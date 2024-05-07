@@ -1,11 +1,86 @@
-import { Module } from '@nestjs/common';
+import { APP_PIPE, APP_GUARD, APP_FILTER } from '@nestjs/core';
+import { Module, ValidationPipe, BadRequestException } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { JwtModule } from '@nestjs/jwt';
 
-import { AppController } from './app.controller';
+import {
+  apiConfig,
+  dbConfig,
+  jwtConfig,
+  AuthGuard,
+  ExceptionFilter,
+} from './common';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { BookingModule } from './booking/booking.module';
+
 import { AppService } from './app.service';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [apiConfig, dbConfig, jwtConfig],
+    }),
+    SequelizeModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      async useFactory(configService: ConfigService) {
+        return {
+          dialect: 'postgres',
+          host: configService.get<string>('db.host'),
+          port: configService.get<number>('db.port'),
+          username: configService.get<string>('db.user'),
+          password: configService.get<string>('db.pass'),
+          database: configService.get<string>('db.name'),
+          autoLoadModels: true,
+          synchronize: true,
+        };
+      },
+    }),
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      async useFactory(configService: ConfigService) {
+        return {
+          secret: configService.get<string>('jwt.secret'),
+          signOptions: {
+            issuer: 'Palm Code',
+          },
+        };
+      },
+    }),
+    AuthModule,
+    UserModule,
+    BookingModule,
+  ],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useFactory() {
+        return new ValidationPipe({
+          exceptionFactory(data) {
+            return new BadRequestException(data);
+          },
+          validationError: {
+            target: false,
+            value: false,
+          },
+        });
+      },
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: ExceptionFilter,
+    },
+  ],
+  exports: [AppService],
 })
 export class AppModule {}
