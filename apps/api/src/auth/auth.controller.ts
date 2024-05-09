@@ -8,7 +8,7 @@ import {
   Body,
   Request,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
 import { DocumentTag, Public, AuthRequest } from '../common';
 import { UpdateUserEmailDto } from '../user/dtos';
@@ -35,6 +35,12 @@ export class AuthController {
     return this.authService.signIn(payload);
   }
 
+  @ApiBearerAuth(DocumentTag.USER)
+  @ApiHeader({
+    required: true,
+    name: 'Authorization',
+    description: 'User JWT access token.',
+  })
   @Patch('/password')
   @HttpCode(HttpStatus.OK)
   public updatePassword(
@@ -44,6 +50,12 @@ export class AuthController {
     return this.authService.updatePassword(request.auth.user_id, payload);
   }
 
+  @ApiBearerAuth(DocumentTag.USER)
+  @ApiHeader({
+    required: true,
+    name: 'Authorization',
+    description: 'User JWT access token.',
+  })
   @Patch('/email')
   @HttpCode(HttpStatus.OK)
   public updateEmail(
@@ -53,12 +65,24 @@ export class AuthController {
     return this.authService.updateEmail(request.auth.user_id, payload);
   }
 
+  @ApiBearerAuth(DocumentTag.USER)
+  @ApiHeader({
+    required: true,
+    name: 'Authorization',
+    description: 'User JWT access token.',
+  })
   @Patch('/deactivate')
   @HttpCode(HttpStatus.OK)
   public deactivate(@Request() request: AuthRequest) {
     return this.authService.deactivate(request.auth.user_id);
   }
 
+  @ApiBearerAuth(DocumentTag.USER)
+  @ApiHeader({
+    required: true,
+    name: 'Authorization',
+    description: 'User JWT access token.',
+  })
   @Delete('/')
   @HttpCode(HttpStatus.OK)
   public delete(@Request() request: AuthRequest) {

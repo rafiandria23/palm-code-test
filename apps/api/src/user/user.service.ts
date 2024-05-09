@@ -5,7 +5,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction, FindAndCountOptions, Op } from 'sequelize';
+import { CreateOptions, FindOptions, FindAndCountOptions, Op } from 'sequelize';
 
 import { AppService } from '../app.service';
 import { PaginationDto, SortDto } from '../common';
@@ -25,31 +25,30 @@ export class UserService {
     private readonly appService: AppService,
   ) {}
 
-  public create(payload: CreateUserDto, transaction?: Transaction) {
+  public create(payload: CreateUserDto, options?: CreateOptions<User>) {
     return this.userModel.create(
       {
         first_name: payload.first_name,
         last_name: payload.last_name,
         email: payload.email,
       },
-      {
-        transaction,
-      },
+      options,
     );
   }
 
-  public readById(id: string) {
-    return this.userModel.findByPk(id, {
-      paranoid: false,
-    });
+  public readById(id: string, options?: Omit<FindOptions<User>, 'where'>) {
+    return this.userModel.findByPk(id, options);
   }
 
-  public readByEmail(email: string) {
+  public readByEmail(
+    email: string,
+    options?: Omit<FindOptions<User>, 'where'>,
+  ) {
     return this.userModel.findOne({
       where: {
         email,
       },
-      paranoid: false,
+      ...options,
     });
   }
 
@@ -66,7 +65,7 @@ export class UserService {
   }
 
   public async readAll(queries: ReadAllUsersQueryDto) {
-    const options: FindAndCountOptions<User> = {
+    const options: Omit<FindAndCountOptions<User>, 'group'> = {
       where: {},
       offset: queries.page_size * (queries.page - 1),
       limit: queries.page_size,
@@ -90,14 +89,12 @@ export class UserService {
     const { count: total, rows: existingUsers } =
       await this.userModel.findAndCountAll(options);
 
-    return {
-      ...this.appService.successTimestamp({
-        metadata: {
-          total,
-        },
-        data: existingUsers,
-      }),
-    };
+    return this.appService.successTimestamp({
+      metadata: {
+        total,
+      },
+      data: existingUsers,
+    });
   }
 
   public async updateEmail(id: string, payload: UpdateUserEmailDto) {

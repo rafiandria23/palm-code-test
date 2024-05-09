@@ -29,7 +29,9 @@ export class AuthService {
   ) {}
 
   public async signUp(payload: SignUpDto) {
-    const existingUser = await this.userService.readByEmail(payload.email);
+    const existingUser = await this.userService.readByEmail(payload.email, {
+      paranoid: false,
+    });
 
     if (existingUser !== null) {
       throw new UnprocessableEntityException('User already exists!');
@@ -38,7 +40,7 @@ export class AuthService {
     return this.sequelize.transaction(async (transaction) => {
       const createdUser = await this.userService.create(
         _.omit(payload, ['password']),
-        transaction,
+        { transaction },
       );
 
       const [accessToken] = await Promise.all([
@@ -61,7 +63,9 @@ export class AuthService {
   }
 
   public async signIn(payload: SignInDto) {
-    const existingUser = await this.userService.readByEmail(payload.email);
+    const existingUser = await this.userService.readByEmail(payload.email, {
+      paranoid: false,
+    });
 
     if (!existingUser) {
       throw new NotFoundException('User is not found!');

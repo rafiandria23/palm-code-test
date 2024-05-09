@@ -1,9 +1,19 @@
-import { Module } from '@nestjs/common';
-import { SettingService } from './setting.service';
+import { Module, forwardRef } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+
+import { AppModule } from '../app.module';
+
+import { Country, Surfboard } from './models';
 import { SettingController } from './setting.controller';
+import { SettingService } from './setting.service';
 
 @Module({
-  providers: [SettingService],
+  imports: [
+    SequelizeModule.forFeature([Country, Surfboard]),
+    forwardRef(() => AppModule),
+  ],
   controllers: [SettingController],
+  providers: [SettingService],
+  exports: [SettingService],
 })
 export class SettingModule {}
