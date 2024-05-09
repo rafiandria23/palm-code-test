@@ -1,11 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import _ from 'lodash';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction } from 'sequelize';
+import { Transaction, FindAndCountOptions, Op } from 'sequelize';
 
 import { AppService } from '../app.service';
+import { PaginationDto, SortDto } from '../common';
 
 import { User } from './models';
-import { CreateUserDto } from './dtos';
+import {
+  CreateUserDto,
+  ReadAllUsersQueryDto,
+  UpdateUserEmailDto,
+  UpdateUserDto,
+} from './dtos';
 
 @Injectable()
 export class UserService {
@@ -54,8 +65,74 @@ export class UserService {
     });
   }
 
-  public readAll() {
-    return this.userModel.findAll();
+  public async readAll(queries: ReadAllUsersQueryDto) {
+    const options: FindAndCountOptions<User> = {
+      where: {},
+      offset: queries.page_size * (queries.page - 1),
+      limit: queries.page_size,
+      order: [[queries.sort_by, queries.sort]],
+    };
+
+    const filters = _.omit(queries, [
+      ..._.keys(new PaginationDto()),
+      ..._.keys(new SortDto()),
+      'sort_by',
+    ]);
+
+    if (!_.isEmpty(filters)) {
+      _.forOwn(filters, (filterValue, filterKey) => {
+        options.where[filterKey] = {
+          [Op.iLike]: `%${filterValue}%`,
+        };
+      });
+    }
+
+    const { count: total, rows: existingUsers } =
+      await this.userModel.findAndCountAll(options);
+
+    return {
+      ...this.appService.successTimestamp({
+        metadata: {
+          total,
+        },
+        data: existingUsers,
+      }),
+    };
+  }
+
+  public async updateEmail(id: string, payload: UpdateUserEmailDto) {
+    const existingUser = await this.readByEmail(payload.email);
+
+    if (existingUser) {
+      throw new UnprocessableEntityException('Email is not available!');
+    }
+
+    await this.userModel.update(
+      {
+        email: payload.email,
+      },
+      {
+        where: {
+          id,
+        },
+      },
+    );
+  }
+
+  public async update(id: string, payload: UpdateUserDto) {
+    await this.userModel.update(
+      {
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+      },
+      {
+        where: {
+          id,
+        },
+      },
+    );
+
+    return this.appService.successTimestamp();
   }
 
   public async deactivate(id: string) {

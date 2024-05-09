@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsOptional,
-  IsEnum,
   IsString,
   IsNumber,
+  IsEnum,
   Min,
   Max,
 } from 'class-validator';
@@ -22,7 +22,7 @@ export class PaginationDto {
   @Min(PaginationPage.MIN)
   @IsNumber()
   @IsOptional()
-  page = PaginationPage.MIN;
+  public readonly page = PaginationPage.MIN;
 
   @ApiProperty()
   @Transform(({ value }) => parseInt(value, RADIX))
@@ -30,13 +30,13 @@ export class PaginationDto {
   @Min(PaginationSize.MIN)
   @IsNumber()
   @IsOptional()
-  page_size = PaginationSize.DEFAULT;
+  public readonly page_size = PaginationSize.DEFAULT;
 }
 
-export class PaginationSortDto {
+export class SortDto {
   @ApiProperty()
   @IsEnum(SortDirection)
   @IsString()
   @IsOptional()
-  sort: SortDirection = SortDirection.ASC;
+  public readonly sort: SortDirection = SortDirection.ASC;
 }

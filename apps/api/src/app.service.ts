@@ -3,18 +3,16 @@ import dayjs from 'dayjs';
 
 @Injectable()
 export class AppService {
-  public successTimestamp({ success = true, data = undefined } = {}) {
-    if (data || data === null) {
-      return {
-        success,
-        timestamp: dayjs(),
-        data,
-      };
-    }
-
+  public successTimestamp({
+    success = true,
+    metadata = undefined,
+    data = undefined,
+  } = {}) {
     return {
       success,
       timestamp: dayjs(),
+      metadata,
+      data,
     };
   }
 }

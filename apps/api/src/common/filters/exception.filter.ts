@@ -40,6 +40,9 @@ export class ExceptionFilter
         _.omit(exception.getResponse() as object, ['statusCode', 'error']),
         'message',
       );
+    } else {
+      // @TODO: Change this with Nest.js' own LoggerService
+      console.error(exception);
     }
 
     if (isString(errData)) {

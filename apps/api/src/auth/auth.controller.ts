@@ -11,6 +11,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { DocumentTag, Public, AuthRequest } from '../common';
+import { UpdateUserEmailDto } from '../user/dtos';
 
 import { AuthService } from './auth.service';
 import { SignUpDto, SignInDto, UpdatePasswordDto } from './dtos';
@@ -41,6 +42,15 @@ export class AuthController {
     @Body() payload: UpdatePasswordDto,
   ) {
     return this.authService.updatePassword(request.auth.user_id, payload);
+  }
+
+  @Patch('/email')
+  @HttpCode(HttpStatus.OK)
+  public updateEmail(
+    @Request() request: AuthRequest,
+    @Body() payload: UpdateUserEmailDto,
+  ) {
+    return this.authService.updateEmail(request.auth.user_id, payload);
   }
 
   @Patch('/deactivate')

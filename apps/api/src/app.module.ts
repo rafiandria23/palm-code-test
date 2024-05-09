@@ -73,6 +73,8 @@ import { CommonModule } from './common/common.module';
             target: false,
             value: false,
           },
+          whitelist: true,
+          forbidNonWhitelisted: true,
         });
       },
     },

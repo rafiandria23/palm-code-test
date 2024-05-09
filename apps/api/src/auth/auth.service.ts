@@ -12,6 +12,7 @@ import bcrypt from 'bcrypt';
 
 import { AppService } from '../app.service';
 import { UserService } from '../user/user.service';
+import { UpdateUserEmailDto } from '../user/dtos';
 
 import { UserPassword } from './models';
 import { SignUpDto, SignInDto, UpdatePasswordDto } from './dtos';
@@ -122,6 +123,12 @@ export class AuthService {
     await existingUserPassword.update({
       password: payload.new_password,
     });
+
+    return this.appService.successTimestamp();
+  }
+
+  public async updateEmail(userId: string, payload: UpdateUserEmailDto) {
+    await this.userService.updateEmail(userId, payload);
 
     return this.appService.successTimestamp();
   }
