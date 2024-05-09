@@ -9,12 +9,7 @@ import {
   DeletedAt,
   AllowNull,
   Unique,
-  HasOne,
-  HasMany,
 } from 'sequelize-typescript';
-
-import { UserPassword } from '../../auth/models';
-import { Booking } from '../../booking/models';
 
 @Table({
   tableName: 'users',
@@ -56,10 +51,4 @@ export class User extends Model<User> {
   @DeletedAt
   @Column
   public deleted_at: Date | null;
-
-  @HasOne(() => UserPassword, 'user_id')
-  public password: UserPassword;
-
-  @HasMany(() => Booking, 'user_id')
-  public bookings: Booking[];
 }

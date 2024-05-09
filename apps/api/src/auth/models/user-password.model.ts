@@ -8,14 +8,10 @@ import {
   UpdatedAt,
   DeletedAt,
   AllowNull,
-  ForeignKey,
-  BelongsTo,
   BeforeCreate,
   BeforeUpdate,
 } from 'sequelize-typescript';
 import bcrypt from 'bcrypt';
-
-import { User } from '../../user/models/user.model';
 
 import { PasswordSaltRounds } from '../constants';
 
@@ -36,10 +32,8 @@ export class UserPassword extends Model<UserPassword> {
   })
   public id: string;
 
-  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
-    onDelete: 'CASCADE',
   })
   public user_id: string;
 
@@ -60,9 +54,6 @@ export class UserPassword extends Model<UserPassword> {
   @DeletedAt
   @Column
   public deleted_at: Date | null;
-
-  @BelongsTo(() => User, 'user_id')
-  public user: User;
 
   @BeforeCreate
   @BeforeUpdate

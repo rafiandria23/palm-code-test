@@ -5,7 +5,13 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CreateOptions, FindOptions, FindAndCountOptions, Op } from 'sequelize';
+import {
+  Transaction,
+  Op,
+  FindOptions,
+  FindAndCountOptions,
+  DestroyOptions,
+} from 'sequelize';
 
 import { AppService } from '../app.service';
 import { PaginationDto, SortDto } from '../common';
@@ -25,14 +31,16 @@ export class UserService {
     private readonly appService: AppService,
   ) {}
 
-  public create(payload: CreateUserDto, options?: CreateOptions<User>) {
+  public create(payload: CreateUserDto, transaction?: Transaction) {
     return this.userModel.create(
       {
         first_name: payload.first_name,
         last_name: payload.last_name,
         email: payload.email,
       },
-      options,
+      {
+        transaction,
+      },
     );
   }
 
@@ -97,7 +105,11 @@ export class UserService {
     });
   }
 
-  public async updateEmail(id: string, payload: UpdateUserEmailDto) {
+  public async updateEmail(
+    id: string,
+    payload: UpdateUserEmailDto,
+    transaction?: Transaction,
+  ) {
     const existingUser = await this.readByEmail(payload.email);
 
     if (existingUser) {
@@ -112,11 +124,16 @@ export class UserService {
         where: {
           id,
         },
+        transaction,
       },
     );
   }
 
-  public async update(id: string, payload: UpdateUserDto) {
+  public async update(
+    id: string,
+    payload: UpdateUserDto,
+    transaction?: Transaction,
+  ) {
     await this.userModel.update(
       {
         first_name: payload.first_name,
@@ -126,26 +143,22 @@ export class UserService {
         where: {
           id,
         },
+        transaction,
       },
     );
 
     return this.appService.successTimestamp();
   }
 
-  public async deactivate(id: string) {
+  public async delete(
+    id: string,
+    options?: Omit<DestroyOptions<User>, 'where'>,
+  ) {
     await this.userModel.destroy({
       where: {
         id,
       },
-    });
-  }
-
-  public async delete(id: string) {
-    await this.userModel.destroy({
-      where: {
-        id,
-      },
-      force: true,
+      ...options,
     });
   }
 }

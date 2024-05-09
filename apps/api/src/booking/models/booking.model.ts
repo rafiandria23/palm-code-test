@@ -8,14 +8,10 @@ import {
   UpdatedAt,
   DeletedAt,
   AllowNull,
-  ForeignKey,
-  BelongsTo,
 } from 'sequelize-typescript';
 import dayjs from 'dayjs';
 
 import { DATE_FORMAT } from '../../common/constants';
-
-import { User } from '../../user/models';
 
 @Table({
   tableName: 'bookings',
@@ -34,10 +30,8 @@ export class Booking extends Model<Booking> {
   })
   public id: string;
 
-  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
-    onDelete: 'CASCADE',
   })
   public user_id: string;
 
@@ -50,7 +44,9 @@ export class Booking extends Model<Booking> {
   @Column
   public visitor_phone: string;
 
-  @Column
+  @Column({
+    type: DataType.UUID,
+  })
   public visitor_country_id: string;
 
   @Column
@@ -64,7 +60,9 @@ export class Booking extends Model<Booking> {
   })
   visit_date: string;
 
-  @Column
+  @Column({
+    type: DataType.UUID,
+  })
   public surfboard_id: string;
 
   @Column
@@ -82,7 +80,4 @@ export class Booking extends Model<Booking> {
   @DeletedAt
   @Column
   public deleted_at: Date | null;
-
-  @BelongsTo(() => User, 'user_id')
-  public user: User;
 }

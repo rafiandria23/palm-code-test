@@ -40,7 +40,7 @@ export class AuthService {
     return this.sequelize.transaction(async (transaction) => {
       const createdUser = await this.userService.create(
         _.omit(payload, ['password']),
-        { transaction },
+        transaction,
       );
 
       const [accessToken] = await Promise.all([
@@ -138,13 +138,13 @@ export class AuthService {
   }
 
   public async deactivate(userId: string) {
-    await this.userService.deactivate(userId);
+    await this.userService.delete(userId);
 
     return this.appService.successTimestamp();
   }
 
   public async delete(userId: string) {
-    await this.userService.delete(userId);
+    await this.userService.delete(userId, { force: true });
 
     return this.appService.successTimestamp();
   }
