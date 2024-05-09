@@ -36,12 +36,6 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
-  @Get('/me')
-  @HttpCode(HttpStatus.OK)
-  public me(@Request() request: AuthRequest) {
-    return this.userService.me(request.auth.user_id);
-  }
-
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   public async readById(@Param() params: ReadUserByIdParamDto) {
@@ -52,6 +46,12 @@ export class UserController {
     }
 
     return this.appService.successTimestamp({ data: existingUser });
+  }
+
+  @Get('/me')
+  @HttpCode(HttpStatus.OK)
+  public me(@Request() request: AuthRequest) {
+    return this.userService.me(request.auth.user_id);
   }
 
   @Get('/')

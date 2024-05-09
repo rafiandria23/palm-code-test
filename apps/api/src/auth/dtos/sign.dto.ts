@@ -1,12 +1,34 @@
-import { IntersectionType, PickType } from '@nestjs/mapped-types';
+import { PickType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
-
-import { CreateUserDto } from '../../user/dtos';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsEmail,
+  MinLength,
+} from 'class-validator';
 
 import { PasswordLength } from '../constants';
 
-export class SignUpDto extends IntersectionType(CreateUserDto) {
+export class SignUpDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  public readonly first_name: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  public readonly last_name?: string;
+
+  @ApiProperty({
+    format: 'email',
+  })
+  @IsEmail()
+  @IsString()
+  @IsNotEmpty()
+  public readonly email: string;
+
   @ApiProperty()
   @MinLength(PasswordLength.MIN)
   @IsString()

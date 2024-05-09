@@ -12,10 +12,14 @@ import bcrypt from 'bcrypt';
 
 import { AppService } from '../app.service';
 import { UserService } from '../user/user.service';
-import { UpdateUserEmailDto } from '../user/dtos';
 
 import { UserPassword } from './models';
-import { SignUpDto, SignInDto, UpdatePasswordDto } from './dtos';
+import {
+  SignUpDto,
+  SignInDto,
+  UpdateEmailDto,
+  UpdatePasswordDto,
+} from './dtos';
 
 @Injectable()
 export class AuthService {
@@ -98,6 +102,12 @@ export class AuthService {
     });
   }
 
+  public async updateEmail(userId: string, payload: UpdateEmailDto) {
+    await this.userService.updateEmail(userId, payload);
+
+    return this.appService.successTimestamp();
+  }
+
   public async updatePassword(userId: string, payload: UpdatePasswordDto) {
     const existingUser = await this.userService.readById(userId);
 
@@ -127,12 +137,6 @@ export class AuthService {
     await existingUserPassword.update({
       password: payload.new_password,
     });
-
-    return this.appService.successTimestamp();
-  }
-
-  public async updateEmail(userId: string, payload: UpdateUserEmailDto) {
-    await this.userService.updateEmail(userId, payload);
 
     return this.appService.successTimestamp();
   }

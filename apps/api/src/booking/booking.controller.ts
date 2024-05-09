@@ -2,6 +2,8 @@ import {
   Controller,
   Post,
   Get,
+  Put,
+  Delete,
   HttpCode,
   HttpStatus,
   Body,
@@ -17,13 +19,31 @@ import { DocumentTag } from '../common';
 export class BookingController {
   @Post('/')
   @HttpCode(HttpStatus.CREATED)
-  public async create(@Body() payload: object) {}
+  public create(@Body() payload: object) {
+    return;
+  }
 
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
-  public async readById(@Param() params: object) {}
+  public readById(@Param() params: object) {
+    return;
+  }
 
   @Get('/')
   @HttpCode(HttpStatus.OK)
-  public async readAll(@Query() queries: object) {}
+  public readAll(@Query() queries: object) {
+    return;
+  }
+
+  @Put('/:id')
+  @HttpCode(HttpStatus.OK)
+  public update(@Param() params: object, @Body() payload: object) {
+    return;
+  }
+
+  @Delete('/:id')
+  @HttpCode(HttpStatus.OK)
+  public delete(@Param() params: object) {
+    return;
+  }
 }

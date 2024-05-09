@@ -11,10 +11,14 @@ import {
 import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
 import { DocumentTag, Public, AuthRequest } from '../common';
-import { UpdateUserEmailDto } from '../user/dtos';
 
 import { AuthService } from './auth.service';
-import { SignUpDto, SignInDto, UpdatePasswordDto } from './dtos';
+import {
+  SignUpDto,
+  SignInDto,
+  UpdateEmailDto,
+  UpdatePasswordDto,
+} from './dtos';
 
 @Controller('/auth')
 @ApiTags(DocumentTag.AUTH)
@@ -41,13 +45,13 @@ export class AuthController {
     name: 'Authorization',
     description: 'User JWT access token.',
   })
-  @Patch('/password')
+  @Patch('/email')
   @HttpCode(HttpStatus.OK)
-  public updatePassword(
+  public updateEmail(
     @Request() request: AuthRequest,
-    @Body() payload: UpdatePasswordDto,
+    @Body() payload: UpdateEmailDto,
   ) {
-    return this.authService.updatePassword(request.auth.user_id, payload);
+    return this.authService.updateEmail(request.auth.user_id, payload);
   }
 
   @ApiBearerAuth(DocumentTag.USER)
@@ -56,13 +60,13 @@ export class AuthController {
     name: 'Authorization',
     description: 'User JWT access token.',
   })
-  @Patch('/email')
+  @Patch('/password')
   @HttpCode(HttpStatus.OK)
-  public updateEmail(
+  public updatePassword(
     @Request() request: AuthRequest,
-    @Body() payload: UpdateUserEmailDto,
+    @Body() payload: UpdatePasswordDto,
   ) {
-    return this.authService.updateEmail(request.auth.user_id, payload);
+    return this.authService.updatePassword(request.auth.user_id, payload);
   }
 
   @ApiBearerAuth(DocumentTag.USER)
