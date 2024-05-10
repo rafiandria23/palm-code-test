@@ -2,13 +2,20 @@ import type { FC, ReactNode } from 'react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
-import { ThemeProvider } from '@mui/material';
+import {
+  ThemeProvider,
+  CssBaseline,
+  AppBar,
+  Toolbar,
+  Stack,
+} from '@mui/material';
 
 import '../styles/global.scss';
 import theme from '../styles/theme';
 
-import SkyImage from '../../public/sky.svg';
-import SurfingImage from '../../public/surfing.svg';
+import SkyImage from '../../public/sky.png';
+import SurfingImage from '../../public/surfing.png';
+import LogoImage from '../../public/logo.svg';
 
 export const metadata: Metadata = {
   title: 'Palm Code Test Web',
@@ -25,6 +32,8 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
       <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
+            <CssBaseline />
+
             {/* Background */}
             <>
               <Image
@@ -37,6 +46,8 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
                   objectFit: 'cover',
                   objectPosition: '0 -8rem',
                   opacity: '20%',
+                  position: 'absolute',
+                  zIndex: 1,
                 }}
               />
               <Image
@@ -46,17 +57,52 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
                 fill
                 sizes="100vw"
                 style={{
+                  position: 'absolute',
                   objectFit: 'cover',
                   objectPosition: '0 8rem',
+                  zIndex: 2,
                 }}
               />
             </>
 
             {/* Header */}
-            <header />
+            <AppBar
+              component="header"
+              sx={{
+                zIndex: 3,
+                mt: '2rem',
+                background: 'transparent',
+                boxShadow: 'none',
+              }}
+            >
+              <Toolbar
+                sx={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  alt="Logo."
+                  src={LogoImage}
+                  style={{
+                    width: '8rem',
+                    height: '4rem',
+                  }}
+                />
+              </Toolbar>
+            </AppBar>
 
             {/* Main */}
-            <main>{children}</main>
+            <Stack
+              component="main"
+              sx={{
+                position: 'relative',
+                zIndex: 4,
+                mt: '8rem',
+              }}
+            >
+              {children}
+            </Stack>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

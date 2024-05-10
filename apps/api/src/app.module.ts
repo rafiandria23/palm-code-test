@@ -54,10 +54,10 @@ import { CommonModule } from './common/common.module';
         };
       },
     }),
+    SettingModule,
     AuthModule,
     UserModule,
     BookingModule,
-    SettingModule,
     CommonModule,
   ],
   providers: [
