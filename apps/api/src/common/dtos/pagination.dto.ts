@@ -9,12 +9,12 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
+import { RADIX } from '../constants/number.constant';
 import {
-  RADIX,
   PaginationPage,
   PaginationSize,
   SortDirection,
-} from '../constants';
+} from '../constants/pagination.constant';
 
 export class PaginationDto {
   @ApiProperty()

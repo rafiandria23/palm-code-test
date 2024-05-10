@@ -8,15 +8,15 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
-import { DocumentTag } from '../common';
+import { DocumentTag } from '../common/constants/docs.constant';
 
-import { SettingService } from './setting.service';
 import {
   ReadCountryByIdParamDto,
   ReadAllCountriesQueryDto,
   ReadSurfboardByIdParamDto,
   ReadAllSurfboardsQueryDto,
-} from './dtos';
+} from './dtos/read.dto';
+import { SettingService } from './setting.service';
 
 @ApiTags(DocumentTag.SETTING)
 @ApiBearerAuth(DocumentTag.USER)

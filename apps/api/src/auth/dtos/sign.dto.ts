@@ -8,7 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-import { PasswordLength } from '../constants';
+import { PasswordLength } from '../constants/user-password.constant';
 
 export class SignUpDto {
   @ApiProperty()

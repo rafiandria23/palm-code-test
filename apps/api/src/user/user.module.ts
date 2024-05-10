@@ -3,9 +3,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
 
 import { AppModule } from '../app.module';
 
-import { User } from './models';
-import { UserController } from './user.controller';
+import { User } from './models/user.model';
 import { UserService } from './user.service';
+import { UserController } from './user.controller';
 
 @Module({
   imports: [SequelizeModule.forFeature([User]), forwardRef(() => AppModule)],

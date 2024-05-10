@@ -8,9 +8,9 @@ import {
   IsUUID,
 } from 'class-validator';
 
-import { PaginationDto, SortDto } from '../../common';
+import { PaginationDto, SortDto } from '../../common/dtos/pagination.dto';
 
-import { UserSortProperty } from '../constants';
+import { UserSortProperty } from '../constants/read.constant';
 
 export class ReadUserByIdParamDto {
   @ApiProperty()

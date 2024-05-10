@@ -4,10 +4,14 @@ import { InjectModel } from '@nestjs/sequelize';
 import { FindAndCountOptions, Op } from 'sequelize';
 
 import { AppService } from '../app.service';
-import { PaginationDto, SortDto } from '../common';
+import { PaginationDto, SortDto } from '../common/dtos/pagination.dto';
 
-import { Country, Surfboard } from './models';
-import { ReadAllCountriesQueryDto, ReadAllSurfboardsQueryDto } from './dtos';
+import { Country } from './models/country.model';
+import { Surfboard } from './models/surfboard.model';
+import {
+  ReadAllCountriesQueryDto,
+  ReadAllSurfboardsQueryDto,
+} from './dtos/read.dto';
 
 @Injectable()
 export class SettingService {

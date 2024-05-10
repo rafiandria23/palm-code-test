@@ -14,15 +14,12 @@ import {
 } from 'sequelize';
 
 import { AppService } from '../app.service';
-import { PaginationDto, SortDto } from '../common';
+import { PaginationDto, SortDto } from '../common/dtos/pagination.dto';
 
-import { User } from './models';
-import {
-  CreateUserDto,
-  ReadAllUsersQueryDto,
-  UpdateUserEmailDto,
-  UpdateUserDto,
-} from './dtos';
+import { User } from './models/user.model';
+import { CreateUserDto } from './dtos/create.dto';
+import { ReadAllUsersQueryDto } from './dtos/read.dto';
+import { UpdateUserEmailDto, UpdateUserDto } from './dtos/update.dto';
 
 @Injectable()
 export class UserService {

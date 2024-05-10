@@ -3,9 +3,10 @@ import { SequelizeModule } from '@nestjs/sequelize';
 
 import { AppModule } from '../app.module';
 
-import { Country, Surfboard } from './models';
-import { SettingController } from './setting.controller';
+import { Country } from './models/country.model';
+import { Surfboard } from './models/surfboard.model';
 import { SettingService } from './setting.service';
+import { SettingController } from './setting.controller';
 
 @Module({
   imports: [

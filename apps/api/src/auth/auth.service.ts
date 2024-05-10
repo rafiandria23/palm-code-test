@@ -13,13 +13,9 @@ import bcrypt from 'bcrypt';
 import { AppService } from '../app.service';
 import { UserService } from '../user/user.service';
 
-import { UserPassword } from './models';
-import {
-  SignUpDto,
-  SignInDto,
-  UpdateEmailDto,
-  UpdatePasswordDto,
-} from './dtos';
+import { UserPassword } from './models/user-password.model';
+import { SignUpDto, SignInDto } from './dtos/sign.dto';
+import { UpdateEmailDto, UpdatePasswordDto } from './dtos/update.dto';
 
 @Injectable()
 export class AuthService {

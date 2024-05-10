@@ -13,14 +13,12 @@ import {
 import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
 import { AppService } from '../app.service';
-import { DocumentTag, AuthRequest } from '../common';
+import { AuthRequest } from '../common/interfaces/request.interface';
+import { DocumentTag } from '../common/constants/docs.constant';
 
+import { ReadUserByIdParamDto, ReadAllUsersQueryDto } from './dtos/read.dto';
+import { UpdateUserDto } from './dtos/update.dto';
 import { UserService } from './user.service';
-import {
-  ReadUserByIdParamDto,
-  ReadAllUsersQueryDto,
-  UpdateUserDto,
-} from './dtos';
 
 @ApiTags(DocumentTag.USER)
 @ApiBearerAuth(DocumentTag.USER)

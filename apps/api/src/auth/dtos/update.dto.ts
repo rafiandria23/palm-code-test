@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, IsEmail, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { PasswordLength } from '../constants';
+import { PasswordLength } from '../constants/user-password.constant';
 
 export class UpdateEmailDto {
   @ApiProperty({

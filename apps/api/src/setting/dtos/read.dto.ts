@@ -8,9 +8,12 @@ import {
   IsUUID,
 } from 'class-validator';
 
-import { PaginationDto, SortDto } from '../../common';
+import { PaginationDto, SortDto } from '../../common/dtos/pagination.dto';
 
-import { CountrySortProperty, SurfboardSortProperty } from '../constants';
+import {
+  CountrySortProperty,
+  SurfboardSortProperty,
+} from '../constants/read.constant';
 
 export class ReadCountryByIdParamDto {
   @ApiProperty()

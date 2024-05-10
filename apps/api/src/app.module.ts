@@ -4,20 +4,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { JwtModule } from '@nestjs/jwt';
 
-import {
-  apiConfig,
-  dbConfig,
-  jwtConfig,
-  AuthGuard,
-  ExceptionFilter,
-} from './common';
+import { apiConfig } from './common/configs/api.config';
+import { dbConfig } from './common/configs/db.config';
+import { jwtConfig } from './common/configs/jwt.config';
+import { AuthGuard } from './common/guards/auth.guard';
+import { ExceptionFilter } from './common/filters/exception.filter';
+import { CommonModule } from './common/common.module';
 import { SettingModule } from './setting/setting.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { BookingModule } from './booking/booking.module';
 
 import { AppService } from './app.service';
-import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -54,11 +52,11 @@ import { CommonModule } from './common/common.module';
         };
       },
     }),
+    CommonModule,
     SettingModule,
     AuthModule,
     UserModule,
     BookingModule,
-    CommonModule,
   ],
   providers: [
     AppService,

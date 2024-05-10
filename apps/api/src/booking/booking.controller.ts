@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { DocumentTag } from '../common';
+import { DocumentTag } from '../common/constants/docs.constant';
 
 @Controller('/bookings')
 @ApiTags(DocumentTag.BOOKING)

@@ -10,15 +10,13 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
-import { DocumentTag, Public, AuthRequest } from '../common';
+import { AuthRequest } from '../common/interfaces/request.interface';
+import { Public } from '../common/decorators/auth.decorator';
+import { DocumentTag } from '../common/constants/docs.constant';
 
+import { SignUpDto, SignInDto } from './dtos/sign.dto';
+import { UpdateEmailDto, UpdatePasswordDto } from './dtos/update.dto';
 import { AuthService } from './auth.service';
-import {
-  SignUpDto,
-  SignInDto,
-  UpdateEmailDto,
-  UpdatePasswordDto,
-} from './dtos';
 
 @Controller('/auth')
 @ApiTags(DocumentTag.AUTH)

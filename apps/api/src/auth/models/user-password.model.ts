@@ -13,7 +13,7 @@ import {
 } from 'sequelize-typescript';
 import bcrypt from 'bcrypt';
 
-import { PasswordSaltRounds } from '../constants';
+import { PasswordSaltRounds } from '../constants/user-password.constant';
 
 @Table({
   tableName: 'user_passwords',

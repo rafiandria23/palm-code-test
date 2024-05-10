@@ -4,9 +4,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { AppModule } from '../app.module';
 import { UserModule } from '../user/user.module';
 
-import { UserPassword } from './models';
-import { AuthController } from './auth.controller';
+import { UserPassword } from './models/user-password.model';
 import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
