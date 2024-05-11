@@ -13,11 +13,11 @@ import {
   DestroyOptions,
 } from 'sequelize';
 
-import { AppService } from '../app.service';
 import {
   PaginationQueryDto,
   SortQueryDto,
 } from '../common/dtos/pagination.dto';
+import { CommonService } from '../common/common.service';
 
 import { User } from './models/user.model';
 import { CreateUserBodyDto } from './dtos/create.dto';
@@ -28,7 +28,7 @@ import { UpdateUserEmailBodyDto, UpdateUserBodyDto } from './dtos/update.dto';
 export class UserService {
   constructor(
     @InjectModel(User) private readonly userModel: typeof User,
-    private readonly appService: AppService,
+    private readonly commonService: CommonService,
   ) {}
 
   public create(payload: CreateUserBodyDto, transaction?: Transaction) {
@@ -67,7 +67,7 @@ export class UserService {
       throw new NotFoundException('User is not found!');
     }
 
-    return this.appService.successTimestamp({
+    return this.commonService.successTimestamp({
       data: existingUser,
     });
   }
@@ -97,7 +97,7 @@ export class UserService {
     const { count: total, rows: existingUsers } =
       await this.userModel.findAndCountAll(options);
 
-    return this.appService.successTimestamp({
+    return this.commonService.successTimestamp({
       metadata: {
         total,
       },
@@ -112,20 +112,15 @@ export class UserService {
   ) {
     const existingUser = await this.readByEmail(payload.email);
 
-    if (existingUser) {
+    if (existingUser !== null) {
       throw new UnprocessableEntityException('Email is not available!');
     }
 
-    await this.userModel.update(
+    await existingUser.update(
       {
         email: payload.email,
       },
-      {
-        where: {
-          id,
-        },
-        transaction,
-      },
+      { transaction },
     );
   }
 
@@ -147,7 +142,7 @@ export class UserService {
       },
     );
 
-    return this.appService.successTimestamp();
+    return this.commonService.successTimestamp();
   }
 
   public async delete(

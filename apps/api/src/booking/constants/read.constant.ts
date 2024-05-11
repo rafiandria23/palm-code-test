@@ -1,6 +1,5 @@
 export enum BookingSortProperty {
   ID = 'id',
-  USER_ID = 'user_id',
   VISITOR_NAME = 'visitor_name',
   VISITOR_EMAIL = 'visitor_email',
   VISITOR_PHONE = 'visitor_phone',

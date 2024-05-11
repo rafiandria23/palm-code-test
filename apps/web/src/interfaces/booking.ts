@@ -5,7 +5,6 @@ import type { Surfboard } from './surfboard';
 
 export interface Booking {
   id: string;
-  user_id: string;
   visitor_name: string;
   visitor_email: string;
   visitor_phone: string;
@@ -24,12 +23,7 @@ export interface Booking {
 export interface BookingForm
   extends Omit<
     Booking,
-    | 'id'
-    | 'user_id'
-    | 'national_id_photo_url'
-    | 'created_at'
-    | 'updated_at'
-    | 'deleted_at'
+    'id' | 'national_id_photo_url' | 'created_at' | 'updated_at' | 'deleted_at'
   > {
   national_id_photo: string;
 }

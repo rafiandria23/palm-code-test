@@ -10,7 +10,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 
-import { AppService } from '../app.service';
+import { CommonService } from '../common/common.service';
 import { UserService } from '../user/user.service';
 
 import { UserPassword } from './models/user-password.model';
@@ -23,8 +23,8 @@ export class AuthService {
     private readonly sequelize: Sequelize,
     @InjectModel(UserPassword)
     private readonly userPasswordModel: typeof UserPassword,
+    private readonly commonService: CommonService,
     private readonly jwtService: JwtService,
-    private readonly appService: AppService,
     private readonly userService: UserService,
   ) {}
 
@@ -54,7 +54,7 @@ export class AuthService {
         ),
       ]);
 
-      return this.appService.successTimestamp({
+      return this.commonService.successTimestamp({
         data: {
           access_token: accessToken,
         },
@@ -87,25 +87,29 @@ export class AuthService {
       throw new BadRequestException('Wrong email or password!');
     }
 
+    if (existingUser.deleted_at !== null) {
+      await existingUser.restore();
+    }
+
     const accessToken = await this.jwtService.signAsync({
       user_id: existingUser.id,
     });
 
-    return this.appService.successTimestamp({
+    return this.commonService.successTimestamp({
       data: {
         access_token: accessToken,
       },
     });
   }
 
-  public async updateEmail(userId: string, payload: UpdateEmailBodyDto) {
-    await this.userService.updateEmail(userId, payload);
+  public async updateEmail(id: string, payload: UpdateEmailBodyDto) {
+    await this.userService.updateEmail(id, payload);
 
-    return this.appService.successTimestamp();
+    return this.commonService.successTimestamp();
   }
 
-  public async updatePassword(userId: string, payload: UpdatePasswordBodyDto) {
-    const existingUser = await this.userService.readById(userId);
+  public async updatePassword(id: string, payload: UpdatePasswordBodyDto) {
+    const existingUser = await this.userService.readById(id);
 
     if (!existingUser) {
       throw new NotFoundException('User is not found!');
@@ -134,18 +138,18 @@ export class AuthService {
       password: payload.new_password,
     });
 
-    return this.appService.successTimestamp();
+    return this.commonService.successTimestamp();
   }
 
-  public async deactivate(userId: string) {
-    await this.userService.delete(userId);
+  public async deactivate(id: string) {
+    await this.userService.delete(id);
 
-    return this.appService.successTimestamp();
+    return this.commonService.successTimestamp();
   }
 
-  public async delete(userId: string) {
-    await this.userService.delete(userId, { force: true });
+  public async delete(id: string) {
+    await this.userService.delete(id, { force: true });
 
-    return this.appService.successTimestamp();
+    return this.commonService.successTimestamp();
   }
 }

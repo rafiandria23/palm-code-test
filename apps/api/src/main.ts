@@ -7,6 +7,8 @@ import {
 } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
+import { DocumentTag } from './common/constants/docs.constant';
+
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -27,10 +29,11 @@ async function bootstrap() {
     .setTitle('Palm Code Test API')
     .setDescription('Test for Palm Code.')
     .setVersion('1.0')
-    .addTag('Auth')
-    .addTag('User')
-    .addTag('Booking')
-    .addBearerAuth({ type: 'http', name: 'User' })
+    .addTag(DocumentTag.SETTING)
+    .addTag(DocumentTag.AUTH)
+    .addTag(DocumentTag.USER)
+    .addTag(DocumentTag.BOOKING)
+    .addBearerAuth({ type: 'http', name: DocumentTag.USER })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);

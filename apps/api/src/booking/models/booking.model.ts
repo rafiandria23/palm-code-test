@@ -30,11 +30,6 @@ export class Booking extends Model<Booking> {
   })
   public id: string;
 
-  @Column({
-    type: DataType.UUID,
-  })
-  public user_id: string;
-
   @Column
   public visitor_name: string;
 

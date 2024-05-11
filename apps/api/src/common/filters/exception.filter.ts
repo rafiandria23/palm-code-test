@@ -10,7 +10,7 @@ import {
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { isString } from 'tipe-apa';
 
-import { AppService } from '../../app.service';
+import { CommonService } from '../common.service';
 
 @Catch()
 export class ExceptionFilter
@@ -18,7 +18,7 @@ export class ExceptionFilter
 {
   constructor(
     private readonly httpAdapterHost: HttpAdapterHost<FastifyAdapter>,
-    private readonly appService: AppService,
+    private readonly commonService: CommonService,
   ) {}
 
   public catch(exception: HttpException | Error, host: ArgumentsHost) {
@@ -53,7 +53,7 @@ export class ExceptionFilter
 
     return httpAdapter.reply(
       httpHost.getResponse(),
-      this.appService.successTimestamp({
+      this.commonService.successTimestamp({
         success: false,
         data: errData,
       }),

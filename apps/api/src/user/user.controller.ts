@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
-import { AppService } from '../app.service';
 import { AuthRequest } from '../common/interfaces/request.interface';
 import { DocumentTag } from '../common/constants/docs.constant';
+import { CommonService } from '../common/common.service';
 
 import { ReadUserByIdParamDto, ReadAllUsersQueryDto } from './dtos/read.dto';
 import { UpdateUserBodyDto } from './dtos/update.dto';
@@ -30,7 +30,7 @@ import { UserService } from './user.service';
 @Controller('/users')
 export class UserController {
   constructor(
-    private readonly appService: AppService,
+    private readonly commonService: CommonService,
     private readonly userService: UserService,
   ) {}
 
@@ -43,7 +43,7 @@ export class UserController {
       throw new NotFoundException('User is not found!');
     }
 
-    return this.appService.successTimestamp({ data: existingUser });
+    return this.commonService.successTimestamp({ data: existingUser });
   }
 
   @Get('/me')
