@@ -6,6 +6,7 @@ import {
   FastifyAdapter,
 } from '@nestjs/platform-fastify';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import multipart from '@fastify/multipart';
 
 import { DocumentTag } from './common/constants/docs.constant';
 
@@ -40,6 +41,13 @@ async function bootstrap() {
 
   const apiHost = configService.get<string>('api.host');
   const apiPort = configService.get<number>('api.port');
+
+  app.register(multipart, {
+    // limits: {
+    //   fileSize:
+    // },
+    throwFileSizeLimit: true,
+  });
 
   await app.listen(apiPort, apiHost);
 

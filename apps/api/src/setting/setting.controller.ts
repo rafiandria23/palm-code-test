@@ -9,7 +9,7 @@ import {
   Body,
   Param,
   Query,
-  NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
@@ -64,6 +64,12 @@ export class SettingController {
     return this.settingService.createSurfboard(payload);
   }
 
+  @Get('/countries')
+  @HttpCode(HttpStatus.OK)
+  public readAllCountries(@Query() queries: ReadAllCountriesQueryDto) {
+    return this.settingService.readAllCountries(queries);
+  }
+
   @Get('/countries/:id')
   @HttpCode(HttpStatus.OK)
   public async readCountryById(@Param() params: ReadCountryByIdParamDto) {
@@ -72,16 +78,16 @@ export class SettingController {
     );
 
     if (!existingCountry) {
-      throw new NotFoundException('Country is not found!');
+      throw new UnprocessableEntityException('Country is not found!');
     }
 
     return this.commonService.successTimestamp({ data: existingCountry });
   }
 
-  @Get('/countries')
+  @Get('/surfboards')
   @HttpCode(HttpStatus.OK)
-  public readAllCountries(@Query() queries: ReadAllCountriesQueryDto) {
-    return this.settingService.readAllCountries(queries);
+  public readAllSurfboards(@Query() queries: ReadAllSurfboardsQueryDto) {
+    return this.settingService.readAllSurfboards(queries);
   }
 
   @Get('/surfboards/:id')
@@ -92,16 +98,10 @@ export class SettingController {
     );
 
     if (!existingSurfboard) {
-      throw new NotFoundException('Surfboard is not found!');
+      throw new UnprocessableEntityException('Surfboard is not found!');
     }
 
     return this.commonService.successTimestamp({ data: existingSurfboard });
-  }
-
-  @Get('/surfboards')
-  @HttpCode(HttpStatus.OK)
-  public readAllSurfboards(@Query() queries: ReadAllSurfboardsQueryDto) {
-    return this.settingService.readAllSurfboards(queries);
   }
 
   @Put('/countries/:id')

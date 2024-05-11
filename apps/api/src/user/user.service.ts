@@ -1,9 +1,5 @@
 import _ from 'lodash';
-import {
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import {
   Transaction,
@@ -64,7 +60,7 @@ export class UserService {
     const existingUser = await this.readById(id);
 
     if (!existingUser) {
-      throw new NotFoundException('User is not found!');
+      throw new UnprocessableEntityException('User does not exist!');
     }
 
     return this.commonService.successTimestamp({
@@ -110,29 +106,9 @@ export class UserService {
     payload: UpdateUserEmailBodyDto,
     transaction?: Transaction,
   ) {
-    const existingUser = await this.readByEmail(payload.email);
-
-    if (existingUser !== null) {
-      throw new UnprocessableEntityException('Email is not available!');
-    }
-
-    await existingUser.update(
+    const [existingUser] = await this.userModel.update(
       {
         email: payload.email,
-      },
-      { transaction },
-    );
-  }
-
-  public async update(
-    id: string,
-    payload: UpdateUserBodyDto,
-    transaction?: Transaction,
-  ) {
-    await this.userModel.update(
-      {
-        first_name: payload.first_name,
-        last_name: payload.last_name,
       },
       {
         where: {
@@ -142,6 +118,28 @@ export class UserService {
       },
     );
 
+    if (!existingUser) {
+      throw new UnprocessableEntityException('User does not exist!');
+    }
+  }
+
+  public async update(
+    id: string,
+    payload: UpdateUserBodyDto,
+    transaction?: Transaction,
+  ) {
+    const [existingUser] = await this.userModel.update(
+      {
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+      },
+      { where: { id }, transaction },
+    );
+
+    if (!existingUser) {
+      throw new UnprocessableEntityException('User does not exist!');
+    }
+
     return this.commonService.successTimestamp();
   }
 
@@ -149,11 +147,15 @@ export class UserService {
     id: string,
     options?: Omit<DestroyOptions<User>, 'where'>,
   ) {
-    await this.userModel.destroy({
+    const existingUser = await this.userModel.destroy({
       where: {
         id,
       },
       ...options,
     });
+
+    if (!existingUser) {
+      throw new UnprocessableEntityException('User does not exist!');
+    }
   }
 }

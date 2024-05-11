@@ -8,7 +8,7 @@ import {
   Param,
   Query,
   Body,
-  NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
@@ -34,22 +34,22 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
+  @Get('/me')
+  @HttpCode(HttpStatus.OK)
+  public me(@Request() request: AuthRequest) {
+    return this.userService.me(request.auth.user_id);
+  }
+
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   public async readById(@Param() params: ReadUserByIdParamDto) {
     const existingUser = await this.userService.readById(params.id);
 
     if (!existingUser) {
-      throw new NotFoundException('User is not found!');
+      throw new UnprocessableEntityException('User does not exist!');
     }
 
     return this.commonService.successTimestamp({ data: existingUser });
-  }
-
-  @Get('/me')
-  @HttpCode(HttpStatus.OK)
-  public me(@Request() request: AuthRequest) {
-    return this.userService.me(request.auth.user_id);
   }
 
   @Get('/')

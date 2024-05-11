@@ -5,8 +5,8 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Body,
   Request,
+  Body,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
@@ -73,7 +73,7 @@ export class AuthController {
     name: 'Authorization',
     description: 'User JWT access token.',
   })
-  @Patch('/deactivate')
+  @Delete('/deactivate')
   @HttpCode(HttpStatus.OK)
   public deactivate(@Request() request: AuthRequest) {
     return this.authService.deactivate(request.auth.user_id);

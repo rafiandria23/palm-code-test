@@ -31,7 +31,9 @@ export class BookingService {
 
     if (!existingCountry) {
       throw new UnprocessableEntityException('Country does not exist!');
-    } else if (!existingSurfboard) {
+    }
+
+    if (!existingSurfboard) {
       throw new UnprocessableEntityException('Surfboard does not exist!');
     }
 
@@ -48,10 +50,6 @@ export class BookingService {
     });
 
     return this.commonService.successTimestamp({ data: createdBooking });
-  }
-
-  public readById(id: string) {
-    return this.bookingModel.findByPk(id);
   }
 
   public async readAll(queries: ReadAllBookingsQueryDto) {
@@ -87,13 +85,11 @@ export class BookingService {
     });
   }
 
+  public readById(id: string) {
+    return this.bookingModel.findByPk(id);
+  }
+
   public async update(id: string, payload: UpdateBookingBodyDto) {
-    const existingBooking = await this.readById(id);
-
-    if (!existingBooking) {
-      throw new UnprocessableEntityException('Booking does not exist!');
-    }
-
     const [existingCountry, existingSurfboard] = await Promise.all([
       this.settingService.readCountryById(payload.visitor_country_id),
       this.settingService.readSurfboardById(payload.surfboard_id),
@@ -101,33 +97,48 @@ export class BookingService {
 
     if (!existingCountry) {
       throw new UnprocessableEntityException('Country does not exist!');
-    } else if (!existingSurfboard) {
+    }
+
+    if (!existingSurfboard) {
       throw new UnprocessableEntityException('Surfboard does not exist!');
     }
 
-    await existingBooking.update({
-      visitor_name: payload.visitor_name,
-      visitor_email: payload.visitor_email,
-      visitor_phone: payload.visitor_phone,
-      visitor_country_id: existingCountry.id,
-      surfing_experience: payload.surfing_experience,
-      visit_date: payload.visit_date,
-      surfboard_id: existingSurfboard.id,
-      // @TODO: Implement upload to S3!
-      national_id_photo_url: '',
-    });
-
-    return this.commonService.successTimestamp();
-  }
-
-  public async delete(id: string) {
-    const existingBooking = await this.readById(id);
+    const [existingBooking] = await this.bookingModel.update(
+      {
+        visitor_name: payload.visitor_name,
+        visitor_email: payload.visitor_email,
+        visitor_phone: payload.visitor_phone,
+        visitor_country_id: existingCountry.id,
+        surfing_experience: payload.surfing_experience,
+        visit_date: payload.visit_date,
+        surfboard_id: existingSurfboard.id,
+        // @TODO: Implement upload to S3!
+        national_id_photo_url: '',
+      },
+      {
+        where: {
+          id,
+        },
+      },
+    );
 
     if (!existingBooking) {
       throw new UnprocessableEntityException('Booking does not exist!');
     }
 
-    await existingBooking.destroy();
+    return this.commonService.successTimestamp();
+  }
+
+  public async delete(id: string) {
+    const existingBooking = await this.bookingModel.destroy({
+      where: {
+        id,
+      },
+    });
+
+    if (!existingBooking) {
+      throw new UnprocessableEntityException('Booking does not exist!');
+    }
 
     return this.commonService.successTimestamp();
   }

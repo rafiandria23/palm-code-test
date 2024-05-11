@@ -1,10 +1,5 @@
 import _ from 'lodash';
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { JwtService } from '@nestjs/jwt';
@@ -68,13 +63,14 @@ export class AuthService {
     });
 
     if (!existingUser) {
-      throw new NotFoundException('User is not found!');
+      throw new UnprocessableEntityException('User does not exist!');
     }
 
     const existingUserPassword = await this.userPasswordModel.findOne({
       where: {
         user_id: existingUser.id,
       },
+      paranoid: false,
     });
 
     if (!existingUserPassword) {
@@ -84,11 +80,20 @@ export class AuthService {
     if (
       !(await bcrypt.compare(payload.password, existingUserPassword.password))
     ) {
-      throw new BadRequestException('Wrong email or password!');
+      throw new UnprocessableEntityException('Wrong email or password!');
     }
 
-    if (existingUser.deleted_at !== null) {
-      await existingUser.restore();
+    if (
+      [existingUser.deleted_at, existingUserPassword.deleted_at].some(
+        (deleted) => deleted !== null,
+      )
+    ) {
+      await this.sequelize.transaction(async (transaction) => {
+        await Promise.all([
+          existingUser.restore({ transaction }),
+          existingUserPassword.restore({ transaction }),
+        ]);
+      });
     }
 
     const accessToken = await this.jwtService.signAsync({
@@ -103,21 +108,25 @@ export class AuthService {
   }
 
   public async updateEmail(id: string, payload: UpdateEmailBodyDto) {
+    const existingUser = await this.userService.readByEmail(payload.email);
+
+    if (existingUser !== null) {
+      if (existingUser.id === id) {
+        throw new UnprocessableEntityException('Email is already yours!');
+      }
+
+      throw new UnprocessableEntityException('Email is not available!');
+    }
+
     await this.userService.updateEmail(id, payload);
 
     return this.commonService.successTimestamp();
   }
 
   public async updatePassword(id: string, payload: UpdatePasswordBodyDto) {
-    const existingUser = await this.userService.readById(id);
-
-    if (!existingUser) {
-      throw new NotFoundException('User is not found!');
-    }
-
     const existingUserPassword = await this.userPasswordModel.findOne({
       where: {
-        user_id: existingUser.id,
+        user_id: id,
       },
     });
 
@@ -125,13 +134,17 @@ export class AuthService {
       throw new UnprocessableEntityException('Please reset your password!');
     }
 
-    if (
-      !(await bcrypt.compare(
-        payload.old_password,
-        existingUserPassword.password,
-      ))
-    ) {
-      throw new BadRequestException('Wrong current password!');
+    const [oldPasswordComparison, newPasswordComparison] = await Promise.all([
+      bcrypt.compare(payload.old_password, existingUserPassword.password),
+      bcrypt.compare(payload.new_password, existingUserPassword.password),
+    ]);
+
+    if (!oldPasswordComparison) {
+      throw new UnprocessableEntityException('Wrong password!');
+    }
+
+    if (newPasswordComparison) {
+      throw new UnprocessableEntityException('Password is identical!');
     }
 
     await existingUserPassword.update({
@@ -142,13 +155,27 @@ export class AuthService {
   }
 
   public async deactivate(id: string) {
-    await this.userService.delete(id);
+    await this.sequelize.transaction(async (transaction) => {
+      await Promise.all([
+        this.userService.delete(id, { transaction }),
+        this.userPasswordModel.destroy({ where: { user_id: id }, transaction }),
+      ]);
+    });
 
     return this.commonService.successTimestamp();
   }
 
   public async delete(id: string) {
-    await this.userService.delete(id, { force: true });
+    await this.sequelize.transaction(async (transaction) => {
+      await Promise.all([
+        this.userService.delete(id, { force: true, transaction }),
+        this.userPasswordModel.destroy({
+          where: { user_id: id },
+          force: true,
+          transaction,
+        }),
+      ]);
+    });
 
     return this.commonService.successTimestamp();
   }

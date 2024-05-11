@@ -13,7 +13,7 @@ import {
 } from 'sequelize-typescript';
 import bcrypt from 'bcrypt';
 
-import { PasswordSaltRounds } from '../constants/user-password.constant';
+import { PasswordSaltRound } from '../constants/user-password.constant';
 
 @Table({
   tableName: 'user_passwords',
@@ -57,7 +57,10 @@ export class UserPassword extends Model<UserPassword> {
 
   @BeforeCreate
   @BeforeUpdate
-  public static async hashPassword(this: UserPassword) {
-    this.password = await bcrypt.hash(this.password, PasswordSaltRounds);
+  public static async hashPassword(userPassword: UserPassword) {
+    userPassword.password = await bcrypt.hash(
+      userPassword.password,
+      PasswordSaltRound.DEFAULT,
+    );
   }
 }

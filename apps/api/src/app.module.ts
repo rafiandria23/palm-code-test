@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { apiConfig } from './common/configs/api.config';
 import { dbConfig } from './common/configs/db.config';
 import { jwtConfig } from './common/configs/jwt.config';
+import { awsConfig } from './common/configs/aws.config';
 import { AuthGuard } from './common/guards/auth.guard';
 import { ExceptionFilter } from './common/filters/exception.filter';
 import { CommonModule } from './common/common.module';
@@ -21,7 +22,7 @@ import { AppService } from './app.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [apiConfig, dbConfig, jwtConfig],
+      load: [apiConfig, dbConfig, jwtConfig, awsConfig],
     }),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],

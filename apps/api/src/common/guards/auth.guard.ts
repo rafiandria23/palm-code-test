@@ -50,7 +50,9 @@ export class AuthGuard implements CanActivate {
 
     if (type !== 'Bearer') {
       throw new UnauthorizedException('Access token type is invalid!');
-    } else if (!accessToken) {
+    }
+
+    if (!accessToken) {
       throw new UnauthorizedException('Access token is not found!');
     }
 

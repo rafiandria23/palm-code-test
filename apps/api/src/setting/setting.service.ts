@@ -52,13 +52,6 @@ export class SettingService {
     return this.commonService.successTimestamp({ data: createdSurfboard });
   }
 
-  public readCountryById(
-    id: string,
-    options?: Omit<FindOptions<Country>, 'where'>,
-  ) {
-    return this.countryModel.findByPk(id, options);
-  }
-
   public async readAllCountries(queries: ReadAllCountriesQueryDto) {
     const options: Omit<FindAndCountOptions<Country>, 'group'> = {
       where: {},
@@ -92,11 +85,11 @@ export class SettingService {
     });
   }
 
-  public readSurfboardById(
+  public readCountryById(
     id: string,
-    options?: Omit<FindOptions<Surfboard>, 'where'>,
+    options?: Omit<FindOptions<Country>, 'where'>,
   ) {
-    return this.surfboardModel.findByPk(id, options);
+    return this.countryModel.findByPk(id, options);
   }
 
   public async readAllSurfboards(queries: ReadAllSurfboardsQueryDto) {
@@ -132,58 +125,79 @@ export class SettingService {
     });
   }
 
+  public readSurfboardById(
+    id: string,
+    options?: Omit<FindOptions<Surfboard>, 'where'>,
+  ) {
+    return this.surfboardModel.findByPk(id, options);
+  }
+
   public async updateCountry(id: string, payload: UpdateCountryBodyDto) {
-    const existingCountry = await this.readCountryById(id);
+    const [existingCountry] = await this.countryModel.update(
+      {
+        name: payload.name,
+        code: payload.code,
+        dial_code: payload.dial_code,
+        unicode: payload.unicode,
+        emoji: payload.emoji,
+      },
+      {
+        where: {
+          id,
+        },
+      },
+    );
 
     if (!existingCountry) {
       throw new UnprocessableEntityException('Country does not exist!');
     }
-
-    await existingCountry.update({
-      name: payload.name,
-      code: payload.code,
-      dial_code: payload.dial_code,
-      unicode: payload.unicode,
-      emoji: payload.emoji,
-    });
 
     return this.commonService.successTimestamp();
   }
 
   public async updateSurfboard(id: string, payload: UpdateSurfboardBodyDto) {
-    const existingSurfboard = await this.readSurfboardById(id);
+    const [existingSurfboard] = await this.surfboardModel.update(
+      {
+        name: payload.name,
+      },
+      {
+        where: {
+          id,
+        },
+      },
+    );
 
     if (!existingSurfboard) {
       throw new UnprocessableEntityException('Surfboard does not exist!');
     }
-
-    await existingSurfboard.update({
-      name: payload.name,
-    });
 
     return this.commonService.successTimestamp();
   }
 
   public async deleteCountry(id: string) {
-    const existingCountry = await this.readCountryById(id);
+    const existingCountry = await this.countryModel.destroy({
+      where: {
+        id,
+      },
+    });
 
     if (!existingCountry) {
       throw new UnprocessableEntityException('Country does not exist!');
     }
 
-    await existingCountry.destroy();
-
     return this.commonService.successTimestamp();
   }
 
   public async deleteSurfboard(id: string) {
-    const existingSurfboard = await this.readSurfboardById(id);
+    const existingSurfboard = await this.surfboardModel.destroy({
+      where: {
+        id,
+      },
+    });
 
     if (!existingSurfboard) {
       throw new UnprocessableEntityException('Surfboard does not exist!');
     }
-
-    await existingSurfboard.destroy();
 
     return this.commonService.successTimestamp();
   }

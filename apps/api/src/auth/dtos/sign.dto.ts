@@ -7,6 +7,7 @@ import {
   IsEmail,
   MinLength,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 import { PasswordLength } from '../constants/user-password.constant';
 
@@ -24,6 +25,7 @@ export class SignUpBodyDto {
   @ApiProperty({
     format: 'email',
   })
+  @Transform(({ value }) => value.toLowerCase())
   @IsEmail()
   @IsString()
   @IsNotEmpty()
