@@ -13,9 +13,9 @@ import {
   SortQueryDto,
 } from '../../common/dtos/pagination.dto';
 
-import { UserSortProperty } from '../constants/read.constant';
+import { BookingSortProperty } from '../constants/read.constant';
 
-export class ReadUserByIdParamDto {
+export class ReadBookingByIdParamDto {
   @ApiProperty()
   @IsUUID('4')
   @IsString()
@@ -23,28 +23,38 @@ export class ReadUserByIdParamDto {
   public readonly id: string;
 }
 
-export class ReadAllUsersQueryDto extends IntersectionType(
+export class ReadAllBookingsQueryDto extends IntersectionType(
   PaginationQueryDto,
   SortQueryDto,
 ) {
   @ApiProperty()
-  @IsEnum(UserSortProperty)
+  @IsEnum(BookingSortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by: UserSortProperty = UserSortProperty.ID;
+  public readonly sort_by: BookingSortProperty = BookingSortProperty.ID;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public readonly first_name?: string;
+  public readonly visitor_name?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public readonly last_name?: string;
+  public readonly visitor_email?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public readonly email?: string;
+  public readonly visitor_phone?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  public readonly surfing_experience?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  public readonly visit_date?: string;
 }

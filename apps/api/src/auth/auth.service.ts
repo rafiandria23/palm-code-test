@@ -14,8 +14,8 @@ import { AppService } from '../app.service';
 import { UserService } from '../user/user.service';
 
 import { UserPassword } from './models/user-password.model';
-import { SignUpDto, SignInDto } from './dtos/sign.dto';
-import { UpdateEmailDto, UpdatePasswordDto } from './dtos/update.dto';
+import { SignUpBodyDto, SignInBodyDto } from './dtos/sign.dto';
+import { UpdateEmailBodyDto, UpdatePasswordBodyDto } from './dtos/update.dto';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +28,7 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  public async signUp(payload: SignUpDto) {
+  public async signUp(payload: SignUpBodyDto) {
     const existingUser = await this.userService.readByEmail(payload.email, {
       paranoid: false,
     });
@@ -62,7 +62,7 @@ export class AuthService {
     });
   }
 
-  public async signIn(payload: SignInDto) {
+  public async signIn(payload: SignInBodyDto) {
     const existingUser = await this.userService.readByEmail(payload.email, {
       paranoid: false,
     });
@@ -98,13 +98,13 @@ export class AuthService {
     });
   }
 
-  public async updateEmail(userId: string, payload: UpdateEmailDto) {
+  public async updateEmail(userId: string, payload: UpdateEmailBodyDto) {
     await this.userService.updateEmail(userId, payload);
 
     return this.appService.successTimestamp();
   }
 
-  public async updatePassword(userId: string, payload: UpdatePasswordDto) {
+  public async updatePassword(userId: string, payload: UpdatePasswordBodyDto) {
     const existingUser = await this.userService.readById(userId);
 
     if (!existingUser) {

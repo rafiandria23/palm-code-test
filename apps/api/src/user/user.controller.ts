@@ -17,7 +17,7 @@ import { AuthRequest } from '../common/interfaces/request.interface';
 import { DocumentTag } from '../common/constants/docs.constant';
 
 import { ReadUserByIdParamDto, ReadAllUsersQueryDto } from './dtos/read.dto';
-import { UpdateUserDto } from './dtos/update.dto';
+import { UpdateUserBodyDto } from './dtos/update.dto';
 import { UserService } from './user.service';
 
 @ApiTags(DocumentTag.USER)
@@ -62,7 +62,7 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   public update(
     @Request() request: AuthRequest,
-    @Body() payload: UpdateUserDto,
+    @Body() payload: UpdateUserBodyDto,
   ) {
     return this.userService.update(request.auth.user_id, payload);
   }

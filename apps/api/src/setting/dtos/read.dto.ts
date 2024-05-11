@@ -8,7 +8,10 @@ import {
   IsUUID,
 } from 'class-validator';
 
-import { PaginationDto, SortDto } from '../../common/dtos/pagination.dto';
+import {
+  PaginationQueryDto,
+  SortQueryDto,
+} from '../../common/dtos/pagination.dto';
 
 import {
   CountrySortProperty,
@@ -24,8 +27,8 @@ export class ReadCountryByIdParamDto {
 }
 
 export class ReadAllCountriesQueryDto extends IntersectionType(
-  PaginationDto,
-  SortDto,
+  PaginationQueryDto,
+  SortQueryDto,
 ) {
   @ApiProperty()
   @IsEnum(CountrySortProperty)
@@ -68,8 +71,8 @@ export class ReadSurfboardByIdParamDto {
 }
 
 export class ReadAllSurfboardsQueryDto extends IntersectionType(
-  PaginationDto,
-  SortDto,
+  PaginationQueryDto,
+  SortQueryDto,
 ) {
   @ApiProperty()
   @IsEnum(SurfboardSortProperty)

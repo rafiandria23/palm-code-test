@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { PasswordLength } from '../constants/user-password.constant';
 
-export class UpdateEmailDto {
+export class UpdateEmailBodyDto {
   @ApiProperty({
     format: 'email',
   })
@@ -13,7 +13,7 @@ export class UpdateEmailDto {
   public readonly email: string;
 }
 
-export class UpdatePasswordDto {
+export class UpdatePasswordBodyDto {
   @ApiProperty()
   @MinLength(PasswordLength.MIN)
   @IsString()

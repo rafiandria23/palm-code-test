@@ -14,8 +14,8 @@ import { AuthRequest } from '../common/interfaces/request.interface';
 import { Public } from '../common/decorators/auth.decorator';
 import { DocumentTag } from '../common/constants/docs.constant';
 
-import { SignUpDto, SignInDto } from './dtos/sign.dto';
-import { UpdateEmailDto, UpdatePasswordDto } from './dtos/update.dto';
+import { SignUpBodyDto, SignInBodyDto } from './dtos/sign.dto';
+import { UpdateEmailBodyDto, UpdatePasswordBodyDto } from './dtos/update.dto';
 import { AuthService } from './auth.service';
 
 @Controller('/auth')
@@ -26,14 +26,14 @@ export class AuthController {
   @Public()
   @Post('/sign-up')
   @HttpCode(HttpStatus.CREATED)
-  public signUp(@Body() payload: SignUpDto) {
+  public signUp(@Body() payload: SignUpBodyDto) {
     return this.authService.signUp(payload);
   }
 
   @Public()
   @Post('/sign-in')
   @HttpCode(HttpStatus.OK)
-  public signIn(@Body() payload: SignInDto) {
+  public signIn(@Body() payload: SignInBodyDto) {
     return this.authService.signIn(payload);
   }
 
@@ -47,7 +47,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   public updateEmail(
     @Request() request: AuthRequest,
-    @Body() payload: UpdateEmailDto,
+    @Body() payload: UpdateEmailBodyDto,
   ) {
     return this.authService.updateEmail(request.auth.user_id, payload);
   }
@@ -62,7 +62,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   public updatePassword(
     @Request() request: AuthRequest,
-    @Body() payload: UpdatePasswordDto,
+    @Body() payload: UpdatePasswordBodyDto,
   ) {
     return this.authService.updatePassword(request.auth.user_id, payload);
   }

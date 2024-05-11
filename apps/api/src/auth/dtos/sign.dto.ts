@@ -10,7 +10,7 @@ import {
 
 import { PasswordLength } from '../constants/user-password.constant';
 
-export class SignUpDto {
+export class SignUpBodyDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -36,7 +36,7 @@ export class SignUpDto {
   public readonly password: string;
 }
 
-export class SignInDto extends PickType(SignUpDto, [
+export class SignInBodyDto extends PickType(SignUpBodyDto, [
   'email',
   'password',
 ] as const) {}

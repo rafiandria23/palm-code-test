@@ -4,7 +4,10 @@ import { InjectModel } from '@nestjs/sequelize';
 import { FindAndCountOptions, Op } from 'sequelize';
 
 import { AppService } from '../app.service';
-import { PaginationDto, SortDto } from '../common/dtos/pagination.dto';
+import {
+  PaginationQueryDto,
+  SortQueryDto,
+} from '../common/dtos/pagination.dto';
 
 import { Country } from './models/country.model';
 import { Surfboard } from './models/surfboard.model';
@@ -40,8 +43,8 @@ export class SettingService {
     };
 
     const filters = _.omit(queries, [
-      ..._.keys(new PaginationDto()),
-      ..._.keys(new SortDto()),
+      ..._.keys(new PaginationQueryDto()),
+      ..._.keys(new SortQueryDto()),
       'sort_by',
     ]);
 
@@ -83,8 +86,8 @@ export class SettingService {
     };
 
     const filters = _.omit(queries, [
-      ..._.keys(new PaginationDto()),
-      ..._.keys(new SortDto()),
+      ..._.keys(new PaginationQueryDto()),
+      ..._.keys(new SortQueryDto()),
       'sort_by',
     ]);
 

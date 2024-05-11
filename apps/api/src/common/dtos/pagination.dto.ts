@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsOptional,
-  IsString,
   IsNumber,
+  IsString,
   IsEnum,
   Min,
   Max,
@@ -16,7 +16,7 @@ import {
   SortDirection,
 } from '../constants/pagination.constant';
 
-export class PaginationDto {
+export class PaginationQueryDto {
   @ApiProperty()
   @Transform(({ value }) => parseInt(value, RADIX))
   @Min(PaginationPage.MIN)
@@ -33,7 +33,7 @@ export class PaginationDto {
   public readonly page_size = PaginationSize.DEFAULT;
 }
 
-export class SortDto {
+export class SortQueryDto {
   @ApiProperty()
   @IsEnum(SortDirection)
   @IsString()

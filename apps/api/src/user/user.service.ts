@@ -14,12 +14,15 @@ import {
 } from 'sequelize';
 
 import { AppService } from '../app.service';
-import { PaginationDto, SortDto } from '../common/dtos/pagination.dto';
+import {
+  PaginationQueryDto,
+  SortQueryDto,
+} from '../common/dtos/pagination.dto';
 
 import { User } from './models/user.model';
-import { CreateUserDto } from './dtos/create.dto';
+import { CreateUserBodyDto } from './dtos/create.dto';
 import { ReadAllUsersQueryDto } from './dtos/read.dto';
-import { UpdateUserEmailDto, UpdateUserDto } from './dtos/update.dto';
+import { UpdateUserEmailBodyDto, UpdateUserBodyDto } from './dtos/update.dto';
 
 @Injectable()
 export class UserService {
@@ -28,7 +31,7 @@ export class UserService {
     private readonly appService: AppService,
   ) {}
 
-  public create(payload: CreateUserDto, transaction?: Transaction) {
+  public create(payload: CreateUserBodyDto, transaction?: Transaction) {
     return this.userModel.create(
       {
         first_name: payload.first_name,
@@ -78,8 +81,8 @@ export class UserService {
     };
 
     const filters = _.omit(queries, [
-      ..._.keys(new PaginationDto()),
-      ..._.keys(new SortDto()),
+      ..._.keys(new PaginationQueryDto()),
+      ..._.keys(new SortQueryDto()),
       'sort_by',
     ]);
 
@@ -104,7 +107,7 @@ export class UserService {
 
   public async updateEmail(
     id: string,
-    payload: UpdateUserEmailDto,
+    payload: UpdateUserEmailBodyDto,
     transaction?: Transaction,
   ) {
     const existingUser = await this.readByEmail(payload.email);
@@ -128,7 +131,7 @@ export class UserService {
 
   public async update(
     id: string,
-    payload: UpdateUserDto,
+    payload: UpdateUserBodyDto,
     transaction?: Transaction,
   ) {
     await this.userModel.update(
