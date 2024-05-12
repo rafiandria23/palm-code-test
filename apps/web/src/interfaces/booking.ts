@@ -1,7 +1,6 @@
 import type { Dayjs } from 'dayjs';
 
-import type { Country } from './country';
-import type { Surfboard } from './surfboard';
+import type { Country, Surfboard } from './setting';
 
 export interface Booking {
   id: string;
@@ -13,17 +12,23 @@ export interface Booking {
   visit_date: Dayjs | Date | string;
   surfboard_id: string;
   national_id_photo_url: string;
-  country: Country;
+  visitor_country: Country;
   surfboard: Surfboard;
   created_at: Dayjs | Date | string;
   updated_at: Dayjs | Date | string;
   deleted_at: Dayjs | Date | string | null;
 }
 
-export interface BookingForm
-  extends Omit<
+export interface BookingFormPayload
+  extends Pick<
     Booking,
-    'id' | 'national_id_photo_url' | 'created_at' | 'updated_at' | 'deleted_at'
+    | 'visitor_name'
+    | 'visitor_email'
+    | 'visitor_phone'
+    | 'visitor_country_id'
+    | 'visitor_experience'
+    | 'visit_date'
+    | 'surfboard_id'
   > {
   national_id_photo: string;
 }

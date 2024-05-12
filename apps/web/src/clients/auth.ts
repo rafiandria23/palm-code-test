@@ -1,4 +1,6 @@
 import type { SuccessTimestamp } from '../interfaces/api';
+import type { AuthToken } from '../interfaces/auth';
+
 import BaseClient from './base';
 
 class AuthClient extends BaseClient {
@@ -6,37 +8,41 @@ class AuthClient extends BaseClient {
     super('/auth');
   }
 
-  async signUp() {
-    const { data } = await this.client.post('/sign-up');
+  public async signUp() {
+    const { data } = await this.client.post<
+      SuccessTimestamp<undefined, AuthToken>
+    >('/sign-up');
 
     return data;
   }
 
-  async signIn() {
-    const { data } = await this.client.post('/sign-in');
+  public async signIn() {
+    const { data } = await this.client.post<
+      SuccessTimestamp<undefined, AuthToken>
+    >('/sign-in');
 
     return data;
   }
 
-  async updateEmail(): Promise<SuccessTimestamp> {
+  public async updateEmail() {
     const { data } = await this.client.patch<SuccessTimestamp>('/email');
 
     return data;
   }
 
-  async updatePassword(): Promise<SuccessTimestamp> {
+  public async updatePassword() {
     const { data } = await this.client.patch<SuccessTimestamp>('/password');
 
     return data;
   }
 
-  async deactivate(): Promise<SuccessTimestamp> {
+  public async deactivate() {
     const { data } = await this.client.patch<SuccessTimestamp>('/deactivate');
 
     return data;
   }
 
-  async delete(): Promise<SuccessTimestamp> {
+  public async delete() {
     const { data } = await this.client.delete<SuccessTimestamp>('/');
 
     return data;

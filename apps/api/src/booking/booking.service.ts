@@ -49,7 +49,13 @@ export class BookingService {
       national_id_photo_url: '',
     });
 
-    return this.commonService.successTimestamp({ data: createdBooking });
+    return this.commonService.successTimestamp({
+      data: {
+        ...createdBooking,
+        visitor_country: existingCountry,
+        surfboard: existingSurfboard,
+      },
+    });
   }
 
   public async readAll(queries: ReadAllBookingsQueryDto) {
@@ -85,8 +91,23 @@ export class BookingService {
     });
   }
 
-  public readById(id: string) {
-    return this.bookingModel.findByPk(id);
+  public async readById(id: string) {
+    const existingBooking = await this.bookingModel.findByPk(id);
+
+    if (!existingBooking) {
+      return existingBooking;
+    }
+
+    const [existingCountry, existingSurfboard] = await Promise.all([
+      this.settingService.readCountryById(existingBooking.visitor_country_id),
+      this.settingService.readSurfboardById(existingBooking.surfboard_id),
+    ]);
+
+    return {
+      ...existingBooking,
+      visitor_country: existingCountry,
+      surfboard: existingSurfboard,
+    };
   }
 
   public async update(id: string, payload: UpdateBookingBodyDto) {

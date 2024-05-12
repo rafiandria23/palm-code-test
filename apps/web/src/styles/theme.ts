@@ -38,6 +38,16 @@ const theme = createTheme({
     h6: {
       fontFamily: bodoniModaFont.style.fontFamily,
     },
+    button: {
+      textTransform: 'none',
+    },
+  },
+  components: {
+    MuiInputBase: {
+      defaultProps: {
+        disableInjectingGlobalStyles: true,
+      },
+    },
   },
 });
 

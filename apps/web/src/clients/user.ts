@@ -1,5 +1,6 @@
 import type { SuccessTimestamp } from '../interfaces/api';
 import type { User } from '../interfaces/user';
+
 import BaseClient from './base';
 
 class UserClient extends BaseClient {
@@ -7,15 +8,7 @@ class UserClient extends BaseClient {
     super('/users');
   }
 
-  async readById(id: string): Promise<SuccessTimestamp<undefined, User>> {
-    const { data } = await this.client.get<SuccessTimestamp<undefined, User>>(
-      `/${id}`,
-    );
-
-    return data;
-  }
-
-  async me(): Promise<SuccessTimestamp<undefined, User>> {
+  public async me() {
     const { data } = await this.client.get<SuccessTimestamp<undefined, User>>(
       '/me',
     );
@@ -23,7 +16,15 @@ class UserClient extends BaseClient {
     return data;
   }
 
-  async readAll(): Promise<SuccessTimestamp<undefined, User[]>> {
+  public async readById(id: string) {
+    const { data } = await this.client.get<SuccessTimestamp<undefined, User>>(
+      `/${id}`,
+    );
+
+    return data;
+  }
+
+  public async readAll() {
     const { data } = await this.client.get<SuccessTimestamp<undefined, User[]>>(
       '/',
     );
@@ -31,7 +32,7 @@ class UserClient extends BaseClient {
     return data;
   }
 
-  async update(): Promise<SuccessTimestamp> {
+  public async update() {
     const { data } = await this.client.put<SuccessTimestamp>('/');
 
     return data;

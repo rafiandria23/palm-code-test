@@ -1,6 +1,6 @@
 import type { SuccessTimestamp } from '../interfaces/api';
-import type { Country } from '../interfaces/country';
-import type { Surfboard } from '../interfaces/surfboard';
+import type { Country, Surfboard } from '../interfaces/setting';
+
 import BaseClient from './base';
 
 class SettingClient extends BaseClient {
@@ -8,19 +8,23 @@ class SettingClient extends BaseClient {
     super('/settings');
   }
 
-  async readCountryById(
-    id: string,
-  ): Promise<SuccessTimestamp<undefined, Country>> {
-    const { data } = await this.client.get<
+  public async createCountry() {
+    const { data } = await this.client.post<
       SuccessTimestamp<undefined, Country>
-    >(`/countries/${id}`);
+    >('/countries');
 
     return data;
   }
 
-  async readAllCountries(): Promise<
-    SuccessTimestamp<{ total: number }, Country[]>
-  > {
+  public async createSurfboard() {
+    const { data } = await this.client.post<
+      SuccessTimestamp<undefined, Country>
+    >('/surfboards');
+
+    return data;
+  }
+
+  public async readAllCountries() {
     const { data } = await this.client.get<
       SuccessTimestamp<{ total: number }, Country[]>
     >('/countries');
@@ -28,9 +32,23 @@ class SettingClient extends BaseClient {
     return data;
   }
 
-  async readSurfboardById(
-    id: string,
-  ): Promise<SuccessTimestamp<undefined, Surfboard>> {
+  public async readCountryById(id: string) {
+    const { data } = await this.client.get<
+      SuccessTimestamp<undefined, Country>
+    >(`/countries/${id}`);
+
+    return data;
+  }
+
+  public async readAllSurfboards() {
+    const { data } = await this.client.get<
+      SuccessTimestamp<undefined, Surfboard[]>
+    >('/surfboards');
+
+    return data;
+  }
+
+  public async readSurfboardById(id: string) {
     const { data } = await this.client.get<
       SuccessTimestamp<undefined, Surfboard>
     >(`/surfboards/${id}`);
@@ -38,10 +56,34 @@ class SettingClient extends BaseClient {
     return data;
   }
 
-  async readAllSurfboards(): Promise<SuccessTimestamp<undefined, Surfboard[]>> {
-    const { data } = await this.client.get<
-      SuccessTimestamp<undefined, Surfboard[]>
-    >('/surfboards');
+  public async updateCountry(id: string) {
+    const { data } = await this.client.put<SuccessTimestamp>(
+      `/countries/${id}`,
+    );
+
+    return data;
+  }
+
+  public async updateSurfboard(id: string) {
+    const { data } = await this.client.put<SuccessTimestamp>(
+      `/surfboards/${id}`,
+    );
+
+    return data;
+  }
+
+  public async deleteCountry(id: string) {
+    const { data } = await this.client.delete<SuccessTimestamp>(
+      `/countries/${id}`,
+    );
+
+    return data;
+  }
+
+  public async deleteSurfboard(id: string) {
+    const { data } = await this.client.delete<SuccessTimestamp>(
+      `/surfboards/${id}`,
+    );
 
     return data;
   }
