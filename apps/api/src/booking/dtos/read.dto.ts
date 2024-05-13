@@ -15,14 +15,6 @@ import {
 
 import { BookingSortProperty } from '../constants/read.constant';
 
-export class ReadBookingByIdParamDto {
-  @ApiProperty()
-  @IsUUID('4')
-  @IsString()
-  @IsNotEmpty()
-  public readonly id: string;
-}
-
 export class ReadAllBookingsQueryDto extends IntersectionType(
   PaginationQueryDto,
   SortQueryDto,
@@ -31,7 +23,8 @@ export class ReadAllBookingsQueryDto extends IntersectionType(
   @IsEnum(BookingSortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by: BookingSortProperty = BookingSortProperty.CREATED_AT;
+  public readonly sort_by?: BookingSortProperty =
+    BookingSortProperty.CREATED_AT;
 
   @ApiProperty()
   @IsString()
@@ -57,4 +50,12 @@ export class ReadAllBookingsQueryDto extends IntersectionType(
   @IsString()
   @IsOptional()
   public readonly visit_date?: string;
+}
+
+export class ReadBookingByIdParamDto {
+  @ApiProperty()
+  @IsUUID('4')
+  @IsString()
+  @IsNotEmpty()
+  public readonly id: string;
 }

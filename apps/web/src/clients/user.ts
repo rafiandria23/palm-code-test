@@ -1,11 +1,26 @@
-import type { SuccessTimestamp } from '../interfaces/api';
-import type { User } from '../interfaces/user';
+import type { SuccessTimestamp, ReadAllMetadata } from '../interfaces/api';
+import type {
+  User,
+  ReadUserByIdPayload,
+  ReadAllUsersPayload,
+  UpdateUserPayload,
+} from '../interfaces/user';
 
 import BaseClient from './base';
 
 class UserClient extends BaseClient {
   constructor() {
     super('/users');
+  }
+
+  public async readAll(payload: ReadAllUsersPayload) {
+    const { data } = await this.client.get<
+      SuccessTimestamp<ReadAllMetadata, User[]>
+    >('/', {
+      params: payload,
+    });
+
+    return data;
   }
 
   public async me() {
@@ -16,24 +31,16 @@ class UserClient extends BaseClient {
     return data;
   }
 
-  public async readById(id: string) {
+  public async readById(payload: ReadUserByIdPayload) {
     const { data } = await this.client.get<SuccessTimestamp<undefined, User>>(
-      `/${id}`,
+      `/${payload.id}`,
     );
 
     return data;
   }
 
-  public async readAll() {
-    const { data } = await this.client.get<SuccessTimestamp<undefined, User[]>>(
-      '/',
-    );
-
-    return data;
-  }
-
-  public async update() {
-    const { data } = await this.client.put<SuccessTimestamp>('/');
+  public async update(payload: UpdateUserPayload) {
+    const { data } = await this.client.put<SuccessTimestamp>('/', payload);
 
     return data;
   }

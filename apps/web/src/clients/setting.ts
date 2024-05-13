@@ -1,5 +1,20 @@
+import _ from 'lodash';
+
 import type { SuccessTimestamp } from '../interfaces/api';
-import type { Country, Surfboard } from '../interfaces/setting';
+import type {
+  Country,
+  Surfboard,
+  CreateCountryPayload,
+  CreateSurfboardPayload,
+  ReadAllCountriesPayload,
+  ReadCountryByIdPayload,
+  ReadAllSurfboardsPayload,
+  ReadSurfboardByIdPayload,
+  UpdateCountryPayload,
+  UpdateSurfboardPayload,
+  DeleteCountryPayload,
+  DeleteSurfboardPayload,
+} from '../interfaces/setting';
 
 import BaseClient from './base';
 
@@ -8,81 +23,87 @@ class SettingClient extends BaseClient {
     super('/settings');
   }
 
-  public async createCountry() {
+  public async createCountry(payload: CreateCountryPayload) {
     const { data } = await this.client.post<
       SuccessTimestamp<undefined, Country>
-    >('/countries');
+    >('/countries', payload);
 
     return data;
   }
 
-  public async createSurfboard() {
+  public async createSurfboard(payload: CreateSurfboardPayload) {
     const { data } = await this.client.post<
       SuccessTimestamp<undefined, Country>
-    >('/surfboards');
+    >('/surfboards', payload);
 
     return data;
   }
 
-  public async readAllCountries() {
+  public async readAllCountries(payload: ReadAllCountriesPayload) {
     const { data } = await this.client.get<
       SuccessTimestamp<{ total: number }, Country[]>
-    >('/countries');
+    >('/countries', {
+      params: payload,
+    });
 
     return data;
   }
 
-  public async readCountryById(id: string) {
+  public async readCountryById(payload: ReadCountryByIdPayload) {
     const { data } = await this.client.get<
       SuccessTimestamp<undefined, Country>
-    >(`/countries/${id}`);
+    >(`/countries/${payload.id}`);
 
     return data;
   }
 
-  public async readAllSurfboards() {
+  public async readAllSurfboards(payload: ReadAllSurfboardsPayload) {
     const { data } = await this.client.get<
       SuccessTimestamp<undefined, Surfboard[]>
-    >('/surfboards');
+    >('/surfboards', {
+      params: payload,
+    });
 
     return data;
   }
 
-  public async readSurfboardById(id: string) {
+  public async readSurfboardById(payload: ReadSurfboardByIdPayload) {
     const { data } = await this.client.get<
       SuccessTimestamp<undefined, Surfboard>
-    >(`/surfboards/${id}`);
+    >(`/surfboards/${payload.id}`);
 
     return data;
   }
 
-  public async updateCountry(id: string) {
+  public async updateCountry(payload: UpdateCountryPayload) {
     const { data } = await this.client.put<SuccessTimestamp>(
-      `/countries/${id}`,
+      `/countries/${payload.id}`,
+      _.omit(payload, ['id']),
     );
 
     return data;
   }
 
-  public async updateSurfboard(id: string) {
+  public async updateSurfboard(payload: UpdateSurfboardPayload) {
     const { data } = await this.client.put<SuccessTimestamp>(
-      `/surfboards/${id}`,
+      `/surfboards/${payload.id}`,
+      _.omit(payload, ['id']),
     );
 
     return data;
   }
 
-  public async deleteCountry(id: string) {
+  public async deleteCountry(payload: DeleteCountryPayload) {
     const { data } = await this.client.delete<SuccessTimestamp>(
-      `/countries/${id}`,
+      `/countries/${payload.id}`,
     );
 
     return data;
   }
 
-  public async deleteSurfboard(id: string) {
+  public async deleteSurfboard(payload: DeleteSurfboardPayload) {
     const { data } = await this.client.delete<SuccessTimestamp>(
-      `/surfboards/${id}`,
+      `/surfboards/${payload.id}`,
     );
 
     return data;

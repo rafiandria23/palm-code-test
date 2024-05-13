@@ -1,5 +1,11 @@
 import type { SuccessTimestamp } from '../interfaces/api';
-import type { AuthToken } from '../interfaces/auth';
+import type {
+  AuthToken,
+  SignUpPayload,
+  SignInPayload,
+  UpdateEmailPayload,
+  UpdatePasswordPayload,
+} from '../interfaces/auth';
 
 import BaseClient from './base';
 
@@ -8,30 +14,36 @@ class AuthClient extends BaseClient {
     super('/auth');
   }
 
-  public async signUp() {
+  public async signUp(payload: SignUpPayload) {
     const { data } = await this.client.post<
       SuccessTimestamp<undefined, AuthToken>
-    >('/sign-up');
+    >('/sign-up', payload);
 
     return data;
   }
 
-  public async signIn() {
+  public async signIn(payload: SignInPayload) {
     const { data } = await this.client.post<
       SuccessTimestamp<undefined, AuthToken>
-    >('/sign-in');
+    >('/sign-in', payload);
 
     return data;
   }
 
-  public async updateEmail() {
-    const { data } = await this.client.patch<SuccessTimestamp>('/email');
+  public async updateEmail(payload: UpdateEmailPayload) {
+    const { data } = await this.client.patch<SuccessTimestamp>(
+      '/email',
+      payload,
+    );
 
     return data;
   }
 
-  public async updatePassword() {
-    const { data } = await this.client.patch<SuccessTimestamp>('/password');
+  public async updatePassword(payload: UpdatePasswordPayload) {
+    const { data } = await this.client.patch<SuccessTimestamp>(
+      '/password',
+      payload,
+    );
 
     return data;
   }

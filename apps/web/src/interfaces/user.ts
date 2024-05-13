@@ -1,11 +1,23 @@
-import type { Dayjs } from 'dayjs';
+import type { Timestamp } from './date';
+import { PaginationPayload, SortPayload } from './api';
 
 export interface User {
   id: string;
   first_name: string;
-  last_name?: string;
+  last_name: string | null;
   email: string;
-  created_at: Dayjs | Date | string;
-  updated_at: Dayjs | Date | string;
-  deleted_at: Dayjs | Date | string | null;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+  deleted_at: Timestamp | null;
 }
+
+export type ReadAllUsersPayload = PaginationPayload &
+  SortPayload<User> &
+  Pick<User, 'first_name' | 'last_name' | 'email'>;
+
+export type ReadUserByIdPayload = Pick<User, 'id'>;
+
+export type UpdateUserPayload = Pick<
+  User,
+  'id' | 'first_name' | 'last_name' | 'email'
+>;

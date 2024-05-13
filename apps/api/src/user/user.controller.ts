@@ -34,6 +34,12 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
+  @Get('/')
+  @HttpCode(HttpStatus.OK)
+  public readAll(@Query() queries: ReadAllUsersQueryDto) {
+    return this.userService.readAll(queries);
+  }
+
   @Get('/me')
   @HttpCode(HttpStatus.OK)
   public me(@Request() request: AuthRequest) {
@@ -50,12 +56,6 @@ export class UserController {
     }
 
     return this.commonService.successTimestamp({ data: existingUser });
-  }
-
-  @Get('/')
-  @HttpCode(HttpStatus.OK)
-  public readAll(@Query() queries: ReadAllUsersQueryDto) {
-    return this.userService.readAll(queries);
   }
 
   @Put('/')

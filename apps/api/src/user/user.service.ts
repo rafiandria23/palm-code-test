@@ -56,18 +56,6 @@ export class UserService {
     });
   }
 
-  public async me(id: string) {
-    const existingUser = await this.readById(id);
-
-    if (!existingUser) {
-      throw new UnprocessableEntityException('User does not exist!');
-    }
-
-    return this.commonService.successTimestamp({
-      data: existingUser,
-    });
-  }
-
   public async readAll(queries: ReadAllUsersQueryDto) {
     const options: Omit<FindAndCountOptions<User>, 'group'> = {
       where: {},
@@ -98,6 +86,18 @@ export class UserService {
         total,
       },
       data: existingUsers,
+    });
+  }
+
+  public async me(id: string) {
+    const existingUser = await this.readById(id);
+
+    if (!existingUser) {
+      throw new UnprocessableEntityException('User does not exist!');
+    }
+
+    return this.commonService.successTimestamp({
+      data: existingUser,
     });
   }
 

@@ -15,14 +15,6 @@ import {
 
 import { UserSortProperty } from '../constants/read.constant';
 
-export class ReadUserByIdParamDto {
-  @ApiProperty()
-  @IsUUID('4')
-  @IsString()
-  @IsNotEmpty()
-  public readonly id: string;
-}
-
 export class ReadAllUsersQueryDto extends IntersectionType(
   PaginationQueryDto,
   SortQueryDto,
@@ -31,7 +23,7 @@ export class ReadAllUsersQueryDto extends IntersectionType(
   @IsEnum(UserSortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by: UserSortProperty = UserSortProperty.FIRST_NAME;
+  public readonly sort_by?: UserSortProperty = UserSortProperty.FIRST_NAME;
 
   @ApiProperty()
   @IsString()
@@ -47,4 +39,12 @@ export class ReadAllUsersQueryDto extends IntersectionType(
   @IsString()
   @IsOptional()
   public readonly email?: string;
+}
+
+export class ReadUserByIdParamDto {
+  @ApiProperty()
+  @IsUUID('4')
+  @IsString()
+  @IsNotEmpty()
+  public readonly id: string;
 }

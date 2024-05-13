@@ -1,10 +1,14 @@
+import _ from 'lodash';
+
+import type { SuccessTimestamp, ReadAllMetadata } from '../interfaces/api';
 import type {
-  SuccessTimestamp,
-  PaginationQuery,
-  SortQuery,
-  ReadAllMetadata,
-} from '../interfaces/api';
-import { Booking } from '../interfaces/booking';
+  Booking,
+  CreateBookingPayload,
+  ReadAllBookingsPayload,
+  ReadBookingByIdPayload,
+  UpdateBookingPayload,
+  DeleteBookingPayload,
+} from '../interfaces/booking';
 
 import BaseClient from './base';
 
@@ -13,38 +17,45 @@ class BookingClient extends BaseClient {
     super('/bookings');
   }
 
-  public async create() {
+  public async create(payload: CreateBookingPayload) {
     const { data } = await this.client.post<
       SuccessTimestamp<undefined, Booking>
-    >('/');
+    >('/', payload);
 
     return data;
   }
 
-  public async readAll(queries) {
+  public async readAll(payload: ReadAllBookingsPayload) {
     const { data } = await this.client.get<
       SuccessTimestamp<ReadAllMetadata, Booking[]>
-    >('/');
+    >('/', {
+      params: payload,
+    });
 
     return data;
   }
 
-  public async readById(id: string) {
+  public async readById(payload: ReadBookingByIdPayload) {
     const { data } = await this.client.get<
       SuccessTimestamp<undefined, Booking>
-    >(`/${id}`);
+    >(`/${payload.id}`);
 
     return data;
   }
 
-  public async update(id: string) {
-    const { data } = await this.client.put<SuccessTimestamp>(`/${id}`);
+  public async update(payload: UpdateBookingPayload) {
+    const { data } = await this.client.put<SuccessTimestamp>(
+      `/${payload.id}`,
+      _.omit(payload, ['id']),
+    );
 
     return data;
   }
 
-  public async delete(id: string) {
-    const { data } = await this.client.delete<SuccessTimestamp>(`/${id}`);
+  public async delete(payload: DeleteBookingPayload) {
+    const { data } = await this.client.delete<SuccessTimestamp>(
+      `/${payload.id}`,
+    );
 
     return data;
   }

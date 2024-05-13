@@ -18,14 +18,6 @@ import {
   SurfboardSortProperty,
 } from '../constants/read.constant';
 
-export class ReadCountryByIdParamDto {
-  @ApiProperty()
-  @IsUUID('4')
-  @IsString()
-  @IsNotEmpty()
-  public readonly id: string;
-}
-
 export class ReadAllCountriesQueryDto extends IntersectionType(
   PaginationQueryDto,
   SortQueryDto,
@@ -34,7 +26,7 @@ export class ReadAllCountriesQueryDto extends IntersectionType(
   @IsEnum(CountrySortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by: CountrySortProperty = CountrySortProperty.NAME;
+  public readonly sort_by?: CountrySortProperty = CountrySortProperty.NAME;
 
   @ApiProperty()
   @IsString()
@@ -52,7 +44,7 @@ export class ReadAllCountriesQueryDto extends IntersectionType(
   public readonly dial_code?: string;
 }
 
-export class ReadSurfboardByIdParamDto {
+export class ReadCountryByIdParamDto {
   @ApiProperty()
   @IsUUID('4')
   @IsString()
@@ -68,10 +60,18 @@ export class ReadAllSurfboardsQueryDto extends IntersectionType(
   @IsEnum(SurfboardSortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by: SurfboardSortProperty = SurfboardSortProperty.NAME;
+  public readonly sort_by?: SurfboardSortProperty = SurfboardSortProperty.NAME;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
   public readonly name?: string;
+}
+
+export class ReadSurfboardByIdParamDto {
+  @ApiProperty()
+  @IsUUID('4')
+  @IsString()
+  @IsNotEmpty()
+  public readonly id: string;
 }

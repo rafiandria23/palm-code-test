@@ -10,7 +10,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 
 import BeachImage from '../../public/beach.png';
 
-import type { BookingFormPayload } from '../interfaces/booking';
+import type { CreateBookingPayload } from '../interfaces/booking';
 
 const BookingForm = dynamic(() => import('../components/BookingForm'), {
   ssr: false,
@@ -19,7 +19,7 @@ const BookingForm = dynamic(() => import('../components/BookingForm'), {
 const IndexPage: FC = () => {
   const [, setLoading] = useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
-  const form = useForm<BookingFormPayload>({
+  const form = useForm<CreateBookingPayload>({
     mode: 'onBlur',
   });
 

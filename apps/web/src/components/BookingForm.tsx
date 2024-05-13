@@ -3,19 +3,19 @@ import { useState, useMemo, useCallback, memo } from 'react';
 import { Stack, Typography, Button } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 
-import type { BookingFormPayload } from '../interfaces/booking';
+import type { CreateBookingPayload } from '../interfaces/booking';
 
 import VisitorDetailsForm from '../components/VisitorDetailsForm';
 import SurfingExperienceForm from '../components/SurfingExperienceForm';
 import IdVerificationForm from '../components/IdVerificationForm';
 
 export interface BookingFormProps {
-  onSubmit: (payload: BookingFormPayload) => Promise<void>;
+  onSubmit: (payload: CreateBookingPayload) => Promise<void>;
 }
 
 const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
   const [step, setStep] = useState<number>(1);
-  const { handleSubmit } = useFormContext<BookingFormPayload>();
+  const { handleSubmit } = useFormContext<CreateBookingPayload>();
 
   const steps = useMemo(
     () =>
@@ -52,7 +52,7 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
   }, [steps, step, setStep]);
 
   const handleRender = useCallback(() => {
-    const { title, component: FormStepComponent } = steps.get(step)!;
+    const { title, component: FormStepComponent } = steps.get(step);
 
     return (
       <>

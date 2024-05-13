@@ -2,10 +2,10 @@ import type { FC } from 'react';
 import { Stack, Grid, TextField } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form';
 
-import type { BookingFormPayload } from '../interfaces/booking';
+import type { CreateBookingPayload } from '../interfaces/booking';
 
 const SurfingExperienceForm: FC = () => {
-  const { control } = useFormContext<BookingFormPayload>();
+  const { control } = useFormContext<CreateBookingPayload>();
 
   return (
     <Stack>

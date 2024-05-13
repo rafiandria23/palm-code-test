@@ -1,11 +1,19 @@
 import type { FC } from 'react';
-import { Grid, TextField } from '@mui/material';
+import {
+  Grid,
+  Autocomplete,
+  TextField,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { useFormContext, Controller } from 'react-hook-form';
 
-import type { BookingFormPayload } from '../interfaces/booking';
+import type { Country } from '../interfaces/setting';
+import type { CreateBookingPayload } from '../interfaces/booking';
 
 const VisitorDetailsForm: FC = () => {
-  const { control } = useFormContext<BookingFormPayload>();
+  const { control } = useFormContext<CreateBookingPayload>();
 
   return (
     <Grid container spacing={2}>
@@ -17,23 +25,70 @@ const VisitorDetailsForm: FC = () => {
           name="visitor_name"
           render={({ field, fieldState }) => (
             <TextField
+              fullWidth
               disabled={field.disabled}
-              // type={formField.type}
+              type="text"
               name={field.name}
               label="Name"
               placeholder="Enter your name"
-              // select={formField.type === 'select'}
               onChange={field.onChange}
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={fieldState.error?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <CloseIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           )}
         />
       </Grid>
 
       <Grid item>
-        <TextField />
+        <Controller
+          key="visitor_country_id"
+          control={control}
+          disabled={false}
+          name="visitor_country_id"
+          render={({ field, fieldState }) => (
+            <Autocomplete
+              getOptionKey={(country: Country) => country.id}
+              getOptionLabel={(country: Country) =>
+                `${country.emoji} ${country.name}`
+              }
+              options={[]}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  fullWidth
+                  disabled={field.disabled}
+                  type="text"
+                  name={field.name}
+                  label="Country"
+                  // select={formField.type === 'select'}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  error={!!fieldState.error || fieldState.invalid}
+                  helperText={fieldState.error?.message}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton>
+                          <CloseIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
+            />
+          )}
+        />
       </Grid>
 
       <Grid item>
@@ -44,16 +99,25 @@ const VisitorDetailsForm: FC = () => {
           name="visitor_email"
           render={({ field, fieldState }) => (
             <TextField
+              fullWidth
               disabled={field.disabled}
-              // type={formField.type}
+              type="email"
               name={field.name}
               label="Email"
               placeholder="Enter your email"
-              // select={formField.type === 'select'}
               onChange={field.onChange}
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={fieldState.error?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <CloseIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           )}
         />
@@ -67,16 +131,25 @@ const VisitorDetailsForm: FC = () => {
           name="visitor_phone"
           render={({ field, fieldState }) => (
             <TextField
+              fullWidth
               disabled={field.disabled}
-              // type={formField.type}
+              type="tel"
               name={field.name}
               label="Whatsapp number"
               placeholder="Your active number"
-              // select={formField.type === 'select'}
               onChange={field.onChange}
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={fieldState.error?.message}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <CloseIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
           )}
         />
