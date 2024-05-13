@@ -34,7 +34,7 @@ export class ReadAllCountriesQueryDto extends IntersectionType(
   @IsEnum(CountrySortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by: CountrySortProperty = CountrySortProperty.ID;
+  public readonly sort_by: CountrySortProperty = CountrySortProperty.NAME;
 
   @ApiProperty()
   @IsString()
@@ -50,16 +50,6 @@ export class ReadAllCountriesQueryDto extends IntersectionType(
   @IsString()
   @IsOptional()
   public readonly dial_code?: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
-  public readonly unicode?: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
-  public readonly emoji?: string;
 }
 
 export class ReadSurfboardByIdParamDto {
@@ -78,7 +68,7 @@ export class ReadAllSurfboardsQueryDto extends IntersectionType(
   @IsEnum(SurfboardSortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by: SurfboardSortProperty = SurfboardSortProperty.ID;
+  public readonly sort_by: SurfboardSortProperty = SurfboardSortProperty.NAME;
 
   @ApiProperty()
   @IsString()

@@ -31,7 +31,7 @@ export class ReadAllBookingsQueryDto extends IntersectionType(
   @IsEnum(BookingSortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by: BookingSortProperty = BookingSortProperty.ID;
+  public readonly sort_by: BookingSortProperty = BookingSortProperty.CREATED_AT;
 
   @ApiProperty()
   @IsString()

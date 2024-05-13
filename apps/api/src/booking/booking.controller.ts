@@ -6,7 +6,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  // Request,
+  Request,
   Body,
   Param,
   Query,
@@ -14,11 +14,11 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-// import { AuthRequest } from '../common/interfaces/request.interface';
+import { AuthRequest } from '../common/interfaces/request.interface';
 import { DocumentTag } from '../common/constants/docs.constant';
 import { CommonService } from '../common/common.service';
 
-import { CreateBookingBodyDto } from './dtos/create.dto';
+// import { CreateBookingBodyDto } from './dtos/create.dto';
 import {
   ReadBookingByIdParamDto,
   ReadAllBookingsQueryDto,
@@ -37,11 +37,19 @@ export class BookingController {
 
   @Post('/')
   @HttpCode(HttpStatus.CREATED)
-  public create(
-    // @Request() request: AuthRequest,
-    @Body() payload: CreateBookingBodyDto,
+  public async create(
+    @Request() request: AuthRequest,
+    // @Body() payload: CreateBookingBodyDto,
   ) {
-    return this.bookingService.create(payload);
+    const nationalIdPhotoFile = await request.file();
+    const uploadedNationalIdPhotoFile = await this.commonService
+      .uploadFile(nationalIdPhotoFile.filename, nationalIdPhotoFile.file)
+      .on('httpUploadProgress', (progress) => {
+        console.info(progress);
+      })
+      .done();
+
+    return this.commonService.getFileUrl(uploadedNationalIdPhotoFile.Key);
   }
 
   @Get('/')

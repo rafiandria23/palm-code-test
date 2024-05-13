@@ -8,6 +8,7 @@ import {
   UpdatedAt,
   DeletedAt,
   AllowNull,
+  Unique,
 } from 'sequelize-typescript';
 
 @Table({
@@ -27,6 +28,7 @@ export class Surfboard extends Model<Surfboard> {
   })
   public id: string;
 
+  @Unique
   @Column
   public name: string;
 

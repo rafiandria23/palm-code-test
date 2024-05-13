@@ -31,7 +31,7 @@ export class ReadAllUsersQueryDto extends IntersectionType(
   @IsEnum(UserSortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by: UserSortProperty = UserSortProperty.ID;
+  public readonly sort_by: UserSortProperty = UserSortProperty.FIRST_NAME;
 
   @ApiProperty()
   @IsString()

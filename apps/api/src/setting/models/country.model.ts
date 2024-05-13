@@ -8,6 +8,7 @@ import {
   UpdatedAt,
   DeletedAt,
   AllowNull,
+  Unique,
 } from 'sequelize-typescript';
 
 @Table({
@@ -27,18 +28,18 @@ export class Country extends Model<Country> {
   })
   public id: string;
 
+  @Unique
   @Column
   public name: string;
 
+  @Unique
   @Column
   public code: string;
 
   @Column
   public dial_code: string;
 
-  @Column
-  public unicode: string;
-
+  @Unique
   @Column
   public emoji: string;
 

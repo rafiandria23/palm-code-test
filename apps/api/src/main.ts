@@ -42,12 +42,7 @@ async function bootstrap() {
   const apiHost = configService.get<string>('api.host');
   const apiPort = configService.get<number>('api.port');
 
-  app.register(multipart, {
-    // limits: {
-    //   fileSize:
-    // },
-    throwFileSizeLimit: true,
-  });
+  app.register(multipart);
 
   await app.listen(apiPort, apiHost);
 

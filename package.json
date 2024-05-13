@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@aws-sdk/client-s3": "^3.574.0",
+    "@aws-sdk/lib-storage": "^3.574.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
@@ -42,7 +43,8 @@
     "sequelize": "^6.37.3",
     "sequelize-typescript": "^2.1.6",
     "tipe-apa": "^0.4.7",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@nestjs/schematics": "^10.0.1",
@@ -70,6 +72,7 @@
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",
     "@types/sequelize": "^4.28.20",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.3.0",
     "@typescript-eslint/parser": "^7.3.0",
     "babel-jest": "^29.4.1",
@@ -87,6 +90,7 @@
     "nx": "19.0.0",
     "prettier": "^2.6.2",
     "sass": "1.62.1",
+    "sequelize-cli": "^6.6.2",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "typescript": "~5.4.2",

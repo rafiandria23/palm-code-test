@@ -8,6 +8,7 @@ import {
   UpdatedAt,
   DeletedAt,
   AllowNull,
+  Unique,
 } from 'sequelize-typescript';
 import dayjs from 'dayjs';
 
@@ -60,8 +61,11 @@ export class Booking extends Model<Booking> {
   })
   public surfboard_id: string;
 
-  @Column
-  public national_id_photo_url: string;
+  @Unique
+  @Column({
+    type: DataType.TEXT,
+  })
+  public national_id_photo_file_key: string;
 
   @CreatedAt
   @Column

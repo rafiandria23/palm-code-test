@@ -46,7 +46,7 @@ export class BookingService {
       visit_date: payload.visit_date,
       surfboard_id: existingSurfboard.id,
       // @TODO: Implement upload to S3!
-      national_id_photo_url: '',
+      national_id_photo_file_key: '',
     });
 
     return this.commonService.successTimestamp({
@@ -134,7 +134,7 @@ export class BookingService {
         visit_date: payload.visit_date,
         surfboard_id: existingSurfboard.id,
         // @TODO: Implement upload to S3!
-        national_id_photo_url: '',
+        national_id_photo_file_key: '',
       },
       {
         where: {

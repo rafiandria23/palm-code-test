@@ -37,7 +37,6 @@ export class SettingService {
       name: payload.name,
       code: payload.code,
       dial_code: payload.dial_code,
-      unicode: payload.unicode,
       emoji: payload.emoji,
     });
 
@@ -138,7 +137,6 @@ export class SettingService {
         name: payload.name,
         code: payload.code,
         dial_code: payload.dial_code,
-        unicode: payload.unicode,
         emoji: payload.emoji,
       },
       {

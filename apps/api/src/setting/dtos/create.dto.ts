@@ -20,11 +20,6 @@ export class CreateCountryBodyDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly unicode: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
   public readonly emoji: string;
 }
 

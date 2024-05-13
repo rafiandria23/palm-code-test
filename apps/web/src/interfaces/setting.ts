@@ -5,7 +5,6 @@ export interface Country {
   name: string;
   code: string;
   dial_code: string;
-  unicode: string;
   emoji: string;
   created_at: Dayjs | Date | string;
   updated_at: Dayjs | Date | string;

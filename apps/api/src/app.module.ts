@@ -36,11 +36,6 @@ import { AppService } from './app.service';
           password: configService.get<string>('db.pass'),
           database: configService.get<string>('db.name'),
           autoLoadModels: true,
-          // @TODO: Remove sync related options upon submission!
-          synchronize: true,
-          sync: {
-            force: true,
-          },
         };
       },
     }),
