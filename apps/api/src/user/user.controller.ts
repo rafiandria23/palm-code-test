@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
-import { AuthRequest } from '../common/interfaces/request.interface';
+import { ApiRequest } from '../common/interfaces/api.interface';
 import { DocumentTag } from '../common/constants/docs.constant';
 import { CommonService } from '../common/common.service';
 
@@ -42,7 +42,7 @@ export class UserController {
 
   @Get('/me')
   @HttpCode(HttpStatus.OK)
-  public me(@Request() request: AuthRequest) {
+  public me(@Request() request: ApiRequest) {
     return this.userService.me(request.auth.user_id);
   }
 
@@ -61,7 +61,7 @@ export class UserController {
   @Put('/')
   @HttpCode(HttpStatus.OK)
   public update(
-    @Request() request: AuthRequest,
+    @Request() request: ApiRequest,
     @Body() payload: UpdateUserBodyDto,
   ) {
     return this.userService.update(request.auth.user_id, payload);

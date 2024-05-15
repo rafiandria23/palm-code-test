@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import dayjs from 'dayjs';
+import { MultipartFile } from '@fastify/multipart';
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { Readable } from 'stream';
+import dayjs from 'dayjs';
 import path from 'path';
 import * as uuid from 'uuid';
 
@@ -34,18 +34,22 @@ export class CommonService {
     };
   }
 
-  public uploadFile(originalFilename: string, body: Readable) {
-    const key = `${uuid.v4()}${path.extname(originalFilename)}`;
+  public uploadFile(multipartFile: MultipartFile) {
+    const key = `${uuid.v4()}${path.extname(
+      multipartFile.filename,
+    )}`.toLocaleLowerCase();
 
     const uploadedFile = new Upload({
       client: this.s3Client,
       params: {
         Bucket: this.configService.get<string>('aws.s3BucketName'),
         Key: key,
+        ContentType: multipartFile.mimetype,
+        ContentEncoding: multipartFile.encoding,
         Metadata: {
-          original_filename: originalFilename,
+          original_filename: multipartFile.filename,
         },
-        Body: body,
+        Body: multipartFile.file,
       },
     });
 

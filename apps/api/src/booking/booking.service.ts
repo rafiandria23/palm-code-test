@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FindAndCountOptions, Op } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 
 import {
   PaginationQueryDto,
@@ -18,6 +19,7 @@ import { UpdateBookingBodyDto } from './dtos/update.dto';
 @Injectable()
 export class BookingService {
   constructor(
+    private readonly sequelize: Sequelize,
     @InjectModel(Booking) private readonly bookingModel: typeof Booking,
     private readonly commonService: CommonService,
     private readonly settingService: SettingService,
@@ -45,49 +47,80 @@ export class BookingService {
       surfing_experience: payload.surfing_experience,
       visit_date: payload.visit_date,
       surfboard_id: existingSurfboard.id,
-      // @TODO: Implement upload to S3!
-      national_id_photo_file_key: '',
+      national_id_photo_file_key: payload.national_id_photo_file_key,
     });
 
+    const result = createdBooking.toJSON();
+
+    _.set(
+      result,
+      'national_id_photo_url',
+      this.commonService.getFileUrl(result.national_id_photo_file_key),
+    );
+    _.set(result, 'visitor_country', existingCountry);
+    _.set(result, 'surfboard', existingSurfboard);
+
     return this.commonService.successTimestamp({
-      data: {
-        ...createdBooking,
-        visitor_country: existingCountry,
-        surfboard: existingSurfboard,
-      },
+      data: result,
     });
   }
 
   public async readAll(queries: ReadAllBookingsQueryDto) {
-    const options: Omit<FindAndCountOptions<Booking>, 'group'> = {
-      where: {},
-      offset: queries.page_size * (queries.page - 1),
-      limit: queries.page_size,
-      order: [[queries.sort_by, queries.sort]],
-    };
+    return await this.sequelize.transaction(async (transaction) => {
+      const options: Omit<FindAndCountOptions<Booking>, 'group'> = {
+        where: {},
+        offset: queries.page_size * (queries.page - 1),
+        limit: queries.page_size,
+        order: [[queries.sort_by, queries.sort]],
+        transaction,
+      };
 
-    const filters = _.omit(queries, [
-      ..._.keys(new PaginationQueryDto()),
-      ..._.keys(new SortQueryDto()),
-      'sort_by',
-    ]);
+      const filters = _.omit(queries, [
+        ..._.keys(new PaginationQueryDto()),
+        ..._.keys(new SortQueryDto()),
+        'sort_by',
+      ]);
 
-    if (!_.isEmpty(filters)) {
-      _.forOwn(filters, (filterValue, filterKey) => {
-        options.where[filterKey] = {
-          [Op.iLike]: `%${filterValue}%`,
-        };
+      if (!_.isEmpty(filters)) {
+        _.forOwn(filters, (filterValue, filterKey) => {
+          options.where[filterKey] = {
+            [Op.iLike]: `%${filterValue}%`,
+          };
+        });
+      }
+
+      const { count: total, rows: existingBookings } =
+        await this.bookingModel.findAndCountAll(options);
+
+      const result = [];
+
+      for (const existingBooking of existingBookings.map((existingBooking) =>
+        existingBooking.toJSON(),
+      )) {
+        const [existingCountry, existingSurfboard] = await Promise.all([
+          this.settingService.readCountryById(
+            existingBooking.visitor_country_id,
+            {
+              transaction,
+            },
+          ),
+          this.settingService.readSurfboardById(existingBooking.surfboard_id, {
+            transaction,
+          }),
+        ]);
+
+        _.set(existingBooking, 'visitor_country', existingCountry);
+        _.set(existingBooking, 'surfboard', existingSurfboard);
+
+        result.push(existingBooking);
+      }
+
+      return this.commonService.successTimestamp({
+        metadata: {
+          total,
+        },
+        data: result,
       });
-    }
-
-    const { count: total, rows: existingBookings } =
-      await this.bookingModel.findAndCountAll(options);
-
-    return this.commonService.successTimestamp({
-      metadata: {
-        total,
-      },
-      data: existingBookings,
     });
   }
 
@@ -103,11 +136,17 @@ export class BookingService {
       this.settingService.readSurfboardById(existingBooking.surfboard_id),
     ]);
 
-    return {
-      ...existingBooking,
-      visitor_country: existingCountry,
-      surfboard: existingSurfboard,
-    };
+    const result = existingBooking.toJSON();
+
+    _.set(
+      result,
+      'national_id_photo_url',
+      this.commonService.getFileUrl(result.national_id_photo_file_key),
+    );
+    _.set(result, 'visitor_country', existingCountry);
+    _.set(result, 'surfboard', existingSurfboard);
+
+    return _.omit(result, ['national_id_photo_file_key']);
   }
 
   public async update(id: string, payload: UpdateBookingBodyDto) {
@@ -124,28 +163,31 @@ export class BookingService {
       throw new UnprocessableEntityException('Surfboard does not exist!');
     }
 
-    const [existingBooking] = await this.bookingModel.update(
-      {
-        visitor_name: payload.visitor_name,
-        visitor_email: payload.visitor_email,
-        visitor_phone: payload.visitor_phone,
-        visitor_country_id: existingCountry.id,
-        surfing_experience: payload.surfing_experience,
-        visit_date: payload.visit_date,
-        surfboard_id: existingSurfboard.id,
-        // @TODO: Implement upload to S3!
-        national_id_photo_file_key: '',
-      },
-      {
-        where: {
-          id,
-        },
-      },
-    );
+    const existingBooking = await this.bookingModel.findByPk(id);
 
     if (!existingBooking) {
       throw new UnprocessableEntityException('Booking does not exist!');
     }
+
+    if (
+      existingBooking.national_id_photo_file_key !==
+      payload.national_id_photo_file_key
+    ) {
+      await this.commonService.deleteFile(
+        existingBooking.national_id_photo_file_key,
+      );
+    }
+
+    await existingBooking.update({
+      visitor_name: payload.visitor_name,
+      visitor_email: payload.visitor_email,
+      visitor_phone: payload.visitor_phone,
+      visitor_country_id: existingCountry.id,
+      surfing_experience: payload.surfing_experience,
+      visit_date: payload.visit_date,
+      surfboard_id: existingSurfboard.id,
+      national_id_photo_file_key: payload.national_id_photo_file_key,
+    });
 
     return this.commonService.successTimestamp();
   }

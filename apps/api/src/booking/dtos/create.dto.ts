@@ -12,6 +12,7 @@ import {
   MinLength,
   MaxLength,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateBookingBodyDto {
   @ApiProperty()
@@ -59,4 +60,10 @@ export class CreateBookingBodyDto {
   @IsString()
   @IsNotEmpty()
   public readonly surfboard_id: string;
+
+  @ApiProperty()
+  @Transform(({ value }) => value.toLowerCase())
+  @IsString()
+  @IsNotEmpty()
+  public readonly national_id_photo_file_key: string;
 }

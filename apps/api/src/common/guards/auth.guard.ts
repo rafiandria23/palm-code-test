@@ -9,7 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { AuthRequest } from '../interfaces/request.interface';
+import { ApiRequest } from '../interfaces/api.interface';
 import { AuthMetadata } from '../constants/auth.constant';
 
 @Injectable()
@@ -27,10 +27,10 @@ export class AuthGuard implements CanActivate {
     );
 
     if (isPublic) {
-      return true;
+      return isPublic;
     }
 
-    const request = ctx.switchToHttp().getRequest<AuthRequest>();
+    const request = ctx.switchToHttp().getRequest<ApiRequest>();
     const accessToken = this.extractAccessToken(request);
     const payload = await this.authenticate(accessToken);
 
@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate {
     return true;
   }
 
-  private extractAccessToken(request: AuthRequest) {
+  private extractAccessToken(request: ApiRequest) {
     const authorizationHeader = request.headers.authorization;
 
     if (!authorizationHeader) {

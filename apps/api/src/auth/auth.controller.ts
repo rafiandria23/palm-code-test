@@ -10,9 +10,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiHeader } from '@nestjs/swagger';
 
-import { AuthRequest } from '../common/interfaces/request.interface';
-import { Public } from '../common/decorators/auth.decorator';
+import { ApiRequest } from '../common/interfaces/api.interface';
 import { DocumentTag } from '../common/constants/docs.constant';
+import { Public } from '../common/decorators/auth.decorator';
 
 import { SignUpBodyDto, SignInBodyDto } from './dtos/sign.dto';
 import { UpdateEmailBodyDto, UpdatePasswordBodyDto } from './dtos/update.dto';
@@ -46,7 +46,7 @@ export class AuthController {
   @Patch('/email')
   @HttpCode(HttpStatus.OK)
   public updateEmail(
-    @Request() request: AuthRequest,
+    @Request() request: ApiRequest,
     @Body() payload: UpdateEmailBodyDto,
   ) {
     return this.authService.updateEmail(request.auth.user_id, payload);
@@ -61,7 +61,7 @@ export class AuthController {
   @Patch('/password')
   @HttpCode(HttpStatus.OK)
   public updatePassword(
-    @Request() request: AuthRequest,
+    @Request() request: ApiRequest,
     @Body() payload: UpdatePasswordBodyDto,
   ) {
     return this.authService.updatePassword(request.auth.user_id, payload);
@@ -75,7 +75,7 @@ export class AuthController {
   })
   @Delete('/deactivate')
   @HttpCode(HttpStatus.OK)
-  public deactivate(@Request() request: AuthRequest) {
+  public deactivate(@Request() request: ApiRequest) {
     return this.authService.deactivate(request.auth.user_id);
   }
 
@@ -87,7 +87,7 @@ export class AuthController {
   })
   @Delete('/')
   @HttpCode(HttpStatus.OK)
-  public delete(@Request() request: AuthRequest) {
+  public delete(@Request() request: ApiRequest) {
     return this.authService.delete(request.auth.user_id);
   }
 }

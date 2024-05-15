@@ -4,9 +4,10 @@ import {
   Get,
   Put,
   Delete,
+  UseInterceptors,
   HttpCode,
   HttpStatus,
-  Request,
+  Response,
   Body,
   Param,
   Query,
@@ -14,11 +15,17 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { AuthRequest } from '../common/interfaces/request.interface';
+import { ApiResponse } from '../common/interfaces/api.interface';
 import { DocumentTag } from '../common/constants/docs.constant';
+import {
+  SUPPORTED_FILE_TYPE,
+  MEGABYTE,
+} from '../common/constants/file.constant';
+import { FileConfig } from '../common/decorators/file.decorator';
+import { FileInterceptor } from '../common/interceptors/file.interceptor';
 import { CommonService } from '../common/common.service';
 
-// import { CreateBookingBodyDto } from './dtos/create.dto';
+import { CreateBookingBodyDto } from './dtos/create.dto';
 import {
   ReadBookingByIdParamDto,
   ReadAllBookingsQueryDto,
@@ -37,19 +44,26 @@ export class BookingController {
 
   @Post('/')
   @HttpCode(HttpStatus.CREATED)
-  public async create(
-    @Request() request: AuthRequest,
-    // @Body() payload: CreateBookingBodyDto,
-  ) {
-    const nationalIdPhotoFile = await request.file();
-    const uploadedNationalIdPhotoFile = await this.commonService
-      .uploadFile(nationalIdPhotoFile.filename, nationalIdPhotoFile.file)
-      .on('httpUploadProgress', (progress) => {
-        console.info(progress);
-      })
-      .done();
+  public create(@Body() payload: CreateBookingBodyDto) {
+    return this.bookingService.create(payload);
+  }
 
-    return this.commonService.getFileUrl(uploadedNationalIdPhotoFile.Key);
+  @Post('/uploads/national-id-photo')
+  @FileConfig({
+    field: 'national_id_photo',
+    type: SUPPORTED_FILE_TYPE.image,
+    size: 2 * MEGABYTE,
+  })
+  @UseInterceptors(FileInterceptor)
+  @HttpCode(HttpStatus.CREATED)
+  public async uploadNationalIdPhoto(@Response() response: ApiResponse) {
+    return response.send(
+      this.commonService.successTimestamp({
+        data: {
+          file_key: response.file.key,
+        },
+      }),
+    );
   }
 
   @Get('/')

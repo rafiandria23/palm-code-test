@@ -20,17 +20,11 @@ export interface Booking {
 }
 
 export interface CreateBookingPayload
-  extends Pick<
+  extends Omit<
     Booking,
-    | 'visitor_name'
-    | 'visitor_email'
-    | 'visitor_phone'
-    | 'visitor_country_id'
-    | 'visitor_experience'
-    | 'visit_date'
-    | 'surfboard_id'
+    'id' | 'national_id_photo_url' | 'created_at' | 'updated_at' | 'deleted_at'
   > {
-  national_id_photo: string;
+  national_id_photo_file_key: string;
 }
 
 export type ReadAllBookingsPayload = PaginationPayload &
