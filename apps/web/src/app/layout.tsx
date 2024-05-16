@@ -6,17 +6,18 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import {
   ThemeProvider,
   CssBaseline,
+  Stack,
+  Box,
   AppBar,
   Toolbar,
-  Stack,
 } from '@mui/material';
 
 import '../styles/global.scss';
 import theme from '../styles/theme';
 
-import SkyImage from '../../public/sky.png';
-import SurfingImage from '../../public/surfing.png';
-import LogoImage from '../../public/logo.svg';
+import LogoImage from '../assets/logo.svg';
+import SkyImage from '../assets/sky.png';
+import SurfingImage from '../assets/surfing.png';
 
 const NotistackProvider = dynamic(
   () => import('../components/NotistackProvider'),
@@ -35,7 +36,13 @@ export interface RootLayoutProps {
 const RootLayout: FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en">
-      <body>
+      <Stack
+        component="body"
+        sx={{
+          position: 'relative',
+          justifyContent: 'center',
+        }}
+      >
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -46,6 +53,7 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
                 <Image
                   alt="Sky."
                   src={SkyImage}
+                  priority
                   quality={100}
                   fill
                   sizes="100vw"
@@ -54,12 +62,13 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
                     objectPosition: '0 -8rem',
                     opacity: '20%',
                     position: 'absolute',
-                    zIndex: 1,
                   }}
                 />
+
                 <Image
                   alt="Surfing."
                   src={SurfingImage}
+                  priority
                   quality={100}
                   fill
                   sizes="100vw"
@@ -70,6 +79,8 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
                     zIndex: 2,
                   }}
                 />
+
+                {/* @TODO: BOOK VISIT */}
               </>
 
               {/* Header */}
@@ -91,6 +102,8 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
                   <Image
                     alt="Logo."
                     src={LogoImage}
+                    width={8}
+                    height={4}
                     style={{
                       width: '8rem',
                       height: '4rem',
@@ -100,7 +113,7 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
               </AppBar>
 
               {/* Main */}
-              <Stack
+              <Box
                 component="main"
                 sx={{
                   position: 'relative',
@@ -109,11 +122,11 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
                 }}
               >
                 {children}
-              </Stack>
+              </Box>
             </NotistackProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
-      </body>
+      </Stack>
     </html>
   );
 };

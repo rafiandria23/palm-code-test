@@ -25,6 +25,17 @@ class BookingClient extends BaseClient {
     return data;
   }
 
+  public async uploadNationalIdPhoto(file: File) {
+    const payload = new FormData();
+    payload.set('national_id_photo', file);
+
+    const { data } = await this.client.post<
+      SuccessTimestamp<undefined, { file_key: string }>
+    >('/uploads/national-id-photo', payload);
+
+    return data;
+  }
+
   public async readAll(payload: ReadAllBookingsPayload) {
     const { data } = await this.client.get<
       SuccessTimestamp<ReadAllMetadata, Booking[]>

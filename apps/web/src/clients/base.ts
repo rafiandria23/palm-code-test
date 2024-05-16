@@ -20,8 +20,12 @@ class BaseClient {
     const apiVersion = _.defaultTo(_.get(options, 'version'), 'v1');
 
     this.client = axios.create({
-      baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/${apiVersion}/${domainUrl}`,
+      baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/${apiVersion}${domainUrl}`,
       ...options,
+      headers: {
+        ...options?.headers,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_HARDCODED_ACCESS_TOKEN}`,
+      },
     });
   }
 }

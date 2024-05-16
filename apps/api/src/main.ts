@@ -48,6 +48,8 @@ async function bootstrap() {
   const apiHost = configService.get<string>('api.host');
   const apiPort = configService.get<number>('api.port');
 
+  app.enableCors();
+
   await app.listen(apiPort, apiHost);
 
   Logger.log(`🚀 API is running on: http://${apiHost}:${apiPort}`);

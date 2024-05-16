@@ -13,7 +13,7 @@ class UserClient extends BaseClient {
     super('/users');
   }
 
-  public async readAll(payload: ReadAllUsersPayload) {
+  public async readAll(payload?: ReadAllUsersPayload) {
     const { data } = await this.client.get<
       SuccessTimestamp<ReadAllMetadata, User[]>
     >('/', {

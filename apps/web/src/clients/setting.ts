@@ -39,7 +39,7 @@ class SettingClient extends BaseClient {
     return data;
   }
 
-  public async readAllCountries(payload: ReadAllCountriesPayload) {
+  public async readAllCountries(payload?: ReadAllCountriesPayload) {
     const { data } = await this.client.get<
       SuccessTimestamp<{ total: number }, Country[]>
     >('/countries', {
@@ -57,7 +57,7 @@ class SettingClient extends BaseClient {
     return data;
   }
 
-  public async readAllSurfboards(payload: ReadAllSurfboardsPayload) {
+  public async readAllSurfboards(payload?: ReadAllSurfboardsPayload) {
     const { data } = await this.client.get<
       SuccessTimestamp<undefined, Surfboard[]>
     >('/surfboards', {

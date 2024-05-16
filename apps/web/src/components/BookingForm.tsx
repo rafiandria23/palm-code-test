@@ -1,92 +1,123 @@
-import type { FC } from 'react';
+import type { FC, ReactElement, FormEventHandler } from 'react';
 import { useState, useMemo, useCallback, memo } from 'react';
-import { Stack, Typography, Button } from '@mui/material';
+import { useTheme, Stack, Box, Typography, Button } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 
-import type { CreateBookingPayload } from '../interfaces/booking';
+import type { CreateBookingFormPayload } from '../validations/booking';
 
 import VisitorDetailsForm from '../components/VisitorDetailsForm';
 import SurfingExperienceForm from '../components/SurfingExperienceForm';
-import IdVerificationForm from '../components/IdVerificationForm';
+import NationalIdVerificationForm from '../components/NationalIdVerificationForm';
+// import BookingDetails from './BookingDetails';
 
 export interface BookingFormProps {
-  onSubmit: (payload: CreateBookingPayload) => Promise<void>;
+  onSubmit(payload: CreateBookingFormPayload): Promise<void>;
 }
 
 const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
-  const [step, setStep] = useState<number>(1);
-  const { handleSubmit } = useFormContext<CreateBookingPayload>();
+  const theme = useTheme();
+  const { trigger, handleSubmit } = useFormContext<CreateBookingFormPayload>();
+  const [activeStep, setActiveStep] = useState<number>(0);
 
-  const steps = useMemo(
-    () =>
-      new Map([
-        [
-          1,
-          {
-            title: 'Visitor Details',
-            component: VisitorDetailsForm,
-          },
-        ],
-        [
-          2,
-          {
-            title: 'Surfing Experiences',
-            component: SurfingExperienceForm,
-          },
-        ],
-        [
-          3,
-          {
-            title: 'ID Verification',
-            component: IdVerificationForm,
-          },
-        ],
-      ]),
+  const steps = useMemo<
+    {
+      title: string;
+      component: ReactElement;
+      fields: Array<keyof CreateBookingFormPayload>;
+    }[]
+  >(
+    () => [
+      {
+        title: 'Visitor Details',
+        component: <VisitorDetailsForm />,
+        fields: ['name', 'country_id', 'email', 'phone'],
+      },
+      {
+        title: 'Surfing Experiences',
+        component: <SurfingExperienceForm />,
+        fields: ['surfing_experience', 'date', 'surfboard_id'],
+      },
+      {
+        title: 'ID Verification',
+        component: <NationalIdVerificationForm />,
+        fields: [],
+      },
+    ],
     [],
   );
 
-  const handleNextStep = useCallback(() => {
-    if (step < steps.size) {
-      setStep(step + 1);
-    }
-  }, [steps, step, setStep]);
+  const handleReset = useCallback(() => {
+    setActiveStep(0);
+  }, [setActiveStep]);
 
-  const handleRender = useCallback(() => {
-    const { title, component: FormStepComponent } = steps.get(step);
+  const handleNext = useCallback<FormEventHandler<HTMLFormElement>>(
+    async (e) => {
+      e.preventDefault();
 
-    return (
-      <>
-        <Typography
-          sx={{
-            textTransform: 'uppercase',
-          }}
-        >
-          {step}/{steps.size} {title}
-        </Typography>
+      const valid = await trigger(steps[activeStep].fields);
 
-        <FormStepComponent />
+      if (valid) {
+        if (activeStep < steps.length - 1) {
+          setActiveStep(activeStep + 1);
+          return;
+        }
 
-        {step === steps.size ? (
-          <Button type="submit">Book My Visit</Button>
-        ) : (
-          <Button onClick={handleNextStep}>Next</Button>
-        )}
-      </>
-    );
-  }, [steps, step, handleNextStep]);
+        // await handleSubmit(onSubmit);
+
+        handleReset();
+      }
+    },
+    [trigger, steps, activeStep, setActiveStep, handleSubmit, handleReset],
+  );
 
   return (
     <Stack
       component="form"
       name="booking-form"
-      spacing={4}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleNext}
+      sx={{
+        height: '581px',
+        padding: theme.spacing(6),
+        justifyContent: 'space-between',
+      }}
     >
-      <Typography component="h1" variant="h2" gutterBottom>
-        Book Your Visit
-      </Typography>
+      <Box>
+        <Typography component="h1" variant="h2" gutterBottom>
+          Book Your Visit
+        </Typography>
 
-      {handleRender()}
+        <Typography
+          sx={{
+            fontWeight: 'normal',
+            textTransform: 'uppercase',
+            letterSpacing: '0.2em',
+          }}
+        >
+          {activeStep + 1}/{steps.length}: {steps[activeStep].title}
+        </Typography>
+      </Box>
+
+      {steps[activeStep].component}
+
+      <Box>
+        <Button
+          type="submit"
+          variant="contained"
+          size="large"
+          disableElevation
+          sx={{
+            paddingX: theme.spacing(8),
+            borderRadius: 'unset',
+            background: '#FFFFFF',
+            color: '#060B0C',
+            '&:hover': {
+              background: '#ECECEC',
+            },
+          }}
+        >
+          {activeStep + 1 >= steps.length ? 'Book My Visit' : 'Next'}
+        </Button>
+      </Box>
     </Stack>
   );
 };

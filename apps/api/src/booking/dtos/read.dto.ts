@@ -29,17 +29,17 @@ export class ReadAllBookingsQueryDto extends IntersectionType(
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public readonly visitor_name?: string;
+  public readonly name?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public readonly visitor_email?: string;
+  public readonly email?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public readonly visitor_phone?: string;
+  public readonly phone?: string;
 
   @ApiProperty()
   @IsString()
@@ -49,7 +49,7 @@ export class ReadAllBookingsQueryDto extends IntersectionType(
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public readonly visit_date?: string;
+  public readonly date?: string;
 }
 
 export class ReadBookingByIdParamDto {

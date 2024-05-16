@@ -27,7 +27,7 @@ export class BookingService {
 
   public async create(payload: CreateBookingBodyDto) {
     const [existingCountry, existingSurfboard] = await Promise.all([
-      this.settingService.readCountryById(payload.visitor_country_id),
+      this.settingService.readCountryById(payload.country_id),
       this.settingService.readSurfboardById(payload.surfboard_id),
     ]);
 
@@ -40,12 +40,12 @@ export class BookingService {
     }
 
     const createdBooking = await this.bookingModel.create({
-      visitor_name: payload.visitor_name,
-      visitor_email: payload.visitor_email,
-      visitor_phone: payload.visitor_phone,
-      visitor_country_id: existingCountry.id,
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
+      country_id: existingCountry.id,
       surfing_experience: payload.surfing_experience,
-      visit_date: payload.visit_date,
+      date: payload.date,
       surfboard_id: existingSurfboard.id,
       national_id_photo_file_key: payload.national_id_photo_file_key,
     });
@@ -57,7 +57,7 @@ export class BookingService {
       'national_id_photo_url',
       this.commonService.getFileUrl(result.national_id_photo_file_key),
     );
-    _.set(result, 'visitor_country', existingCountry);
+    _.set(result, 'country', existingCountry);
     _.set(result, 'surfboard', existingSurfboard);
 
     return this.commonService.successTimestamp({
@@ -98,18 +98,15 @@ export class BookingService {
         existingBooking.toJSON(),
       )) {
         const [existingCountry, existingSurfboard] = await Promise.all([
-          this.settingService.readCountryById(
-            existingBooking.visitor_country_id,
-            {
-              transaction,
-            },
-          ),
+          this.settingService.readCountryById(existingBooking.country_id, {
+            transaction,
+          }),
           this.settingService.readSurfboardById(existingBooking.surfboard_id, {
             transaction,
           }),
         ]);
 
-        _.set(existingBooking, 'visitor_country', existingCountry);
+        _.set(existingBooking, 'country', existingCountry);
         _.set(existingBooking, 'surfboard', existingSurfboard);
 
         result.push(existingBooking);
@@ -132,7 +129,7 @@ export class BookingService {
     }
 
     const [existingCountry, existingSurfboard] = await Promise.all([
-      this.settingService.readCountryById(existingBooking.visitor_country_id),
+      this.settingService.readCountryById(existingBooking.country_id),
       this.settingService.readSurfboardById(existingBooking.surfboard_id),
     ]);
 
@@ -143,7 +140,7 @@ export class BookingService {
       'national_id_photo_url',
       this.commonService.getFileUrl(result.national_id_photo_file_key),
     );
-    _.set(result, 'visitor_country', existingCountry);
+    _.set(result, 'country', existingCountry);
     _.set(result, 'surfboard', existingSurfboard);
 
     return _.omit(result, ['national_id_photo_file_key']);
@@ -151,7 +148,7 @@ export class BookingService {
 
   public async update(id: string, payload: UpdateBookingBodyDto) {
     const [existingCountry, existingSurfboard] = await Promise.all([
-      this.settingService.readCountryById(payload.visitor_country_id),
+      this.settingService.readCountryById(payload.country_id),
       this.settingService.readSurfboardById(payload.surfboard_id),
     ]);
 
@@ -179,12 +176,12 @@ export class BookingService {
     }
 
     await existingBooking.update({
-      visitor_name: payload.visitor_name,
-      visitor_email: payload.visitor_email,
-      visitor_phone: payload.visitor_phone,
-      visitor_country_id: existingCountry.id,
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
+      country_id: existingCountry.id,
       surfing_experience: payload.surfing_experience,
-      visit_date: payload.visit_date,
+      date: payload.date,
       surfboard_id: existingSurfboard.id,
       national_id_photo_file_key: payload.national_id_photo_file_key,
     });

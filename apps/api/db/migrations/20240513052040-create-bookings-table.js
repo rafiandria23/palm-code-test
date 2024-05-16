@@ -12,19 +12,19 @@ module.exports = {
         primaryKey: true,
         defaultValue: Sequelize.UUIDV4,
       },
-      visitor_name: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      visitor_email: {
+      email: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      visitor_phone: {
+      phone: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      visitor_country_id: {
+      country_id: {
         type: Sequelize.UUID,
         allowNull: false,
       },
@@ -32,7 +32,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      visit_date: {
+      date: {
         type: Sequelize.DATEONLY,
         allowNull: false,
       },

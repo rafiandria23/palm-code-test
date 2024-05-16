@@ -18,6 +18,9 @@ const interFont = InterFont({
 });
 
 const theme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
   typography: {
     fontFamily: interFont.style.fontFamily,
     h1: {
@@ -46,6 +49,11 @@ const theme = createTheme({
     MuiInputBase: {
       defaultProps: {
         disableInjectingGlobalStyles: true,
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: 'filled',
       },
     },
   },

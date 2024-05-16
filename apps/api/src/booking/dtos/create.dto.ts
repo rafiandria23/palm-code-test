@@ -18,7 +18,7 @@ export class CreateBookingBodyDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly visitor_name: string;
+  public readonly name: string;
 
   @ApiProperty({
     format: 'email',
@@ -26,19 +26,19 @@ export class CreateBookingBodyDto {
   @IsEmail()
   @IsString()
   @IsNotEmpty()
-  public readonly visitor_email: string;
+  public readonly email: string;
 
   @ApiProperty()
   @IsPhoneNumber()
   @IsString()
   @IsNotEmpty()
-  public readonly visitor_phone: string;
+  public readonly phone: string;
 
   @ApiProperty()
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly visitor_country_id: string;
+  public readonly country_id: string;
 
   @ApiProperty()
   @Max(10)
@@ -53,7 +53,7 @@ export class CreateBookingBodyDto {
   @IsDateString()
   @IsString()
   @IsNotEmpty()
-  public readonly visit_date: string;
+  public readonly date: string;
 
   @ApiProperty()
   @IsUUID('4')

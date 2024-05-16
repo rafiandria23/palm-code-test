@@ -1,33 +1,49 @@
+import _ from 'lodash';
 import type { FC } from 'react';
-import {
-  Grid,
-  Autocomplete,
-  TextField,
-  InputAdornment,
-  IconButton,
-} from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
+import { useState, useCallback, useEffect } from 'react';
+import { Grid, Autocomplete, TextField } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form';
 
 import type { Country } from '../interfaces/setting';
-import type { CreateBookingPayload } from '../interfaces/booking';
+import type { CreateBookingFormPayload } from '../validations/booking';
+import SettingClient from '../clients/setting';
 
 const VisitorDetailsForm: FC = () => {
-  const { control } = useFormContext<CreateBookingPayload>();
+  const { control } = useFormContext<CreateBookingFormPayload>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [countries, setCountries] = useState<Country[]>([]);
+
+  const fetchCountries = useCallback(async () => {
+    setLoading(true);
+
+    // Warning: Bad practice! Refactoring will be done upon submission.
+    const client = new SettingClient();
+
+    const { data } = await client.readAllCountries();
+
+    setCountries(data);
+
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (_.isEmpty(countries)) {
+      fetchCountries();
+    }
+  }, [countries, fetchCountries]);
 
   return (
-    <Grid container spacing={2}>
-      <Grid item>
+    <Grid container spacing={4}>
+      <Grid item xs={6}>
         <Controller
-          key="visitor_name"
+          key="name"
           control={control}
-          disabled={false}
-          name="visitor_name"
+          name="name"
           render={({ field, fieldState }) => (
             <TextField
               fullWidth
               disabled={field.disabled}
-              type="text"
+              type="txt"
               name={field.name}
               label="Name"
               placeholder="Enter your name"
@@ -35,55 +51,35 @@ const VisitorDetailsForm: FC = () => {
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={fieldState.error?.message}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <CloseIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
             />
           )}
         />
       </Grid>
 
-      <Grid item>
+      <Grid item xs={6}>
         <Controller
-          key="visitor_country_id"
+          key="country_id"
           control={control}
-          disabled={false}
-          name="visitor_country_id"
+          name="country_id"
           render={({ field, fieldState }) => (
             <Autocomplete
-              getOptionKey={(country: Country) => country.id}
-              getOptionLabel={(country: Country) =>
-                `${country.emoji} ${country.name}`
-              }
-              options={[]}
+              fullWidth
+              disabled={field.disabled}
+              loading={loading}
+              options={countries}
+              getOptionKey={(country) => country.id}
+              getOptionLabel={(country) => `${country.emoji} ${country.name}`}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              onChange={(__, value) => field.onChange(_.get(value, 'id'))}
+              onBlur={field.onBlur}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  fullWidth
-                  disabled={field.disabled}
                   type="text"
                   name={field.name}
                   label="Country"
-                  // select={formField.type === 'select'}
-                  onChange={field.onChange}
-                  onBlur={field.onBlur}
                   error={!!fieldState.error || fieldState.invalid}
                   helperText={fieldState.error?.message}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton>
-                          <CloseIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
                 />
               )}
             />
@@ -91,12 +87,11 @@ const VisitorDetailsForm: FC = () => {
         />
       </Grid>
 
-      <Grid item>
+      <Grid item xs={6}>
         <Controller
-          key="visitor_email"
+          key="email"
           control={control}
-          disabled={false}
-          name="visitor_email"
+          name="email"
           render={({ field, fieldState }) => (
             <TextField
               fullWidth
@@ -109,26 +104,16 @@ const VisitorDetailsForm: FC = () => {
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={fieldState.error?.message}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <CloseIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
             />
           )}
         />
       </Grid>
 
-      <Grid item>
+      <Grid item xs={6}>
         <Controller
-          key="visitor_phone"
+          key="phone"
           control={control}
-          disabled={false}
-          name="visitor_phone"
+          name="phone"
           render={({ field, fieldState }) => (
             <TextField
               fullWidth
@@ -141,15 +126,6 @@ const VisitorDetailsForm: FC = () => {
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={fieldState.error?.message}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton>
-                      <CloseIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
             />
           )}
         />

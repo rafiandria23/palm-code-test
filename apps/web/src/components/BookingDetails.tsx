@@ -1,16 +1,14 @@
 import type { FC } from 'react';
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Stack, Grid, Typography } from '@mui/material';
+import { useState, useRef, useEffect } from 'react';
+import { Stack, Grid, Box, Typography } from '@mui/material';
 
-const BookingDetails: FC = () => {
+export interface BookingDetailsProps {
+  onTimeout(): void;
+}
+
+const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
   const [remainingSeconds, setRemainingSeconds] = useState<number>(10);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
-  const router = useRouter();
-
-  const handleRefreshPage = useCallback(() => {
-    router.refresh();
-  }, [router]);
 
   useEffect(() => {
     countdownRef.current = setTimeout(() => {
@@ -19,7 +17,7 @@ const BookingDetails: FC = () => {
         return;
       }
 
-      handleRefreshPage();
+      onTimeout();
     }, 1000);
 
     return () => {
@@ -27,24 +25,82 @@ const BookingDetails: FC = () => {
         clearTimeout(countdownRef.current);
       }
     };
-  }, [remainingSeconds, setRemainingSeconds, handleRefreshPage]);
+  }, [onTimeout, remainingSeconds, setRemainingSeconds]);
 
   return (
-    <Stack>
-      <Typography>You&apos;re In!</Typography>
-      <Typography>
-        Your store visit is booking and you&apos;re ready to ride the shopping
-        wave. Here&apos; s your detail:
-      </Typography>
+    <Stack spacing={4}>
+      <Box>
+        <Typography gutterBottom>You&apos;re In!</Typography>
 
-      <Grid container></Grid>
+        <Typography paragraph>
+          Your store visit is booking and you&apos;re ready to ride the shopping
+          wave. Here&apos; s your detail:
+        </Typography>
+      </Box>
 
-      <Typography>
+      <Grid container columnSpacing={4}>
+        <Grid item xs={6}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#6A6A6A',
+            }}
+          >
+            Name:
+          </Typography>
+
+          <Typography>John Doe</Typography>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#6A6A6A',
+            }}
+          >
+            Country:
+          </Typography>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#6A6A6A',
+            }}
+          >
+            Email:
+          </Typography>
+
+          <Typography>john@doe.com</Typography>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#6A6A6A',
+            }}
+          >
+            Visit date:
+          </Typography>
+
+          <Typography>23/04/2024</Typography>
+        </Grid>
+      </Grid>
+
+      <Typography paragraph>
         We look forward to seeing you at the #Swellmatch store! Your booking
         details already sent to your email and whatsapp
       </Typography>
 
-      <Typography>
+      <Typography
+        variant="body2"
+        sx={{
+          color: '#6A6A6A',
+        }}
+      >
         This form will refresh automatically in {remainingSeconds} seconds
       </Typography>
     </Stack>

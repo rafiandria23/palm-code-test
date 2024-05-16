@@ -32,18 +32,18 @@ export class Booking extends Model<Booking> {
   public id: string;
 
   @Column
-  public visitor_name: string;
+  public name: string;
 
   @Column
-  public visitor_email: string;
+  public email: string;
 
   @Column
-  public visitor_phone: string;
+  public phone: string;
 
   @Column({
     type: DataType.UUID,
   })
-  public visitor_country_id: string;
+  public country_id: string;
 
   @Column
   public surfing_experience: number;
@@ -51,10 +51,10 @@ export class Booking extends Model<Booking> {
   @Column({
     type: DataType.DATEONLY,
     get(this: Booking) {
-      return dayjs(this.getDataValue('visit_date')).format(DATE_FORMAT);
+      return dayjs(this.getDataValue('date')).format(DATE_FORMAT);
     },
   })
-  visit_date: string;
+  date: string;
 
   @Column({
     type: DataType.UUID,

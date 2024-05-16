@@ -44,7 +44,7 @@ export class FileInterceptor implements NestInterceptor {
     const multipartFile = await request.file();
 
     if (!multipartFile) {
-      throw new BadRequestException('File is required!');
+      throw new BadRequestException('File must not be empty!');
     }
 
     if (multipartFile.fieldname.trim().toLowerCase() !== fileConfig.field) {
