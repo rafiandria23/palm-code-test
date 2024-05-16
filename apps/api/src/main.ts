@@ -5,9 +5,13 @@ import {
   NestFastifyApplication,
   FastifyAdapter,
 } from '@nestjs/platform-fastify';
+import multipart from '@fastify/multipart';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
-import { AppModule } from './app/app.module';
+import { MEGABYTE } from './common/constants/file.constant';
+import { DocumentTag } from './common/constants/docs.constant';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -16,6 +20,11 @@ async function bootstrap() {
       logger: true,
     }),
   );
+  app.register(multipart, {
+    limits: {
+      fileSize: 5 * MEGABYTE,
+    },
+  });
 
   const configService = app.get(ConfigService);
 
@@ -27,16 +36,19 @@ async function bootstrap() {
     .setTitle('Palm Code Test API')
     .setDescription('Test for Palm Code.')
     .setVersion('1.0')
-    .addTag('Auth')
-    .addTag('User')
-    .addTag('Booking')
-    .addBearerAuth({ type: 'http', name: 'User' })
+    .addTag(DocumentTag.SETTING)
+    .addTag(DocumentTag.AUTH)
+    .addTag(DocumentTag.USER)
+    .addTag(DocumentTag.BOOKING)
+    .addBearerAuth({ type: 'http', name: DocumentTag.USER })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);
 
   const apiHost = configService.get<string>('api.host');
   const apiPort = configService.get<number>('api.port');
+
+  app.enableCors();
 
   await app.listen(apiPort, apiHost);
 
