@@ -4,10 +4,8 @@ export enum PaginationPage {
 
 export enum PaginationSize {
   MIN = 1,
-  // MAX = 100,
-  MAX = 1000,
-  // DEFAULT = 10,
-  DEFAULT = 500,
+  MAX = 500,
+  DEFAULT = 10,
 }
 
 export enum SortDirection {
