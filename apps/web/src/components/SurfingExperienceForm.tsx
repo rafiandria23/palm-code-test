@@ -27,7 +27,9 @@ import SurfboardSliderMarkLabel from './SurfboardSliderMarkLabel';
 
 const SurfingExperienceForm: FC = () => {
   const { loading } = useAppSelector((state) => state.booking);
-  const surfboards = settingApi.useReadAllSurfboardsQuery({});
+  const surfboards = settingApi.useReadAllSurfboardsQuery({
+    page_size: 500,
+  });
   const theme = useTheme();
   const formCtx = useFormContext<CreateBookingFormPayload>();
 

@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import type { FC } from 'react';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { Grid, Autocomplete, TextField, IconButton } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
@@ -13,7 +13,9 @@ import settingApi from '../services/setting';
 
 const VisitorDetailsForm: FC = () => {
   const { loading } = useAppSelector((state) => state.booking);
-  const countries = settingApi.useReadAllCountriesQuery({});
+  const countries = settingApi.useReadAllCountriesQuery({
+    page_size: 500,
+  });
   const formCtx = useFormContext<CreateBookingFormPayload>();
 
   const handleClear = useCallback(

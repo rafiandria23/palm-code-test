@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { Booking, BookingState } from '../interfaces/booking';
+import type { BookingState } from '../interfaces/booking';
 
 const initialState: BookingState = {
   loading: false,
