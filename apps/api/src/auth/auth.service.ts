@@ -9,6 +9,7 @@ import { CommonService } from '../common/common.service';
 import { UserService } from '../user/user.service';
 
 import { UserPassword } from './models/user-password.model';
+import { AuthTokenDataDto } from './dtos';
 import { SignUpBodyDto, SignInBodyDto } from './dtos/sign.dto';
 import { UpdateEmailBodyDto, UpdatePasswordBodyDto } from './dtos/update.dto';
 
@@ -49,7 +50,7 @@ export class AuthService {
         ),
       ]);
 
-      return this.commonService.successTimestamp({
+      return this.commonService.successTimestamp<undefined, AuthTokenDataDto>({
         data: {
           access_token: accessToken,
         },
@@ -100,7 +101,7 @@ export class AuthService {
       user_id: existingUser.id,
     });
 
-    return this.commonService.successTimestamp({
+    return this.commonService.successTimestamp<undefined, AuthTokenDataDto>({
       data: {
         access_token: accessToken,
       },

@@ -40,7 +40,7 @@ async function bootstrap() {
     .addTag(DocumentTag.AUTH)
     .addTag(DocumentTag.USER)
     .addTag(DocumentTag.BOOKING)
-    .addBearerAuth({ type: 'http', name: DocumentTag.USER })
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);

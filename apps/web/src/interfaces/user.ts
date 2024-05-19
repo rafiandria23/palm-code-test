@@ -13,7 +13,7 @@ export interface User {
 
 export type ReadAllUsersPayload = PaginationPayload &
   SortPayload<User> &
-  Pick<User, 'first_name' | 'last_name' | 'email'>;
+  Partial<Pick<User, 'first_name' | 'last_name' | 'email'>>;
 
 export type ReadUserByIdPayload = Pick<User, 'id'>;
 

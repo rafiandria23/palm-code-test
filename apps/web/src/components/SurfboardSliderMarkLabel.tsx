@@ -1,3 +1,5 @@
+'use client';
+
 import type { FC, ReactNode, CSSProperties } from 'react';
 import { useTheme, SliderMarkLabel, Typography } from '@mui/material';
 

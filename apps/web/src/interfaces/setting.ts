@@ -29,13 +29,13 @@ export type CreateSurfboardPayload = Pick<Surfboard, 'name'>;
 
 export type ReadAllCountriesPayload = PaginationPayload &
   SortPayload<Omit<Country, 'emoji'>> &
-  Pick<Country, 'name' | 'code' | 'dial_code'>;
+  Partial<Pick<Country, 'name' | 'code' | 'dial_code'>>;
 
 export type ReadCountryByIdPayload = Pick<Country, 'id'>;
 
 export type ReadAllSurfboardsPayload = PaginationPayload &
   SortPayload<Surfboard> &
-  Pick<Surfboard, 'name'>;
+  Partial<Pick<Surfboard, 'name'>>;
 
 export type ReadSurfboardByIdPayload = Pick<Surfboard, 'id'>;
 

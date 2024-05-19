@@ -2,7 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class DeleteCountryParamDto {
-  @ApiProperty()
+  @ApiProperty({
+    format: 'uuid',
+  })
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
@@ -10,7 +12,9 @@ export class DeleteCountryParamDto {
 }
 
 export class DeleteSurfboardParamDto {
-  @ApiProperty()
+  @ApiProperty({
+    format: 'uuid',
+  })
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()

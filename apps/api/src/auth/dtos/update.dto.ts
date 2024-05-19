@@ -16,13 +16,19 @@ export class UpdateEmailBodyDto {
 }
 
 export class UpdatePasswordBodyDto {
-  @ApiProperty()
+  @ApiProperty({
+    minLength: PasswordLength.MIN,
+    format: 'password',
+  })
   @MinLength(PasswordLength.MIN)
   @IsString()
   @IsNotEmpty()
   public readonly old_password: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    minLength: PasswordLength.MIN,
+    format: 'password',
+  })
   @MinLength(PasswordLength.MIN)
   @IsString()
   @IsNotEmpty()

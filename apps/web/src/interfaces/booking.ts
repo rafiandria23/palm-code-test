@@ -33,14 +33,35 @@ export interface CreateBookingPayload
   national_id_photo_file_key: string;
 }
 
+export interface CreateBookingFormPayload
+  extends Pick<
+    Booking,
+    | 'name'
+    | 'email'
+    | 'phone'
+    | 'country_id'
+    | 'surfing_experience'
+    | 'date'
+    | 'surfboard_id'
+  > {
+  national_id_photo: File;
+}
+
 export type ReadAllBookingsPayload = PaginationPayload &
   SortPayload<
     Omit<Booking, 'national_id_photo_url' | 'country' | 'surfboard'>
   > &
-  Pick<Booking, 'name' | 'email' | 'phone' | 'surfing_experience' | 'date'>;
+  Partial<
+    Pick<Booking, 'name' | 'email' | 'phone' | 'surfing_experience' | 'date'>
+  >;
 
 export type ReadBookingByIdPayload = Pick<Booking, 'id'>;
 
 export type UpdateBookingPayload = Pick<Booking, 'id'> & CreateBookingPayload;
 
 export type DeleteBookingPayload = Pick<Booking, 'id'>;
+
+export interface BookingState {
+  loading: boolean;
+  data: Booking | null;
+}

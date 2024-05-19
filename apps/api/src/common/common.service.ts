@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 import path from 'path';
 import * as uuid from 'uuid';
 
+import { SuccessTimestampDto } from './dtos/success-timestamp.dto';
+
 @Injectable()
 export class CommonService {
   private readonly s3Client: S3Client;
@@ -21,14 +23,14 @@ export class CommonService {
     });
   }
 
-  public successTimestamp({
-    success = true,
-    metadata = undefined,
-    data = undefined,
-  } = {}) {
+  public successTimestamp<MD = undefined, D = undefined>(
+    payload?: Partial<SuccessTimestampDto<MD, D>> | undefined,
+  ): SuccessTimestampDto<MD, D> {
+    const { success = true, timestamp = dayjs(), metadata, data } = payload;
+
     return {
       success,
-      timestamp: dayjs(),
+      timestamp,
       metadata,
       data,
     };

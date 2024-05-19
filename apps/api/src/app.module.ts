@@ -1,5 +1,10 @@
 import { APP_PIPE, APP_GUARD, APP_FILTER } from '@nestjs/core';
-import { Module, ValidationPipe, BadRequestException } from '@nestjs/common';
+import {
+  Logger,
+  Module,
+  ValidationPipe,
+  BadRequestException,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { JwtModule } from '@nestjs/jwt';
@@ -59,6 +64,7 @@ import { AppService } from './app.service';
     BookingModule,
   ],
   providers: [
+    Logger,
     AppService,
     {
       provide: APP_PIPE,

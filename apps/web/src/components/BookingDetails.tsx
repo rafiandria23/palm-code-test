@@ -1,6 +1,12 @@
+'use client';
+
+import _ from 'lodash';
 import type { FC } from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { Stack, Grid, Box, Typography } from '@mui/material';
+import dayjs from 'dayjs';
+
+import { useAppSelector } from '../hooks/store';
 
 export interface BookingDetailsProps {
   onTimeout(): void;
@@ -9,6 +15,7 @@ export interface BookingDetailsProps {
 const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
   const [remainingSeconds, setRemainingSeconds] = useState<number>(10);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
+  const { data } = useAppSelector((state) => state.booking);
 
   useEffect(() => {
     countdownRef.current = setTimeout(() => {
@@ -28,17 +35,22 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
   }, [onTimeout, remainingSeconds, setRemainingSeconds]);
 
   return (
-    <Stack spacing={4}>
+    <Stack
+      sx={{
+        height: '100%',
+        justifyContent: 'space-between',
+      }}
+    >
       <Box>
         <Typography gutterBottom>You&apos;re In!</Typography>
 
         <Typography paragraph>
           Your store visit is booking and you&apos;re ready to ride the shopping
-          wave. Here&apos; s your detail:
+          wave. Here&apos;s your detail:
         </Typography>
       </Box>
 
-      <Grid container columnSpacing={4}>
+      <Grid container rowSpacing={2}>
         <Grid item xs={6}>
           <Typography
             variant="body2"
@@ -49,7 +61,7 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
             Name:
           </Typography>
 
-          <Typography>John Doe</Typography>
+          <Typography>{_.get(data, 'name')}</Typography>
         </Grid>
 
         <Grid item xs={6}>
@@ -60,6 +72,10 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
             }}
           >
             Country:
+          </Typography>
+
+          <Typography>
+            {_.get(data, 'country.emoji')} {_.get(data, 'country.name')}
           </Typography>
         </Grid>
 
@@ -73,7 +89,7 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
             Email:
           </Typography>
 
-          <Typography>john@doe.com</Typography>
+          <Typography>{_.get(data, 'email')}</Typography>
         </Grid>
 
         <Grid item xs={6}>
@@ -86,7 +102,11 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
             Visit date:
           </Typography>
 
-          <Typography>23/04/2024</Typography>
+          {data !== null && (
+            <Typography>
+              {dayjs(data.date, 'YYYY-MM-DD').format('DD/MM/YYYY')}
+            </Typography>
+          )}
         </Grid>
       </Grid>
 

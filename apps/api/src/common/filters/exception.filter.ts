@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { HttpAdapterHost } from '@nestjs/core';
 import {
+  Logger,
   Catch,
   ExceptionFilter as NestExceptionFilter,
   ArgumentsHost,
@@ -17,6 +18,7 @@ export class ExceptionFilter
   implements NestExceptionFilter<HttpException | Error>
 {
   constructor(
+    private readonly logger: Logger,
     private readonly httpAdapterHost: HttpAdapterHost<FastifyAdapter>,
     private readonly commonService: CommonService,
   ) {}
@@ -41,8 +43,7 @@ export class ExceptionFilter
         'message',
       );
     } else {
-      // @TODO: Change this with Nest.js' own LoggerService
-      console.error(exception);
+      this.logger.error(exception.message, exception.stack, exception.name);
     }
 
     if (isString(errData)) {

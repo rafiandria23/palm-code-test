@@ -10,12 +10,14 @@ import {
 } from 'sequelize';
 
 import {
+  ReadAllMetadataDto,
   PaginationQueryDto,
   SortQueryDto,
 } from '../common/dtos/pagination.dto';
 import { CommonService } from '../common/common.service';
 
 import { User } from './models/user.model';
+import { UserDto } from './dtos';
 import { CreateUserBodyDto } from './dtos/create.dto';
 import { ReadAllUsersQueryDto } from './dtos/read.dto';
 import { UpdateUserEmailBodyDto, UpdateUserBodyDto } from './dtos/update.dto';
@@ -81,23 +83,11 @@ export class UserService {
     const { count: total, rows: existingUsers } =
       await this.userModel.findAndCountAll(options);
 
-    return this.commonService.successTimestamp({
+    return this.commonService.successTimestamp<ReadAllMetadataDto, UserDto[]>({
       metadata: {
         total,
       },
       data: existingUsers,
-    });
-  }
-
-  public async me(id: string) {
-    const existingUser = await this.readById(id);
-
-    if (!existingUser) {
-      throw new UnprocessableEntityException('User does not exist!');
-    }
-
-    return this.commonService.successTimestamp({
-      data: existingUser,
     });
   }
 

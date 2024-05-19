@@ -58,7 +58,7 @@ export class FileInterceptor implements NestInterceptor {
     });
 
     if (
-      !_.defaultTo(_.get(foundMimeType, 'extensions'), []).includes(
+      !_.get(foundMimeType, 'extensions', []).includes(
         fileExtension.toLowerCase(),
       )
     ) {

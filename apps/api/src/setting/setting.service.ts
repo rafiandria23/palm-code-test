@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op, FindOptions, FindAndCountOptions } from 'sequelize';
 
 import {
+  ReadAllMetadataDto,
   PaginationQueryDto,
   SortQueryDto,
 } from '../common/dtos/pagination.dto';
@@ -11,6 +12,7 @@ import { CommonService } from '../common/common.service';
 
 import { Country } from './models/country.model';
 import { Surfboard } from './models/surfboard.model';
+import { CountryDto, SurfboardDto } from './dtos';
 import {
   CreateCountryBodyDto,
   CreateSurfboardBodyDto,
@@ -40,7 +42,9 @@ export class SettingService {
       emoji: payload.emoji,
     });
 
-    return this.commonService.successTimestamp({ data: createdCountry });
+    return this.commonService.successTimestamp<undefined, CountryDto>({
+      data: createdCountry,
+    });
   }
 
   public async createSurfboard(payload: CreateSurfboardBodyDto) {
@@ -48,7 +52,9 @@ export class SettingService {
       name: payload.name,
     });
 
-    return this.commonService.successTimestamp({ data: createdSurfboard });
+    return this.commonService.successTimestamp<undefined, SurfboardDto>({
+      data: createdSurfboard,
+    });
   }
 
   public async readAllCountries(queries: ReadAllCountriesQueryDto) {
@@ -76,7 +82,10 @@ export class SettingService {
     const { count: total, rows: existingCountries } =
       await this.countryModel.findAndCountAll(options);
 
-    return this.commonService.successTimestamp({
+    return this.commonService.successTimestamp<
+      ReadAllMetadataDto,
+      CountryDto[]
+    >({
       metadata: {
         total,
       },
@@ -116,7 +125,10 @@ export class SettingService {
     const { count: total, rows: existingSurfboards } =
       await this.surfboardModel.findAndCountAll(options);
 
-    return this.commonService.successTimestamp({
+    return this.commonService.successTimestamp<
+      ReadAllMetadataDto,
+      SurfboardDto[]
+    >({
       metadata: {
         total,
       },

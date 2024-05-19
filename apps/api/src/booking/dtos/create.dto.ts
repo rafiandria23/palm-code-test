@@ -14,6 +14,8 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
+import { SurfingExperience } from '../constants';
+
 export class CreateBookingBodyDto {
   @ApiProperty()
   @IsString()
@@ -34,20 +36,28 @@ export class CreateBookingBodyDto {
   @IsNotEmpty()
   public readonly phone: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    format: 'uuid',
+  })
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
   public readonly country_id: string;
 
-  @ApiProperty()
-  @Max(10)
-  @Min(0)
+  @ApiProperty({
+    minimum: SurfingExperience.MIN,
+    maximum: SurfingExperience.MAX,
+    default: SurfingExperience.MIN,
+  })
+  @Max(SurfingExperience.MAX)
+  @Min(SurfingExperience.MIN)
   @IsNumber()
   @IsNotEmpty()
   public readonly surfing_experience: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    format: 'date',
+  })
   @MaxLength(10)
   @MinLength(10)
   @IsDateString()
@@ -55,7 +65,9 @@ export class CreateBookingBodyDto {
   @IsNotEmpty()
   public readonly date: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    format: 'uuid',
+  })
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()

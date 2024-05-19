@@ -1,49 +1,105 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  Min,
-  Max,
-  IsString,
-  IsEmail,
-  IsPhoneNumber,
-  IsUUID,
-} from 'class-validator';
+import _ from 'lodash';
+import { object, any, string, number } from 'zod';
+import validator from 'validator';
+import dayjs from 'dayjs';
+import { extname } from 'path';
 
-import { IsDate } from './date';
+import type { SupportedFileType } from '../interfaces/file';
+import { SUPPORTED_FILE_TYPE, MEGABYTE } from '../constants/file';
 
-export class CreateBookingFormPayload {
-  @IsString({ message: 'Name is invalid!' })
-  @IsNotEmpty({ message: 'Name must not be empty!' })
-  public name: string;
+export const CreateBookingValidationSchema = object({
+  name: string({
+    required_error: 'Name must not be empty!',
+    invalid_type_error: 'Name is invalid!',
+  })
+    .trim()
+    .min(2, 'Name must not be empty!'),
+  email: string({
+    required_error: 'Email must not be empty!',
+    invalid_type_error: 'Email is invalid!',
+  })
+    .trim()
+    .email('Email is invalid!'),
+  phone: string({
+    required_error: 'Phone must not be empty!',
+    invalid_type_error: 'Phone is invalid!',
+  })
+    .trim()
+    .refine((value?: string) => {
+      if (!value) {
+        return false;
+      }
 
-  @IsEmail(undefined, { message: 'Email is invalid!' })
-  @IsString({ message: 'Email is invalid!' })
-  @IsNotEmpty({ message: 'Email must not be empty!' })
-  public email: string;
+      return validator.isMobilePhone(value, 'any', {
+        strictMode: true,
+      });
+    }, 'Phone is invalid!'),
+  country_id: string({
+    required_error: 'Country must not be empty!',
+    invalid_type_error: 'Country is invalid!',
+  })
+    .trim()
+    .uuid('Country is invalid!'),
+  surfing_experience: number({
+    required_error: 'Surfing experience must not be empty!',
+    invalid_type_error: 'Surfing experience is invalid!',
+  })
+    .min(0, 'Surfing experience must be between 0 and 10!')
+    .max(10, 'Surfing experience must be between 0 and 10!'),
+  date: string({
+    required_error: 'Date must not be empty!',
+    invalid_type_error: 'Date is invalid!',
+  })
+    .trim()
+    .refine((value?: string) => {
+      if (!value) {
+        return false;
+      }
 
-  @IsPhoneNumber(undefined, { message: 'Phone is invalid!' })
-  @IsString({ message: 'Phone is invalid!' })
-  @IsNotEmpty({ message: 'Phone must not be empty!' })
-  public phone: string;
+      const parsedDate = dayjs(value, 'YYYY-MM-DD');
 
-  @IsUUID('4', { message: 'Country is invalid!' })
-  @IsString({ message: 'Country is invalid!' })
-  @IsNotEmpty({ message: 'Country must not be empty!' })
-  public country_id: string;
+      return parsedDate.isValid();
+    }, 'Date is invalid!')
+    .refine((value?: string) => {
+      if (!value) {
+        return false;
+      }
 
-  @Max(10, { message: 'Surfing experience must not exceed 10!' })
-  @Min(0, { message: 'Surfing experience must be at least 0!' })
-  @IsNumber(undefined, { message: 'Surfing experience is invalid!' })
-  @IsNotEmpty({ message: 'Surfing experience must not be empty!' })
-  public surfing_experience: number;
+      const parsedDate = dayjs(value, 'YYYY-MM-DD');
 
-  @IsDate({ message: 'Date is invalid!' })
-  @IsString({ message: 'Date is invalid!' })
-  @IsNotEmpty({ message: 'Date must not be empty!' })
-  public date: string;
+      return parsedDate.isAfter(dayjs(), 'date');
+    }, 'Date must be at least tomorrow!'),
+  surfboard_id: string({
+    required_error: 'Surfboard must not be empty!',
+    invalid_type_error: 'Surfboard is invalid!',
+  })
+    .trim()
+    .uuid('Surfboard is invalid!'),
+  national_id_photo: any({
+    required_error: 'National ID photo must not be empty!',
+    invalid_type_error: 'National ID photo is invalid!',
+  })
+    .refine((value?: File) => {
+      if (!value) {
+        return false;
+      }
 
-  @IsUUID('4', { message: 'Surfboard is invalid!' })
-  @IsString({ message: 'Surfboard is invalid!' })
-  @IsNotEmpty({ message: 'Surfboard must not be empty!' })
-  public surfboard_id: string;
-}
+      const extension = extname(value.name);
+      const mimeType = _.find(SUPPORTED_FILE_TYPE.image, {
+        mimeType: value.type,
+      });
+
+      return _.get<SupportedFileType, 'extensions', string[]>(
+        mimeType,
+        'extensions',
+        [],
+      ).includes(extension.toLowerCase());
+    }, 'File format must be one of PNG, JPEG, and JPG!')
+    .refine((value?: File) => {
+      if (!value) {
+        return false;
+      }
+
+      return value.size <= 2 * MEGABYTE;
+    }, 'File size must not exceed 2MB!'),
+});
