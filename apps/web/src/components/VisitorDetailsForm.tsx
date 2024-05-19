@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import type { FC } from 'react';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { Grid, Autocomplete, TextField, IconButton } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
