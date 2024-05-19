@@ -8,7 +8,9 @@ export class CreateUserBodyDto {
   @IsNotEmpty()
   public readonly first_name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @IsOptional()
   public readonly last_name?: string;

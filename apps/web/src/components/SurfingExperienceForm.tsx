@@ -1,6 +1,8 @@
+'use client';
+
 import _ from 'lodash';
 import type { FC } from 'react';
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import type { SliderProps } from '@mui/material';
 import {
@@ -16,36 +18,18 @@ import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 
-import type { Surfboard } from '../interfaces/setting';
-import type { CreateBookingFormPayload } from '../validations/booking';
-import SettingClient from '../clients/setting';
+import type { CreateBookingFormPayload } from '../interfaces/booking';
+import { useAppSelector } from '../hooks/store';
+import settingApi from '../services/setting';
+
 import SurfboardSliderThumb from './SurfboardSliderThumb';
 import SurfboardSliderMarkLabel from './SurfboardSliderMarkLabel';
 
 const SurfingExperienceForm: FC = () => {
+  const { loading } = useAppSelector((state) => state.booking);
+  const surfboards = settingApi.useReadAllSurfboardsQuery({});
   const theme = useTheme();
-  const { setValue, control } = useFormContext<CreateBookingFormPayload>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [surfboards, setSurfboards] = useState<Surfboard[]>([]);
-
-  const fetchSurfboards = useCallback(async () => {
-    setLoading(true);
-
-    // Warning: Bad practice! Refactoring will be done upon submission.
-    const client = new SettingClient();
-
-    const { data } = await client.readAllSurfboards();
-
-    setSurfboards(data);
-
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    if (_.isEmpty(surfboards)) {
-      fetchSurfboards();
-    }
-  }, [surfboards, fetchSurfboards]);
+  const formCtx = useFormContext<CreateBookingFormPayload>();
 
   const marks = useMemo<SliderProps['marks']>(() => {
     const max = 11;
@@ -67,18 +51,18 @@ const SurfingExperienceForm: FC = () => {
   const handleDateChange = useCallback(
     (date: Dayjs | null) => {
       if (date !== null) {
-        setValue('date', dayjs(date).format('YYYY-MM-DD'));
+        formCtx.setValue('date', dayjs(date).format('YYYY-MM-DD'));
         return;
       }
 
-      setValue('date', '');
+      formCtx.setValue('date', '');
     },
-    [setValue],
+    [formCtx],
   );
 
   const handleDateClear = useCallback(() => {
-    setValue('date', '');
-  }, [setValue]);
+    formCtx.setValue('date', '');
+  }, [formCtx]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -88,8 +72,9 @@ const SurfingExperienceForm: FC = () => {
 
           <Controller
             key="surfing_experience"
-            control={control}
+            control={formCtx.control}
             name="surfing_experience"
+            disabled={loading}
             render={({ field }) => (
               <Slider
                 disabled={field.disabled}
@@ -135,8 +120,9 @@ const SurfingExperienceForm: FC = () => {
         <Grid item xs={6}>
           <Controller
             key="date"
-            control={control}
+            control={formCtx.control}
             name="date"
+            disabled={loading}
             render={({ field, fieldState }) => (
               <DatePicker
                 disabled={field.disabled}
@@ -147,6 +133,21 @@ const SurfingExperienceForm: FC = () => {
                 label="Visit Date"
                 onChange={handleDateChange}
                 slotProps={{
+                  layout: {
+                    sx: {
+                      background: '#232323',
+                      color: '#FFFFFF',
+                    },
+                  },
+                  day: {
+                    sx: {
+                      color: '#FFFFFF',
+                      '&.Mui-selected, &:hover.Mui-selected, &:focus.Mui-selected':
+                        {
+                          backgroundColor: '#FFFFFF',
+                        },
+                    },
+                  },
                   field: {
                     clearable: true,
                     onClear: handleDateClear,
@@ -155,7 +156,7 @@ const SurfingExperienceForm: FC = () => {
                     placeholder: 'Visit date (DD/MM/YYYY)',
                     onBlur: field.onBlur,
                     error: !!fieldState.error || fieldState.invalid,
-                    helperText: fieldState.error?.message,
+                    helperText: _.get(fieldState, 'error.message'),
                   },
                 }}
               />
@@ -166,14 +167,15 @@ const SurfingExperienceForm: FC = () => {
         <Grid item xs={6}>
           <Controller
             key="surfboard_id"
-            control={control}
+            control={formCtx.control}
             name="surfboard_id"
+            disabled={loading}
             render={({ field, fieldState }) => (
               <Autocomplete
                 fullWidth
                 disabled={field.disabled}
-                loading={loading}
-                options={surfboards}
+                loading={surfboards.isLoading}
+                options={_.get(surfboards, 'data.data', [])}
                 getOptionKey={(surfboard) => surfboard.id}
                 getOptionLabel={(surfboard) => surfboard.name}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -186,7 +188,7 @@ const SurfingExperienceForm: FC = () => {
                     name={field.name}
                     label="Your desired board"
                     error={!!fieldState.error || fieldState.invalid}
-                    helperText={fieldState.error?.message}
+                    helperText={_.get(fieldState, 'error.message')}
                   />
                 )}
               />

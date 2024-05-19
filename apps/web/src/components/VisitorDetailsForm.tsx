@@ -1,44 +1,40 @@
+'use client';
+
 import _ from 'lodash';
 import type { FC } from 'react';
-import { useState, useCallback, useEffect } from 'react';
-import { Grid, Autocomplete, TextField } from '@mui/material';
+import { useCallback } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
+import { Grid, Autocomplete, TextField, IconButton } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 
-import type { Country } from '../interfaces/setting';
-import type { CreateBookingFormPayload } from '../validations/booking';
-import SettingClient from '../clients/setting';
+import type { CreateBookingFormPayload } from '../interfaces/booking';
+import { useAppSelector } from '../hooks/store';
+import settingApi from '../services/setting';
 
 const VisitorDetailsForm: FC = () => {
-  const { control } = useFormContext<CreateBookingFormPayload>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [countries, setCountries] = useState<Country[]>([]);
+  const { loading } = useAppSelector((state) => state.booking);
+  const countries = settingApi.useReadAllCountriesQuery({});
+  const formCtx = useFormContext<CreateBookingFormPayload>();
 
-  const fetchCountries = useCallback(async () => {
-    setLoading(true);
-
-    // Warning: Bad practice! Refactoring will be done upon submission.
-    const client = new SettingClient();
-
-    const { data } = await client.readAllCountries();
-
-    setCountries(data);
-
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    if (_.isEmpty(countries)) {
-      fetchCountries();
-    }
-  }, [countries, fetchCountries]);
+  const handleClear = useCallback(
+    (key: keyof Pick<CreateBookingFormPayload, 'name' | 'email' | 'phone'>) => {
+      return () => {
+        formCtx.setValue(key, '', {
+          shouldValidate: true,
+        });
+      };
+    },
+    [formCtx],
+  );
 
   return (
     <Grid container spacing={4}>
       <Grid item xs={6}>
         <Controller
           key="name"
-          control={control}
+          control={formCtx.control}
           name="name"
+          disabled={loading}
           render={({ field, fieldState }) => (
             <TextField
               fullWidth
@@ -47,10 +43,24 @@ const VisitorDetailsForm: FC = () => {
               name={field.name}
               label="Name"
               placeholder="Enter your name"
+              value={field.value}
               onChange={field.onChange}
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
-              helperText={fieldState.error?.message}
+              helperText={_.get(fieldState, 'error.message')}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    size="small"
+                    onClick={handleClear('name')}
+                    sx={{
+                      visibility: !field.value ? 'hidden' : 'visible',
+                    }}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                ),
+              }}
             />
           )}
         />
@@ -59,14 +69,15 @@ const VisitorDetailsForm: FC = () => {
       <Grid item xs={6}>
         <Controller
           key="country_id"
-          control={control}
+          control={formCtx.control}
           name="country_id"
+          disabled={loading}
           render={({ field, fieldState }) => (
             <Autocomplete
               fullWidth
               disabled={field.disabled}
-              loading={loading}
-              options={countries}
+              loading={countries.isLoading}
+              options={_.get(countries, 'data.data', [])}
               getOptionKey={(country) => country.id}
               getOptionLabel={(country) => `${country.emoji} ${country.name}`}
               isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -79,7 +90,7 @@ const VisitorDetailsForm: FC = () => {
                   name={field.name}
                   label="Country"
                   error={!!fieldState.error || fieldState.invalid}
-                  helperText={fieldState.error?.message}
+                  helperText={_.get(fieldState, 'error.message')}
                 />
               )}
             />
@@ -90,8 +101,9 @@ const VisitorDetailsForm: FC = () => {
       <Grid item xs={6}>
         <Controller
           key="email"
-          control={control}
+          control={formCtx.control}
           name="email"
+          disabled={loading}
           render={({ field, fieldState }) => (
             <TextField
               fullWidth
@@ -100,10 +112,24 @@ const VisitorDetailsForm: FC = () => {
               name={field.name}
               label="Email"
               placeholder="Enter your email"
+              value={field.value}
               onChange={field.onChange}
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
-              helperText={fieldState.error?.message}
+              helperText={_.get(fieldState, 'error.message')}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    size="small"
+                    onClick={handleClear('email')}
+                    sx={{
+                      visibility: !field.value ? 'hidden' : 'visible',
+                    }}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                ),
+              }}
             />
           )}
         />
@@ -112,8 +138,9 @@ const VisitorDetailsForm: FC = () => {
       <Grid item xs={6}>
         <Controller
           key="phone"
-          control={control}
+          control={formCtx.control}
           name="phone"
+          disabled={loading}
           render={({ field, fieldState }) => (
             <TextField
               fullWidth
@@ -122,10 +149,24 @@ const VisitorDetailsForm: FC = () => {
               name={field.name}
               label="Whatsapp number"
               placeholder="Your active number"
+              value={field.value}
               onChange={field.onChange}
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
-              helperText={fieldState.error?.message}
+              helperText={_.get(fieldState, 'error.message')}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    size="small"
+                    onClick={handleClear('phone')}
+                    sx={{
+                      visibility: !field.value ? 'hidden' : 'visible',
+                    }}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                ),
+              }}
             />
           )}
         />

@@ -1,5 +1,4 @@
-import { IntersectionType } from '@nestjs/mapped-types';
-import { ApiProperty } from '@nestjs/swagger';
+import { IntersectionType, ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsOptional,
@@ -19,30 +18,42 @@ export class ReadAllUsersQueryDto extends IntersectionType(
   PaginationQueryDto,
   SortQueryDto,
 ) {
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+    enum: UserSortProperty,
+  })
   @IsEnum(UserSortProperty)
   @IsString()
   @IsOptional()
   public readonly sort_by?: UserSortProperty = UserSortProperty.FIRST_NAME;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @IsOptional()
   public readonly first_name?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @IsOptional()
   public readonly last_name?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+    format: 'email',
+  })
   @IsString()
   @IsOptional()
   public readonly email?: string;
 }
 
 export class ReadUserByIdParamDto {
-  @ApiProperty()
+  @ApiProperty({
+    format: 'uuid',
+  })
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()

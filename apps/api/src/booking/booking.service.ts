@@ -5,6 +5,7 @@ import { FindAndCountOptions, Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 
 import {
+  ReadAllMetadataDto,
   PaginationQueryDto,
   SortQueryDto,
 } from '../common/dtos/pagination.dto';
@@ -12,6 +13,7 @@ import { CommonService } from '../common/common.service';
 import { SettingService } from '../setting/setting.service';
 
 import { Booking } from './models/booking.model';
+import { BookingDto } from './dtos';
 import { CreateBookingBodyDto } from './dtos/create.dto';
 import { ReadAllBookingsQueryDto } from './dtos/read.dto';
 import { UpdateBookingBodyDto } from './dtos/update.dto';
@@ -50,18 +52,17 @@ export class BookingService {
       national_id_photo_file_key: payload.national_id_photo_file_key,
     });
 
-    const result = createdBooking.toJSON();
+    const result = {
+      ..._.omit(createdBooking.toJSON(), ['national_id_photo_file_key']),
+      national_id_photo_url: this.commonService.getFileUrl(
+        createdBooking.national_id_photo_file_key,
+      ),
+      country: existingCountry.toJSON(),
+      surfboard: existingSurfboard.toJSON(),
+    };
 
-    _.set(
-      result,
-      'national_id_photo_url',
-      this.commonService.getFileUrl(result.national_id_photo_file_key),
-    );
-    _.set(result, 'country', existingCountry);
-    _.set(result, 'surfboard', existingSurfboard);
-
-    return this.commonService.successTimestamp({
-      data: result,
+    return this.commonService.successTimestamp<undefined, BookingDto>({
+      data: result as BookingDto,
     });
   }
 
@@ -106,13 +107,20 @@ export class BookingService {
           }),
         ]);
 
-        _.set(existingBooking, 'country', existingCountry);
-        _.set(existingBooking, 'surfboard', existingSurfboard);
-
-        result.push(existingBooking);
+        result.push({
+          ..._.omit(existingBooking, ['national_id_photo_file_key']),
+          national_id_photo_url: this.commonService.getFileUrl(
+            existingBooking.national_id_photo_file_key,
+          ),
+          country: existingCountry.toJSON(),
+          surfboard: existingSurfboard.toJSON(),
+        });
       }
 
-      return this.commonService.successTimestamp({
+      return this.commonService.successTimestamp<
+        ReadAllMetadataDto,
+        BookingDto[]
+      >({
         metadata: {
           total,
         },
@@ -125,7 +133,7 @@ export class BookingService {
     const existingBooking = await this.bookingModel.findByPk(id);
 
     if (!existingBooking) {
-      return existingBooking;
+      return null;
     }
 
     const [existingCountry, existingSurfboard] = await Promise.all([
@@ -133,17 +141,16 @@ export class BookingService {
       this.settingService.readSurfboardById(existingBooking.surfboard_id),
     ]);
 
-    const result = existingBooking.toJSON();
+    const result = {
+      ..._.omit(existingBooking.toJSON(), ['national_id_photo_file_key']),
+      national_id_photo_url: this.commonService.getFileUrl(
+        existingBooking.national_id_photo_file_key,
+      ),
+      country: existingCountry.toJSON(),
+      surfboard: existingSurfboard.toJSON(),
+    };
 
-    _.set(
-      result,
-      'national_id_photo_url',
-      this.commonService.getFileUrl(result.national_id_photo_file_key),
-    );
-    _.set(result, 'country', existingCountry);
-    _.set(result, 'surfboard', existingSurfboard);
-
-    return _.omit(result, ['national_id_photo_file_key']);
+    return result;
   }
 
   public async update(id: string, payload: UpdateBookingBodyDto) {

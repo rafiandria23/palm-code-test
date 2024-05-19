@@ -4,7 +4,7 @@ import {
   Bodoni_Moda as BodoniModaFont,
   Inter as InterFont,
 } from 'next/font/google';
-import { createTheme } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
 
 const bodoniModaFont = BodoniModaFont({
   subsets: ['latin'],
@@ -46,14 +46,57 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiCircularProgress: {
+      defaultProps: {
+        sx: {
+          color: '#FFFFFF',
+        },
+      },
+    },
     MuiInputBase: {
       defaultProps: {
         disableInjectingGlobalStyles: true,
+        sx: {
+          borderRadius: 'unset',
+        },
+      },
+      styleOverrides: {
+        root: {
+          background: '#232323',
+        },
+        input: {
+          '&:-webkit-autofill': {
+            '-webkit-box-shadow': '0 0 0 100px #232323 inset !important',
+          },
+        },
+      },
+    },
+    MuiFilledInput: {
+      styleOverrides: {
+        root: {
+          '&::before, &::after': {
+            borderBottom: 'unset',
+          },
+          '&:hover:not(.Mui-disabled, .Mui-error):before': {
+            borderBottom: 'unset',
+          },
+          '&.Mui-focused:after': {
+            borderBottom: 'unset',
+          },
+        },
       },
     },
     MuiTextField: {
       defaultProps: {
         variant: 'filled',
+      },
+      styleOverrides: {
+        root: {
+          color: '#CCCCCC',
+          '& label.Mui-focused': {
+            color: '#CCCCCC',
+          },
+        },
       },
     },
   },

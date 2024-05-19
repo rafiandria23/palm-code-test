@@ -1,5 +1,4 @@
-import { PickType } from '@nestjs/mapped-types';
-import { ApiProperty } from '@nestjs/swagger';
+import { PickType, ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsOptional,
@@ -17,7 +16,9 @@ export class SignUpBodyDto {
   @IsNotEmpty()
   public readonly first_name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @IsOptional()
   public readonly last_name?: string;
@@ -31,7 +32,10 @@ export class SignUpBodyDto {
   @IsNotEmpty()
   public readonly email: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    minLength: PasswordLength.MIN,
+    format: 'password',
+  })
   @MinLength(PasswordLength.MIN)
   @IsString()
   @IsNotEmpty()

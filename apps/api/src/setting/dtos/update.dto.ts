@@ -1,11 +1,12 @@
-import { IntersectionType } from '@nestjs/mapped-types';
-import { ApiProperty } from '@nestjs/swagger';
+import { IntersectionType, ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 import { CreateCountryBodyDto, CreateSurfboardBodyDto } from './create.dto';
 
 export class UpdateCountryParamDto {
-  @ApiProperty()
+  @ApiProperty({
+    format: 'uuid',
+  })
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
@@ -17,7 +18,9 @@ export class UpdateCountryBodyDto extends IntersectionType(
 ) {}
 
 export class UpdateSurfboardParamDto {
-  @ApiProperty()
+  @ApiProperty({
+    format: 'uuid',
+  })
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()

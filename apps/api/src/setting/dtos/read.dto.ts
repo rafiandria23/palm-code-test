@@ -1,5 +1,4 @@
-import { IntersectionType } from '@nestjs/mapped-types';
-import { ApiProperty } from '@nestjs/swagger';
+import { IntersectionType, ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsOptional,
@@ -22,30 +21,41 @@ export class ReadAllCountriesQueryDto extends IntersectionType(
   PaginationQueryDto,
   SortQueryDto,
 ) {
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+    enum: CountrySortProperty,
+  })
   @IsEnum(CountrySortProperty)
   @IsString()
   @IsOptional()
   public readonly sort_by?: CountrySortProperty = CountrySortProperty.NAME;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @IsOptional()
   public readonly name?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @IsOptional()
   public readonly code?: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @IsOptional()
   public readonly dial_code?: string;
 }
 
 export class ReadCountryByIdParamDto {
-  @ApiProperty()
+  @ApiProperty({
+    format: 'uuid',
+  })
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
@@ -56,20 +66,27 @@ export class ReadAllSurfboardsQueryDto extends IntersectionType(
   PaginationQueryDto,
   SortQueryDto,
 ) {
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+    enum: SurfboardSortProperty,
+  })
   @IsEnum(SurfboardSortProperty)
   @IsString()
   @IsOptional()
   public readonly sort_by?: SurfboardSortProperty = SurfboardSortProperty.NAME;
 
-  @ApiProperty()
+  @ApiProperty({
+    required: false,
+  })
   @IsString()
   @IsOptional()
   public readonly name?: string;
 }
 
 export class ReadSurfboardByIdParamDto {
-  @ApiProperty()
+  @ApiProperty({
+    format: 'uuid',
+  })
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
