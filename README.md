@@ -23,6 +23,7 @@ Test for Palm Code.
 - [Nest.js](https://nestjs.com)
 - [Sequelize](https://sequelize.org)
 - [Next.js](https://nextjs.org)
+- [Redux Toolkit](https://redux-toolkit.js.org)
 - [MUI](https://mui.com)
 
 ## Apps
