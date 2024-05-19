@@ -92,7 +92,7 @@
     "jest-environment-node": "^29.4.1",
     "nx": "19.0.4",
     "prettier": "^2.6.2",
-    "sass": "1.62.1",
+    "sass": "1.77.2",
     "sequelize-cli": "^6.6.2",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.2",
