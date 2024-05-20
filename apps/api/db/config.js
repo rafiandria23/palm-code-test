@@ -10,6 +10,15 @@ const dialect = 'postgres';
 /** @type {import('sequelize').Options} */
 const defaultConfig = {
   dialect,
+  dialectOptions: {
+    ssl:
+      _.defaultTo(process.env.DB_SSL, 'false') === 'true'
+        ? {
+            require: true,
+            rejectUnauthorized: true,
+          }
+        : undefined,
+  },
   host: _.defaultTo(process.env.DB_HOST, 'localhost'),
   port: _.defaultTo(parseInt(process.env.DB_PORT, RADIX), 5432),
   username: _.defaultTo(process.env.DB_USER, 'palm_code'),
