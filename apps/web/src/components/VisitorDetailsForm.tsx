@@ -12,7 +12,7 @@ import { useAppSelector } from '../hooks/store';
 import settingApi from '../services/setting';
 
 const VisitorDetailsForm: FC = () => {
-  const { loading } = useAppSelector((state) => state.booking);
+  const bookingState = useAppSelector((state) => state.booking);
   const countries = settingApi.useReadAllCountriesQuery({
     page_size: 500,
   });
@@ -36,7 +36,7 @@ const VisitorDetailsForm: FC = () => {
           key="name"
           control={formCtx.control}
           name="name"
-          disabled={loading}
+          disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <TextField
               fullWidth
@@ -73,7 +73,7 @@ const VisitorDetailsForm: FC = () => {
           key="country_id"
           control={formCtx.control}
           name="country_id"
-          disabled={loading}
+          disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <Autocomplete
               fullWidth
@@ -105,7 +105,7 @@ const VisitorDetailsForm: FC = () => {
           key="email"
           control={formCtx.control}
           name="email"
-          disabled={loading}
+          disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <TextField
               fullWidth
@@ -142,7 +142,7 @@ const VisitorDetailsForm: FC = () => {
           key="phone"
           control={formCtx.control}
           name="phone"
-          disabled={loading}
+          disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <TextField
               fullWidth

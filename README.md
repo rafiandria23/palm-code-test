@@ -49,7 +49,7 @@ yarn
 
 ```zsh
 # Run all apps
-nx run-many -t serve start
+nx run-many -t serve dev
 ```
 
 ## API Docs
