@@ -48,6 +48,7 @@
     "rxjs": "^7.8.0",
     "sequelize": "^6.37.3",
     "sequelize-typescript": "^2.1.6",
+    "sharp": "^0.33.4",
     "tipe-apa": "^0.4.7",
     "tslib": "^2.3.0",
     "uuid": "^9.0.1",
