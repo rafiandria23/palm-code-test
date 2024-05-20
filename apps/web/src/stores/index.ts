@@ -6,6 +6,7 @@ import authApi from '../services/auth';
 import userApi from '../services/user';
 import bookingApi from '../services/booking';
 
+import authSlice from './auth';
 import bookingSlice from './booking';
 
 const store = configureStore({
@@ -14,6 +15,7 @@ const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [bookingApi.reducerPath]: bookingApi.reducer,
+    auth: authSlice.reducer,
     booking: bookingSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

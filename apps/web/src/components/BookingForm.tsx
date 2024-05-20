@@ -20,7 +20,7 @@ export interface BookingFormProps {
 
 const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
   const dispatch = useAppDispatch();
-  const { loading, data } = useAppSelector((state) => state.booking);
+  const bookingState = useAppSelector((state) => state.booking);
   const theme = useTheme();
   const formCtx = useFormContext<CreateBookingFormPayload>();
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -99,8 +99,8 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
     >
       <Box>
         <Typography component="h1" variant="h2" gutterBottom>
-          {finished && data !== null
-            ? `Thank you, ${data.name.split(' ')[0]}`
+          {finished && bookingState.data !== null
+            ? `Thank you, ${bookingState.data.name.split(' ')[0]}`
             : 'Book Your Visit'}
         </Typography>
 
@@ -126,7 +126,7 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
             variant="contained"
             size="large"
             disableElevation
-            disabled={loading}
+            disabled={bookingState.loading}
             sx={{
               paddingX: theme.spacing(8),
               borderRadius: 'unset',

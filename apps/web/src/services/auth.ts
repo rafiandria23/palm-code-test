@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import type { RootState } from '../interfaces/store';
 import type { SuccessTimestamp } from '../interfaces/api';
 import type {
   AuthToken,
@@ -13,6 +14,15 @@ const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth`,
+    prepareHeaders: (headers, { getState }) => {
+      const accessToken = (getState() as RootState).auth.token.access;
+
+      if (accessToken !== null) {
+        headers.set('Authorization', `Bearer ${accessToken}`);
+      }
+
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     signUp: builder.mutation<
@@ -20,6 +30,7 @@ const authApi = createApi({
       SignUpPayload
     >({
       query: (payload) => ({
+        method: 'POST',
         url: '/sign-up',
         body: payload,
       }),
@@ -29,6 +40,7 @@ const authApi = createApi({
       SignInPayload
     >({
       query: (payload) => ({
+        method: 'POST',
         url: '/sign-in',
         body: payload,
       }),

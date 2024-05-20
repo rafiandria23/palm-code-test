@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import type { RootState } from '../interfaces/store';
 import type { SuccessTimestamp, ReadAllMetadata } from '../interfaces/api';
 import type { UploadFileData } from '../interfaces/file';
 import type {
@@ -16,6 +17,15 @@ const bookingApi = createApi({
   reducerPath: 'bookingApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/bookings`,
+    prepareHeaders: (headers, { getState }) => {
+      const accessToken = (getState() as RootState).auth.token.access;
+
+      if (accessToken !== null) {
+        headers.set('Authorization', `Bearer ${accessToken}`);
+      }
+
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     uploadNationalIdPhoto: builder.mutation<
@@ -48,6 +58,7 @@ const bookingApi = createApi({
       ReadAllBookingsPayload
     >({
       query: (payload) => ({
+        method: 'GET',
         url: '',
         params: payload,
       }),
@@ -57,6 +68,7 @@ const bookingApi = createApi({
       ReadBookingByIdPayload
     >({
       query: (payload) => ({
+        method: 'GET',
         url: `/${payload.id}`,
       }),
     }),

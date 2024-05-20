@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+import type { RootState } from '../interfaces/store';
 import type { SuccessTimestamp, ReadAllMetadata } from '../interfaces/api';
 import type {
   Country,
@@ -21,6 +22,15 @@ const settingApi = createApi({
   reducerPath: 'settingApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/settings`,
+    prepareHeaders: (headers, { getState }) => {
+      const accessToken = (getState() as RootState).auth.token.access;
+
+      if (accessToken !== null) {
+        headers.set('Authorization', `Bearer ${accessToken}`);
+      }
+
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     createCountry: builder.mutation<
@@ -28,6 +38,7 @@ const settingApi = createApi({
       CreateCountryPayload
     >({
       query: (payload) => ({
+        method: 'POST',
         url: '/countries',
         body: payload,
       }),
@@ -37,6 +48,7 @@ const settingApi = createApi({
       CreateSurfboardPayload
     >({
       query: (payload) => ({
+        method: 'POST',
         url: '/surfboards',
         body: payload,
       }),
@@ -46,6 +58,7 @@ const settingApi = createApi({
       ReadAllCountriesPayload
     >({
       query: (payload) => ({
+        method: 'GET',
         url: '/countries',
         params: payload,
       }),
@@ -55,6 +68,7 @@ const settingApi = createApi({
       ReadCountryByIdPayload
     >({
       query: (payload) => ({
+        method: 'GET',
         url: `/countries/${payload.id}`,
       }),
     }),
@@ -63,6 +77,7 @@ const settingApi = createApi({
       ReadAllSurfboardsPayload
     >({
       query: (payload) => ({
+        method: 'GET',
         url: '/surfboards',
         params: payload,
       }),
@@ -72,6 +87,7 @@ const settingApi = createApi({
       ReadSurfboardByIdPayload
     >({
       query: (payload) => ({
+        method: 'GET',
         url: `/surfboards/${payload.id}`,
       }),
     }),

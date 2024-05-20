@@ -24,7 +24,7 @@ import type { CreateBookingFormPayload } from '../interfaces/booking';
 import { useAppSelector } from '../hooks/store';
 
 const NationalIdVerificationForm: FC = () => {
-  const { loading } = useAppSelector((state) => state.booking);
+  const bookingState = useAppSelector((state) => state.booking);
   const theme = useTheme();
   const formCtx = useFormContext<CreateBookingFormPayload>();
 
@@ -37,7 +37,7 @@ const NationalIdVerificationForm: FC = () => {
     (e) => {
       e.preventDefault();
 
-      if (!loading) {
+      if (!bookingState.loading) {
         formCtx.setValue(
           'national_id_photo',
           _.get(e, 'dataTransfer.files[0]', null as unknown as File),
@@ -47,7 +47,7 @@ const NationalIdVerificationForm: FC = () => {
         );
       }
     },
-    [loading, formCtx],
+    [bookingState, formCtx],
   );
 
   const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
@@ -88,7 +88,7 @@ const NationalIdVerificationForm: FC = () => {
           key="national_id_photo"
           control={formCtx.control}
           name="national_id_photo"
-          disabled={loading}
+          disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <Stack spacing={1}>
               <Box

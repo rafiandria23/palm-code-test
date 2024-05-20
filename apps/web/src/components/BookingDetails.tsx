@@ -15,7 +15,7 @@ export interface BookingDetailsProps {
 const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
   const [remainingSeconds, setRemainingSeconds] = useState<number>(10);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
-  const { data } = useAppSelector((state) => state.booking);
+  const bookingState = useAppSelector((state) => state.booking);
 
   useEffect(() => {
     countdownRef.current = setTimeout(() => {
@@ -61,7 +61,7 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
             Name:
           </Typography>
 
-          <Typography>{_.get(data, 'name')}</Typography>
+          <Typography>{_.get(bookingState, 'data.name')}</Typography>
         </Grid>
 
         <Grid item xs={6}>
@@ -75,7 +75,8 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
           </Typography>
 
           <Typography>
-            {_.get(data, 'country.emoji')} {_.get(data, 'country.name')}
+            {_.get(bookingState, 'data.country.emoji')}{' '}
+            {_.get(bookingState, 'data.country.name')}
           </Typography>
         </Grid>
 
@@ -89,7 +90,7 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
             Email:
           </Typography>
 
-          <Typography>{_.get(data, 'email')}</Typography>
+          <Typography>{_.get(bookingState, 'data.email')}</Typography>
         </Grid>
 
         <Grid item xs={6}>
@@ -102,9 +103,9 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
             Visit date:
           </Typography>
 
-          {data !== null && (
+          {bookingState.data !== null && (
             <Typography>
-              {dayjs(data.date, 'YYYY-MM-DD').format('DD/MM/YYYY')}
+              {dayjs(bookingState.data.date, 'YYYY-MM-DD').format('DD/MM/YYYY')}
             </Typography>
           )}
         </Grid>

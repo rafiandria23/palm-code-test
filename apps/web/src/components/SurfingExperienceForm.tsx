@@ -26,7 +26,7 @@ import SurfboardSliderThumb from './SurfboardSliderThumb';
 import SurfboardSliderMarkLabel from './SurfboardSliderMarkLabel';
 
 const SurfingExperienceForm: FC = () => {
-  const { loading } = useAppSelector((state) => state.booking);
+  const bookingState = useAppSelector((state) => state.booking);
   const surfboards = settingApi.useReadAllSurfboardsQuery({
     page_size: 500,
   });
@@ -76,7 +76,7 @@ const SurfingExperienceForm: FC = () => {
             key="surfing_experience"
             control={formCtx.control}
             name="surfing_experience"
-            disabled={loading}
+            disabled={bookingState.loading}
             render={({ field }) => (
               <Slider
                 disabled={field.disabled}
@@ -124,7 +124,7 @@ const SurfingExperienceForm: FC = () => {
             key="date"
             control={formCtx.control}
             name="date"
-            disabled={loading}
+            disabled={bookingState.loading}
             render={({ field, fieldState }) => (
               <DatePicker
                 disabled={field.disabled}
@@ -171,7 +171,7 @@ const SurfingExperienceForm: FC = () => {
             key="surfboard_id"
             control={formCtx.control}
             name="surfboard_id"
-            disabled={loading}
+            disabled={bookingState.loading}
             render={({ field, fieldState }) => (
               <Autocomplete
                 fullWidth
