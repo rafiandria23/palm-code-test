@@ -35,6 +35,15 @@ import { AppService } from './app.service';
       async useFactory(configService: ConfigService) {
         return {
           dialect: 'postgres',
+          dialectOptions: {
+            ssl:
+              configService.get<string>('db.sll') === 'true'
+                ? {
+                    require: true,
+                    rejectUnauthorized: true,
+                  }
+                : undefined,
+          },
           host: configService.get<string>('db.host'),
           port: configService.get<number>('db.port'),
           username: configService.get<string>('db.user'),
