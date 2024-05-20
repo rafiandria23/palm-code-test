@@ -37,7 +37,7 @@ import { AppService } from './app.service';
           dialect: 'postgres',
           dialectOptions: {
             ssl:
-              configService.get<string>('db.sll') === 'true'
+              configService.get<string>('db.ssl') === 'true'
                 ? {
                     require: true,
                     rejectUnauthorized: true,
