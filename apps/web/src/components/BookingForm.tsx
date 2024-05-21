@@ -112,7 +112,7 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
               letterSpacing: '0.2em',
             }}
           >
-            {activeStep + 1}/{steps.length}: {steps[activeStep].title}
+            {activeStep + 1}/{steps.length - 1}: {steps[activeStep].title}
           </Typography>
         )}
       </Box>
