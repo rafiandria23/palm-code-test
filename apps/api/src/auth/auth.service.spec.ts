@@ -198,8 +198,8 @@ describe('AuthService', () => {
       mockedUserService.readByEmail.mockResolvedValue(mockedUser);
       mockedUserPasswordModel.findOne.mockResolvedValue(mockedUserPassword);
       mockedBcrypt.compare.mockResolvedValue(true as never);
-      (mockedUserPassword.restore as jest.Mock).mockResolvedValue({});
-      (mockedUser.restore as jest.Mock).mockResolvedValue({});
+      mockedUserPassword.restore.mockResolvedValue({});
+      mockedUser.restore.mockResolvedValue({});
       mockedJwtService.signAsync.mockResolvedValue(faker.string.alphanumeric());
 
       const { data } = await service.signIn({
@@ -348,7 +348,7 @@ describe('AuthService', () => {
       mockedBcrypt.compare
         .mockResolvedValueOnce(true as never)
         .mockResolvedValueOnce(false as never);
-      (mockedUserPassword.update as jest.Mock).mockResolvedValue({});
+      mockedUserPassword.update.mockResolvedValue({});
 
       const { success } = await service.updatePassword(mockedUser.id, {
         old_password: mockedUserPassword.password,
