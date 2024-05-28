@@ -32,39 +32,35 @@ import { AppService } from './app.service';
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      async useFactory(configService: ConfigService) {
-        return {
-          dialect: 'postgres',
-          dialectOptions: {
-            ssl:
-              configService.get<string>('db.ssl') === 'true'
-                ? {
-                    require: true,
-                    rejectUnauthorized: true,
-                  }
-                : undefined,
-          },
-          host: configService.get<string>('db.host'),
-          port: configService.get<number>('db.port'),
-          username: configService.get<string>('db.user'),
-          password: configService.get<string>('db.pass'),
-          database: configService.get<string>('db.name'),
-          autoLoadModels: true,
-        };
-      },
+      useFactory: (configService: ConfigService) => ({
+        dialect: 'postgres',
+        dialectOptions: {
+          ssl:
+            configService.get<string>('db.ssl') === 'true'
+              ? {
+                  require: true,
+                  rejectUnauthorized: true,
+                }
+              : undefined,
+        },
+        host: configService.get<string>('db.host'),
+        port: configService.get<number>('db.port'),
+        username: configService.get<string>('db.user'),
+        password: configService.get<string>('db.pass'),
+        database: configService.get<string>('db.name'),
+        autoLoadModels: true,
+      }),
     }),
     JwtModule.registerAsync({
       global: true,
       imports: [ConfigModule],
       inject: [ConfigService],
-      async useFactory(configService: ConfigService) {
-        return {
-          secret: configService.get<string>('jwt.secret'),
-          signOptions: {
-            issuer: 'Palm Code',
-          },
-        };
-      },
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('jwt.secret'),
+        signOptions: {
+          issuer: 'Palm Code',
+        },
+      }),
     }),
     CommonModule,
     SettingModule,
@@ -77,8 +73,8 @@ import { AppService } from './app.service';
     AppService,
     {
       provide: APP_PIPE,
-      useFactory() {
-        return new ValidationPipe({
+      useFactory: () =>
+        new ValidationPipe({
           exceptionFactory(data) {
             return new BadRequestException(data);
           },
@@ -88,8 +84,7 @@ import { AppService } from './app.service';
           },
           whitelist: true,
           forbidNonWhitelisted: true,
-        });
-      },
+        }),
     },
     {
       provide: APP_GUARD,

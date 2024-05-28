@@ -7,7 +7,6 @@ import {
   UseInterceptors,
   HttpCode,
   HttpStatus,
-  Response,
   Body,
   Param,
   Query,
@@ -22,17 +21,20 @@ import {
   ApiResponse as SwaggerApiResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
+import { Transaction as SequelizeTransaction } from 'sequelize';
 
-import { ApiResponse } from '../common/interfaces/api.interface';
+import { ApiFile } from '../common/interfaces/api.interface';
 import { DocumentTag } from '../common/constants/docs.constant';
 import {
   SUPPORTED_FILE_TYPE,
   MEGABYTE,
 } from '../common/constants/file.constant';
+import { Transaction } from '../common/decorators/transaction.decorator';
+import { FileConfig, UploadedFile } from '../common/decorators/file.decorator';
 import { RawSuccessTimestampDto } from '../common/dtos/success-timestamp.dto';
 import { UploadFileDataDto } from '../common/dtos/file.dto';
-import { FileConfig } from '../common/decorators/file.decorator';
 import { ReadAllMetadataDto } from '../common/dtos/pagination.dto';
+import { TransactionInterceptor } from '../common/interceptors/transaction.interceptor';
 import { FileInterceptor } from '../common/interceptors/file.interceptor';
 import { CommonService } from '../common/common.service';
 
@@ -48,6 +50,7 @@ import { DeleteBookingParamDto } from './dtos/delete.dto';
 import { BookingService } from './booking.service';
 
 @Controller('/bookings')
+@UseInterceptors(TransactionInterceptor)
 @ApiTags(DocumentTag.BOOKING)
 @ApiBearerAuth()
 @ApiExtraModels(
@@ -84,8 +87,13 @@ export class BookingController {
       ],
     },
   })
-  public create(@Body() payload: CreateBookingBodyDto) {
-    return this.bookingService.create(payload);
+  public create(
+    @Transaction() transaction: SequelizeTransaction,
+    @Body() payload: CreateBookingBodyDto,
+  ) {
+    return this.bookingService.create(payload, {
+      transaction,
+    });
   }
 
   @Post('/uploads/national-id-photo')
@@ -121,14 +129,12 @@ export class BookingController {
       ],
     },
   })
-  public async uploadNationalIdPhoto(@Response() response: ApiResponse) {
-    return response.send(
-      this.commonService.successTimestamp<undefined, UploadFileDataDto>({
-        data: {
-          file_key: response.file.key,
-        },
-      }),
-    );
+  public async uploadNationalIdPhoto(@UploadedFile() file: ApiFile) {
+    return this.commonService.successTimestamp<undefined, UploadFileDataDto>({
+      data: {
+        file_key: file.key,
+      },
+    });
   }
 
   @Get('/')
@@ -158,8 +164,13 @@ export class BookingController {
       ],
     },
   })
-  public readAll(@Query() queries: ReadAllBookingsQueryDto) {
-    return this.bookingService.readAll(queries);
+  public readAll(
+    @Transaction() transaction: SequelizeTransaction,
+    @Query() queries: ReadAllBookingsQueryDto,
+  ) {
+    return this.bookingService.readAll(queries, {
+      transaction,
+    });
   }
 
   @Get('/:id')
@@ -183,8 +194,13 @@ export class BookingController {
       ],
     },
   })
-  public async readById(@Param() params: ReadBookingByIdParamDto) {
-    const existingBooking = await this.bookingService.readById(params.id);
+  public async readById(
+    @Transaction() transaction: SequelizeTransaction,
+    @Param() params: ReadBookingByIdParamDto,
+  ) {
+    const existingBooking = await this.bookingService.readById(params.id, {
+      transaction,
+    });
 
     if (!existingBooking) {
       throw new UnprocessableEntityException('Booking is not found!');
@@ -204,10 +220,13 @@ export class BookingController {
     },
   })
   public update(
+    @Transaction() transaction: SequelizeTransaction,
     @Param() params: UpdateBookingParamDto,
     @Body() payload: UpdateBookingBodyDto,
   ) {
-    return this.bookingService.update(params.id, payload);
+    return this.bookingService.update(params.id, payload, {
+      transaction,
+    });
   }
 
   @Delete('/:id')
@@ -218,7 +237,12 @@ export class BookingController {
       $ref: getSchemaPath(RawSuccessTimestampDto),
     },
   })
-  public delete(@Param() params: DeleteBookingParamDto) {
-    return this.bookingService.delete(params.id);
+  public delete(
+    @Transaction() transaction: SequelizeTransaction,
+    @Param() params: DeleteBookingParamDto,
+  ) {
+    return this.bookingService.delete(params.id, {
+      transaction,
+    });
   }
 }

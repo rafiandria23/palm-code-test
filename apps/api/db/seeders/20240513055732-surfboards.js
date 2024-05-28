@@ -25,18 +25,23 @@ module.exports = {
       },
     ];
 
-    await queryInterface.bulkInsert(
-      tableName,
-      surfboards.map((surfboard) => ({
-        id: uuid.v4(),
-        ...surfboard,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: null,
-      })),
-    );
+    await queryInterface.sequelize.transaction(async (transaction) => {
+      await queryInterface.bulkInsert(
+        tableName,
+        surfboards.map((surfboard) => ({
+          id: uuid.v4(),
+          ...surfboard,
+          created_at: new Date(),
+          updated_at: new Date(),
+          deleted_at: null,
+        })),
+        { transaction },
+      );
+    });
   },
   async down(queryInterface) {
-    await queryInterface.bulkDelete(tableName, null);
+    await queryInterface.sequelize.transaction(async (transaction) => {
+      await queryInterface.bulkDelete(tableName, null, { transaction });
+    });
   },
 };

@@ -2,10 +2,11 @@ import _ from 'lodash';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import {
-  Transaction,
   Op,
+  CreateOptions,
   FindOptions,
   FindAndCountOptions,
+  UpdateOptions,
   DestroyOptions,
 } from 'sequelize';
 
@@ -29,17 +30,55 @@ export class UserService {
     private readonly commonService: CommonService,
   ) {}
 
-  public create(payload: CreateUserBodyDto, transaction?: Transaction) {
+  public create(payload: CreateUserBodyDto, options?: CreateOptions<User>) {
     return this.userModel.create(
       {
         first_name: payload.first_name,
         last_name: payload.last_name,
         email: payload.email,
       },
-      {
-        transaction,
-      },
+      options,
     );
+  }
+
+  public async readAll(
+    queries: ReadAllUsersQueryDto,
+    options?: Omit<
+      FindAndCountOptions<User>,
+      'group' | 'where' | 'offset' | 'limit' | 'order'
+    >,
+  ) {
+    const finalOptions: Omit<FindAndCountOptions<User>, 'group'> = {
+      where: {},
+      offset: queries.page_size * (queries.page - 1),
+      limit: queries.page_size,
+      order: [[queries.sort_by, queries.sort]],
+      ...options,
+    };
+
+    const filters = _.omit(queries, [
+      ..._.keys(new PaginationQueryDto()),
+      ..._.keys(new SortQueryDto()),
+      'sort_by',
+    ]);
+
+    if (!_.isEmpty(filters)) {
+      _.forOwn(filters, (filterValue, filterKey) => {
+        finalOptions.where[filterKey] = {
+          [Op.iLike]: `%${filterValue}%`,
+        };
+      });
+    }
+
+    const { count: total, rows: existingUsers } =
+      await this.userModel.findAndCountAll(finalOptions);
+
+    return this.commonService.successTimestamp<ReadAllMetadataDto, UserDto[]>({
+      metadata: {
+        total,
+      },
+      data: existingUsers,
+    });
   }
 
   public readById(id: string, options?: Omit<FindOptions<User>, 'where'>) {
@@ -58,43 +97,35 @@ export class UserService {
     });
   }
 
-  public async readAll(queries: ReadAllUsersQueryDto) {
-    const options: Omit<FindAndCountOptions<User>, 'group'> = {
-      where: {},
-      offset: queries.page_size * (queries.page - 1),
-      limit: queries.page_size,
-      order: [[queries.sort_by, queries.sort]],
-    };
+  public async update(
+    id: string,
+    payload: UpdateUserBodyDto,
+    options?: Omit<UpdateOptions<User>, 'where'>,
+  ) {
+    const [existingUser] = await this.userModel.update(
+      {
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+      },
+      {
+        where: {
+          id,
+        },
+        ...options,
+      },
+    );
 
-    const filters = _.omit(queries, [
-      ..._.keys(new PaginationQueryDto()),
-      ..._.keys(new SortQueryDto()),
-      'sort_by',
-    ]);
-
-    if (!_.isEmpty(filters)) {
-      _.forOwn(filters, (filterValue, filterKey) => {
-        options.where[filterKey] = {
-          [Op.iLike]: `%${filterValue}%`,
-        };
-      });
+    if (!existingUser) {
+      throw new UnprocessableEntityException('User does not exist!');
     }
 
-    const { count: total, rows: existingUsers } =
-      await this.userModel.findAndCountAll(options);
-
-    return this.commonService.successTimestamp<ReadAllMetadataDto, UserDto[]>({
-      metadata: {
-        total,
-      },
-      data: existingUsers,
-    });
+    return this.commonService.successTimestamp();
   }
 
   public async updateEmail(
     id: string,
     payload: UpdateUserEmailBodyDto,
-    transaction?: Transaction,
+    options?: Omit<UpdateOptions<User>, 'where'>,
   ) {
     const [existingUser] = await this.userModel.update(
       {
@@ -104,33 +135,13 @@ export class UserService {
         where: {
           id,
         },
-        transaction,
+        ...options,
       },
     );
 
     if (!existingUser) {
       throw new UnprocessableEntityException('User does not exist!');
     }
-  }
-
-  public async update(
-    id: string,
-    payload: UpdateUserBodyDto,
-    transaction?: Transaction,
-  ) {
-    const [existingUser] = await this.userModel.update(
-      {
-        first_name: payload.first_name,
-        last_name: payload.last_name,
-      },
-      { where: { id }, transaction },
-    );
-
-    if (!existingUser) {
-      throw new UnprocessableEntityException('User does not exist!');
-    }
-
-    return this.commonService.successTimestamp();
   }
 
   public async delete(
