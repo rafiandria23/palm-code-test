@@ -1,7 +1,14 @@
 import _ from 'lodash';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op, FindOptions, FindAndCountOptions } from 'sequelize';
+import {
+  Op,
+  CreateOptions,
+  FindAndCountOptions,
+  FindOptions,
+  UpdateOptions,
+  DestroyOptions,
+} from 'sequelize';
 
 import {
   ReadAllMetadataDto,
@@ -34,35 +41,54 @@ export class SettingService {
     private readonly commonService: CommonService,
   ) {}
 
-  public async createCountry(payload: CreateCountryBodyDto) {
-    const createdCountry = await this.countryModel.create({
-      name: payload.name,
-      code: payload.code,
-      dial_code: payload.dial_code,
-      emoji: payload.emoji,
-    });
+  public async createCountry(
+    payload: CreateCountryBodyDto,
+    options?: CreateOptions<Country>,
+  ) {
+    const createdCountry = await this.countryModel.create(
+      {
+        name: payload.name,
+        code: payload.code,
+        dial_code: payload.dial_code,
+        emoji: payload.emoji,
+      },
+      options,
+    );
 
     return this.commonService.successTimestamp<undefined, CountryDto>({
       data: createdCountry,
     });
   }
 
-  public async createSurfboard(payload: CreateSurfboardBodyDto) {
-    const createdSurfboard = await this.surfboardModel.create({
-      name: payload.name,
-    });
+  public async createSurfboard(
+    payload: CreateSurfboardBodyDto,
+    options?: CreateOptions<Surfboard>,
+  ) {
+    const createdSurfboard = await this.surfboardModel.create(
+      {
+        name: payload.name,
+      },
+      options,
+    );
 
     return this.commonService.successTimestamp<undefined, SurfboardDto>({
       data: createdSurfboard,
     });
   }
 
-  public async readAllCountries(queries: ReadAllCountriesQueryDto) {
-    const options: Omit<FindAndCountOptions<Country>, 'group'> = {
+  public async readAllCountries(
+    queries: ReadAllCountriesQueryDto,
+    options?: Omit<
+      FindAndCountOptions<Country>,
+      'group' | 'where' | 'offset' | 'limit' | 'order'
+    >,
+  ) {
+    const finalOptions: Omit<FindAndCountOptions<Country>, 'group'> = {
       where: {},
       offset: queries.page_size * (queries.page - 1),
       limit: queries.page_size,
       order: [[queries.sort_by, queries.sort]],
+      ...options,
     };
 
     const filters = _.omit(queries, [
@@ -73,14 +99,14 @@ export class SettingService {
 
     if (!_.isEmpty(filters)) {
       _.forOwn(filters, (filterValue, filterKey) => {
-        options.where[filterKey] = {
+        finalOptions.where[filterKey] = {
           [Op.iLike]: `%${filterValue}%`,
         };
       });
     }
 
     const { count: total, rows: existingCountries } =
-      await this.countryModel.findAndCountAll(options);
+      await this.countryModel.findAndCountAll(finalOptions);
 
     return this.commonService.successTimestamp<
       ReadAllMetadataDto,
@@ -100,12 +126,19 @@ export class SettingService {
     return this.countryModel.findByPk(id, options);
   }
 
-  public async readAllSurfboards(queries: ReadAllSurfboardsQueryDto) {
-    const options: Omit<FindAndCountOptions<Surfboard>, 'group'> = {
+  public async readAllSurfboards(
+    queries: ReadAllSurfboardsQueryDto,
+    options?: Omit<
+      FindAndCountOptions<Surfboard>,
+      'group' | 'where' | 'offset' | 'limit' | 'order'
+    >,
+  ) {
+    const finalOptions: Omit<FindAndCountOptions<Surfboard>, 'group'> = {
       where: {},
       offset: queries.page_size * (queries.page - 1),
       limit: queries.page_size,
       order: [[queries.sort_by, queries.sort]],
+      ...options,
     };
 
     const filters = _.omit(queries, [
@@ -116,14 +149,14 @@ export class SettingService {
 
     if (!_.isEmpty(filters)) {
       _.forOwn(filters, (filterValue, filterKey) => {
-        options.where[filterKey] = {
+        finalOptions.where[filterKey] = {
           [Op.iLike]: `%${filterValue}%`,
         };
       });
     }
 
     const { count: total, rows: existingSurfboards } =
-      await this.surfboardModel.findAndCountAll(options);
+      await this.surfboardModel.findAndCountAll(finalOptions);
 
     return this.commonService.successTimestamp<
       ReadAllMetadataDto,
@@ -143,7 +176,11 @@ export class SettingService {
     return this.surfboardModel.findByPk(id, options);
   }
 
-  public async updateCountry(id: string, payload: UpdateCountryBodyDto) {
+  public async updateCountry(
+    id: string,
+    payload: UpdateCountryBodyDto,
+    options?: Omit<UpdateOptions<Country>, 'where'>,
+  ) {
     const [existingCountry] = await this.countryModel.update(
       {
         name: payload.name,
@@ -155,6 +192,7 @@ export class SettingService {
         where: {
           id,
         },
+        ...options,
       },
     );
 
@@ -165,7 +203,11 @@ export class SettingService {
     return this.commonService.successTimestamp();
   }
 
-  public async updateSurfboard(id: string, payload: UpdateSurfboardBodyDto) {
+  public async updateSurfboard(
+    id: string,
+    payload: UpdateSurfboardBodyDto,
+    options?: Omit<UpdateOptions<Surfboard>, 'where'>,
+  ) {
     const [existingSurfboard] = await this.surfboardModel.update(
       {
         name: payload.name,
@@ -174,6 +216,7 @@ export class SettingService {
         where: {
           id,
         },
+        ...options,
       },
     );
 
@@ -184,11 +227,15 @@ export class SettingService {
     return this.commonService.successTimestamp();
   }
 
-  public async deleteCountry(id: string) {
+  public async deleteCountry(
+    id: string,
+    options?: Omit<DestroyOptions<Country>, 'where'>,
+  ) {
     const existingCountry = await this.countryModel.destroy({
       where: {
         id,
       },
+      ...options,
     });
 
     if (!existingCountry) {
@@ -198,11 +245,15 @@ export class SettingService {
     return this.commonService.successTimestamp();
   }
 
-  public async deleteSurfboard(id: string) {
+  public async deleteSurfboard(
+    id: string,
+    options?: Omit<DestroyOptions<Surfboard>, 'where'>,
+  ) {
     const existingSurfboard = await this.surfboardModel.destroy({
       where: {
         id,
       },
+      ...options,
     });
 
     if (!existingSurfboard) {

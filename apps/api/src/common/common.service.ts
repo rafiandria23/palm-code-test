@@ -1,8 +1,13 @@
+import _ from 'lodash';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MultipartFile } from '@fastify/multipart';
 import { Upload } from '@aws-sdk/lib-storage';
-import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import dayjs from 'dayjs';
 import path from 'path';
 import * as uuid from 'uuid';
@@ -26,13 +31,11 @@ export class CommonService {
   public successTimestamp<MD = undefined, D = undefined>(
     payload?: Partial<SuccessTimestampDto<MD, D>> | undefined,
   ): SuccessTimestampDto<MD, D> {
-    const { success = true, timestamp = dayjs(), metadata, data } = payload;
-
     return {
-      success,
-      timestamp,
-      metadata,
-      data,
+      success: _.get(payload, 'success', true),
+      timestamp: _.get(payload, 'timestamp', dayjs()),
+      metadata: _.get(payload, 'metadata'),
+      data: _.get(payload, 'data'),
     };
   }
 
@@ -56,6 +59,23 @@ export class CommonService {
     });
 
     return uploadedFile;
+  }
+
+  public async getFile(key: string) {
+    const command = new GetObjectCommand({
+      Bucket: this.configService.get<string>('aws.s3BucketName'),
+      Key: key,
+    });
+
+    try {
+      return await this.s3Client.send(command);
+    } catch (err) {
+      if (err.name === 'NoSuchKey') {
+        return null;
+      }
+
+      throw err;
+    }
   }
 
   public getFileUrl(key: string) {

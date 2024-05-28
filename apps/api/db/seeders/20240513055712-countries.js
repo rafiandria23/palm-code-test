@@ -1456,18 +1456,25 @@ module.exports = {
       },
     ];
 
-    await queryInterface.bulkInsert(
-      tableName,
-      countries.map((country) => ({
-        id: uuid.v4(),
-        ...country,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: null,
-      })),
-    );
+    await queryInterface.sequelize.transaction(async (transaction) => {
+      await queryInterface.bulkInsert(
+        tableName,
+        countries.map((country) => ({
+          id: uuid.v4(),
+          ...country,
+          created_at: new Date(),
+          updated_at: new Date(),
+          deleted_at: null,
+        })),
+        {
+          transaction,
+        },
+      );
+    });
   },
   async down(queryInterface) {
-    await queryInterface.bulkDelete(tableName, null);
+    await queryInterface.sequelize.transaction(async (transaction) => {
+      await queryInterface.bulkDelete(tableName, null, { transaction });
+    });
   },
 };
