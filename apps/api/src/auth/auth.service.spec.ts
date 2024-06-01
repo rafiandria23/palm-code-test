@@ -10,6 +10,7 @@ import bcrypt from 'bcrypt';
 import { CommonService } from '../common/common.service';
 import { UserService } from '../user/user.service';
 
+import { PasswordLength } from './constants/user-password.constant';
 import { UserPassword } from './models/user-password.model';
 import { AuthService } from './auth.service';
 
@@ -26,6 +27,7 @@ describe('AuthService', () => {
     signAsync: jest.fn(),
     verifyAsync: jest.fn(),
   };
+
   const mockedUserService = {
     create: jest.fn(),
     readByEmail: jest.fn(),
@@ -40,12 +42,12 @@ describe('AuthService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ConfigService,
         AuthService,
         {
           provide: getModelToken(UserPassword),
           useValue: mockedUserPasswordModel,
         },
+        ConfigService,
         CommonService,
         {
           provide: JwtService,
@@ -79,11 +81,15 @@ describe('AuthService', () => {
     id: faker.string.uuid(),
     user_id: mockedUser.id,
     password: faker.internet.password({
-      length: 6,
+      length: PasswordLength.MIN,
     }),
 
     update: jest.fn(),
     restore: jest.fn(),
+  };
+
+  const mockedAuthToken = {
+    access_token: faker.string.alphanumeric(),
   };
 
   describe('signUp', () => {
@@ -106,13 +112,15 @@ describe('AuthService', () => {
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
-    it('should return auth token data', async () => {
+    it('should return auth token', async () => {
       mockedUserService.readByEmail.mockResolvedValue(null);
       mockedUserService.create.mockResolvedValue(mockedUser);
-      mockedJwtService.signAsync.mockResolvedValue(faker.string.alphanumeric());
+      mockedJwtService.signAsync.mockResolvedValue(
+        mockedAuthToken.access_token,
+      );
       mockedUserPasswordModel.create.mockResolvedValue(mockedUserPassword);
 
-      const { data } = await service.signUp({
+      const { success, data } = await service.signUp({
         ..._.omit(mockedUser, ['id']),
         ..._.pick(mockedUserPassword, ['password']),
       });
@@ -122,7 +130,8 @@ describe('AuthService', () => {
       expect(mockedJwtService.signAsync).toHaveBeenCalledTimes(1);
       expect(mockedUserPasswordModel.create).toHaveBeenCalledTimes(1);
 
-      expect(data).toHaveProperty('access_token');
+      expect(success).toBeTruthy();
+      expect(data).toEqual(mockedAuthToken);
     });
   });
 
@@ -156,7 +165,7 @@ describe('AuthService', () => {
         await service.signIn({
           ..._.pick(mockedUser, ['email']),
           password: faker.internet.password({
-            length: 6,
+            length: PasswordLength.MIN,
           }),
         });
       } catch (error) {
@@ -180,7 +189,7 @@ describe('AuthService', () => {
         await service.signIn({
           ..._.pick(mockedUser, ['email']),
           password: faker.internet.password({
-            length: 6,
+            length: PasswordLength.MIN,
           }),
         });
       } catch (error) {
@@ -194,18 +203,20 @@ describe('AuthService', () => {
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
-    it('should return 422 when user password is wrong', async () => {
+    it('should return auth token', async () => {
       mockedUserService.readByEmail.mockResolvedValue(mockedUser);
       mockedUserPasswordModel.findOne.mockResolvedValue(mockedUserPassword);
       mockedBcrypt.compare.mockResolvedValue(true as never);
       mockedUserPassword.restore.mockResolvedValue({});
       mockedUser.restore.mockResolvedValue({});
-      mockedJwtService.signAsync.mockResolvedValue(faker.string.alphanumeric());
+      mockedJwtService.signAsync.mockResolvedValue(
+        mockedAuthToken.access_token,
+      );
 
-      const { data } = await service.signIn({
+      const { success, data } = await service.signIn({
         ..._.pick(mockedUser, ['email']),
         password: faker.internet.password({
-          length: 6,
+          length: PasswordLength.MIN,
         }),
       });
 
@@ -215,7 +226,8 @@ describe('AuthService', () => {
       expect(mockedUser.restore).toHaveBeenCalledTimes(1);
       expect(mockedUserPassword.restore).toHaveBeenCalledTimes(1);
 
-      expect(data).toHaveProperty('access_token');
+      expect(success).toBeTruthy();
+      expect(data).toEqual(mockedAuthToken);
     });
   });
 
@@ -238,8 +250,8 @@ describe('AuthService', () => {
 
     it('should return 422 when user email is not available', async () => {
       mockedUserService.readByEmail.mockResolvedValue({
-        ..._.omit(mockedUser, ['id']),
         id: faker.string.uuid(),
+        ..._.omit(mockedUser, ['id']),
       });
 
       let err: UnprocessableEntityException;
@@ -281,7 +293,7 @@ describe('AuthService', () => {
         await service.updatePassword(mockedUser.id, {
           old_password: mockedUserPassword.password,
           new_password: faker.internet.password({
-            length: 6,
+            length: PasswordLength.MIN,
           }),
         });
       } catch (error) {
@@ -304,10 +316,10 @@ describe('AuthService', () => {
       try {
         await service.updatePassword(mockedUser.id, {
           old_password: faker.internet.password({
-            length: 6,
+            length: PasswordLength.MIN,
           }),
           new_password: faker.internet.password({
-            length: 6,
+            length: PasswordLength.MIN,
           }),
         });
       } catch (error) {
@@ -352,7 +364,9 @@ describe('AuthService', () => {
 
       const { success } = await service.updatePassword(mockedUser.id, {
         old_password: mockedUserPassword.password,
-        new_password: mockedUserPassword.password,
+        new_password: faker.internet.password({
+          length: PasswordLength.MIN,
+        }),
       });
 
       expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);

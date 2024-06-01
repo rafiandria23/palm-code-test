@@ -5,7 +5,11 @@ import { ConfigService } from '@nestjs/config';
 import { getModelToken } from '@nestjs/sequelize';
 import { faker } from '@faker-js/faker';
 
-import { SortDirection } from '../common/constants/pagination.constant';
+import {
+  PaginationPage,
+  PaginationSize,
+  SortDirection,
+} from '../common/constants/pagination.constant';
 import { CommonService } from '../common/common.service';
 
 import { User } from './models/user.model';
@@ -27,12 +31,12 @@ describe('UserService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ConfigService,
         UserService,
         {
           provide: getModelToken(User),
           useValue: mockedUserModel,
         },
+        ConfigService,
         CommonService,
       ],
     }).compile();
@@ -72,8 +76,8 @@ describe('UserService', () => {
       });
 
       const { success, data } = await service.readAll({
-        page: faker.number.int(),
-        page_size: faker.number.int(),
+        page: PaginationPage.MIN,
+        page_size: PaginationSize.MAX,
         sort: SortDirection.ASC,
         sort_by: UserSortProperty.ID,
       });
@@ -152,10 +156,10 @@ describe('UserService', () => {
     it('should return success', async () => {
       mockedUserModel.update.mockResolvedValue([1]);
 
-      const { success } = await service.update(
-        mockedUser.id,
-        _.pick(mockedUser, ['first_name', 'last_name']),
-      );
+      const { success } = await service.update(mockedUser.id, {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+      });
 
       expect(mockedUserModel.update).toHaveBeenCalledTimes(1);
 

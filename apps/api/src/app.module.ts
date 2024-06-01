@@ -21,8 +21,6 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { BookingModule } from './booking/booking.module';
 
-import { AppService } from './app.service';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -70,7 +68,6 @@ import { AppService } from './app.service';
   ],
   providers: [
     Logger,
-    AppService,
     {
       provide: APP_PIPE,
       useFactory: () =>
@@ -95,6 +92,5 @@ import { AppService } from './app.service';
       useClass: ExceptionFilter,
     },
   ],
-  exports: [AppService],
 })
 export class AppModule {}

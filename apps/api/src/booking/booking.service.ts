@@ -1,5 +1,9 @@
 import _ from 'lodash';
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import {
   Op,
@@ -27,6 +31,7 @@ import { UpdateBookingBodyDto } from './dtos/update.dto';
 @Injectable()
 export class BookingService {
   constructor(
+    private readonly logger: Logger,
     @InjectModel(Booking) private readonly bookingModel: typeof Booking,
     private readonly commonService: CommonService,
     private readonly settingService: SettingService,
@@ -229,9 +234,13 @@ export class BookingService {
       existingBooking.national_id_photo_file_key !==
       payload.national_id_photo_file_key
     ) {
-      await this.commonService.deleteFile(
-        existingBooking.national_id_photo_file_key,
-      );
+      try {
+        await this.commonService.deleteFile(
+          existingBooking.national_id_photo_file_key,
+        );
+      } catch (err) {
+        this.logger.error(err.message, err.stack, err.name);
+      }
     }
 
     await existingBooking.update(

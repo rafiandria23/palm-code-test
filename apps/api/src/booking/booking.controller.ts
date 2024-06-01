@@ -88,8 +88,8 @@ export class BookingController {
     },
   })
   public create(
-    @Transaction() transaction: SequelizeTransaction,
     @Body() payload: CreateBookingBodyDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.bookingService.create(payload, {
       transaction,
@@ -165,8 +165,8 @@ export class BookingController {
     },
   })
   public readAll(
-    @Transaction() transaction: SequelizeTransaction,
     @Query() queries: ReadAllBookingsQueryDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.bookingService.readAll(queries, {
       transaction,
@@ -195,8 +195,8 @@ export class BookingController {
     },
   })
   public async readById(
-    @Transaction() transaction: SequelizeTransaction,
     @Param() params: ReadBookingByIdParamDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     const existingBooking = await this.bookingService.readById(params.id, {
       transaction,
@@ -220,9 +220,9 @@ export class BookingController {
     },
   })
   public update(
-    @Transaction() transaction: SequelizeTransaction,
     @Param() params: UpdateBookingParamDto,
     @Body() payload: UpdateBookingBodyDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.bookingService.update(params.id, payload, {
       transaction,
@@ -238,8 +238,8 @@ export class BookingController {
     },
   })
   public delete(
-    @Transaction() transaction: SequelizeTransaction,
     @Param() params: DeleteBookingParamDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.bookingService.delete(params.id, {
       transaction,

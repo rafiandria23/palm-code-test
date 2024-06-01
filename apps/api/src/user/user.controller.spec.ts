@@ -1,12 +1,18 @@
 import _ from 'lodash';
 import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import { faker } from '@faker-js/faker';
 
+import {
+  PaginationPage,
+  PaginationSize,
+  SortDirection,
+} from '../common/constants/pagination.constant';
 import { TransactionInterceptor } from '../common/interceptors/transaction.interceptor';
 import { CommonService } from '../common/common.service';
 
+import { UserSortProperty } from './constants/read.constant';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 
@@ -51,14 +57,24 @@ describe('UserController', () => {
   };
 
   describe('readAll', () => {
-    it('should return success', async () => {
-      mockedUserService.readAll.mockResolvedValue({ success: true });
+    it('should return users', async () => {
+      mockedUserService.readAll.mockResolvedValue({
+        success: true,
+        data: [mockedUser],
+      });
 
-      const { success } = await controller.readAll({});
+      const { success, data } = await controller.readAll({
+        page: PaginationPage.MIN,
+        page_size: PaginationSize.MAX,
+        sort: SortDirection.ASC,
+        sort_by: UserSortProperty.ID,
+        email: mockedUser.email,
+      });
 
       expect(mockedUserService.readAll).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
+      expect(data).toEqual([mockedUser]);
     });
   });
 
@@ -81,16 +97,17 @@ describe('UserController', () => {
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
-    it('should return success', async () => {
+    it('should return user', async () => {
       mockedUserService.readById.mockResolvedValue(mockedUser);
 
-      const { success } = await controller.me({
+      const { success, data } = await controller.me({
         user_id: mockedUser.id,
       });
 
       expect(mockedUserService.readById).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
+      expect(data).toEqual(mockedUser);
     });
   });
 
@@ -113,14 +130,17 @@ describe('UserController', () => {
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
-    it('should return success', async () => {
+    it('should return user', async () => {
       mockedUserService.readById.mockResolvedValue(mockedUser);
 
-      const { success } = await controller.readById(_.pick(mockedUser, ['id']));
+      const { success, data } = await controller.readById(
+        _.pick(mockedUser, ['id']),
+      );
 
       expect(mockedUserService.readById).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
+      expect(data).toEqual(mockedUser);
     });
   });
 

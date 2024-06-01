@@ -89,8 +89,8 @@ export class SettingController {
     },
   })
   public createCountry(
-    @Transaction() transaction: SequelizeTransaction,
     @Body() payload: CreateCountryBodyDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.settingService.createCountry(payload, {
       transaction,
@@ -119,8 +119,8 @@ export class SettingController {
     },
   })
   public createSurfboard(
-    @Transaction() transaction: SequelizeTransaction,
     @Body() payload: CreateSurfboardBodyDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.settingService.createSurfboard(payload, {
       transaction,
@@ -155,8 +155,8 @@ export class SettingController {
     },
   })
   public readAllCountries(
-    @Transaction() transaction: SequelizeTransaction,
     @Query() queries: ReadAllCountriesQueryDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.settingService.readAllCountries(queries, {
       transaction,
@@ -185,8 +185,8 @@ export class SettingController {
     },
   })
   public async readCountryById(
-    @Transaction() transaction: SequelizeTransaction,
     @Param() params: ReadCountryByIdParamDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     const existingCountry = await this.settingService.readCountryById(
       params.id,
@@ -232,8 +232,8 @@ export class SettingController {
     },
   })
   public readAllSurfboards(
-    @Transaction() transaction: SequelizeTransaction,
     @Query() queries: ReadAllSurfboardsQueryDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.settingService.readAllSurfboards(queries, {
       transaction,
@@ -262,8 +262,8 @@ export class SettingController {
     },
   })
   public async readSurfboardById(
-    @Transaction() transaction: SequelizeTransaction,
     @Param() params: ReadSurfboardByIdParamDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     const existingSurfboard = await this.settingService.readSurfboardById(
       params.id,
@@ -290,9 +290,9 @@ export class SettingController {
     },
   })
   public updateCountry(
-    @Transaction() transaction: SequelizeTransaction,
     @Param() params: UpdateCountryParamDto,
     @Body() payload: UpdateCountryBodyDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.settingService.updateCountry(params.id, payload, {
       transaction,
@@ -308,9 +308,9 @@ export class SettingController {
     },
   })
   public updateSurfboard(
-    @Transaction() transaction: SequelizeTransaction,
     @Param() params: UpdateSurfboardParamDto,
     @Body() payload: UpdateSurfboardBodyDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.settingService.updateSurfboard(params.id, payload, {
       transaction,
@@ -326,8 +326,8 @@ export class SettingController {
     },
   })
   public deleteCountry(
-    @Transaction() transaction: SequelizeTransaction,
     @Param() params: DeleteCountryParamDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.settingService.deleteCountry(params.id, {
       transaction,
@@ -343,8 +343,8 @@ export class SettingController {
     },
   })
   public deleteSurfboard(
-    @Transaction() transaction: SequelizeTransaction,
     @Param() params: DeleteSurfboardParamDto,
+    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.settingService.deleteSurfboard(params.id, { transaction });
   }
