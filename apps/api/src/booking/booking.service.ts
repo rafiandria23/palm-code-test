@@ -11,7 +11,7 @@ import {
   FindAndCountOptions,
   FindOptions,
   InstanceUpdateOptions,
-  DestroyOptions,
+  InstanceDestroyOptions,
 } from 'sequelize';
 
 import {
@@ -260,20 +260,19 @@ export class BookingService {
     return this.commonService.successTimestamp();
   }
 
-  public async delete(
-    id: string,
-    options?: Omit<DestroyOptions<Booking>, 'where'>,
-  ) {
-    const existingBooking = await this.bookingModel.destroy({
-      where: {
-        id,
-      },
-      ...options,
+  public async delete(id: string, options?: InstanceDestroyOptions) {
+    const existingBooking = await this.bookingModel.findByPk(id, {
+      transaction: options.transaction,
     });
 
     if (!existingBooking) {
       throw new UnprocessableEntityException('Booking does not exist!');
     }
+
+    await Promise.all([
+      this.commonService.deleteFile(existingBooking.national_id_photo_file_key),
+      existingBooking.destroy(options),
+    ]);
 
     return this.commonService.successTimestamp();
   }

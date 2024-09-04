@@ -114,6 +114,24 @@ describe('BookingController', () => {
     });
   });
 
+  describe('uploadNationalIdPhoto', () => {
+    it('should return file key', async () => {
+      const expectedResult = {
+        success: true,
+        data: {
+          file_key: faker.string.alphanumeric(),
+        },
+      };
+
+      const { success, data } = await controller.uploadNationalIdPhoto({
+        key: expectedResult.data.file_key,
+      });
+
+      expect(success).toBeTruthy();
+      expect(data).toEqual(expectedResult.data);
+    });
+  });
+
   describe('readAll', () => {
     it('should return bookings', async () => {
       const expectedResult = {
