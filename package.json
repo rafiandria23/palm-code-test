@@ -10,7 +10,7 @@
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@faker-js/faker": "^8.4.1",
+    "@faker-js/faker": "^9.0.0",
     "@fastify/multipart": "^8.2.0",
     "@fastify/static": "^7.0.4",
     "@hookform/resolvers": "^3.4.0",
