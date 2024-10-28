@@ -23,35 +23,35 @@ import {
 } from '@nestjs/swagger';
 import { Transaction as SequelizeTransaction } from 'sequelize';
 
-import { ApiFile } from '../common/interfaces/api.interface';
-import { DocumentTag } from '../common/constants/docs.constant';
+import { ApiFile } from '../common/common.interface';
+import { SwaggerTag } from '../common/common.constant';
+import { SUPPORTED_FILE_TYPE, MEGABYTE } from '../file/file.constant';
+import { DbTransaction } from '../common/common.decorator';
+import { FileConfig, UploadedFile } from '../file/file.decorator';
 import {
-  SUPPORTED_FILE_TYPE,
-  MEGABYTE,
-} from '../common/constants/file.constant';
-import { Transaction } from '../common/decorators/transaction.decorator';
-import { FileConfig, UploadedFile } from '../common/decorators/file.decorator';
-import { RawSuccessTimestampDto } from '../common/dtos/success-timestamp.dto';
-import { UploadFileDataDto } from '../common/dtos/file.dto';
-import { ReadAllMetadataDto } from '../common/dtos/pagination.dto';
-import { TransactionInterceptor } from '../common/interceptors/transaction.interceptor';
-import { FileInterceptor } from '../common/interceptors/file.interceptor';
+  RawSuccessTimestampDto,
+  ReadAllMetadataDto,
+} from '../common/common.dto';
+import { UploadFileDataDto } from '../file/file.dto';
+import { DbTransactionInterceptor } from '../common/common.interceptor';
+import { FileInterceptor } from '../file/file.interceptor';
 import { CommonService } from '../common/common.service';
 
-import { BookingDto } from './dtos';
-import { UploadNationalIdPhotoBodyDto } from './dtos/file.dto';
-import { CreateBookingBodyDto } from './dtos/create.dto';
 import {
+  BookingDto,
+  UploadNationalIdPhotoBodyDto,
+  CreateBookingBodyDto,
   ReadBookingByIdParamDto,
   ReadAllBookingsQueryDto,
-} from './dtos/read.dto';
-import { UpdateBookingParamDto, UpdateBookingBodyDto } from './dtos/update.dto';
-import { DeleteBookingParamDto } from './dtos/delete.dto';
+  UpdateBookingParamDto,
+  UpdateBookingBodyDto,
+  DeleteBookingParamDto,
+} from './booking.dto';
 import { BookingService } from './booking.service';
 
 @Controller('/bookings')
-@UseInterceptors(TransactionInterceptor)
-@ApiTags(DocumentTag.BOOKING)
+@UseInterceptors(DbTransactionInterceptor)
+@ApiTags(SwaggerTag.Booking)
 @ApiBearerAuth()
 @ApiExtraModels(
   RawSuccessTimestampDto,
@@ -88,8 +88,8 @@ export class BookingController {
     },
   })
   public create(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Body() payload: CreateBookingBodyDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.bookingService.create(payload, {
       transaction,
@@ -165,8 +165,8 @@ export class BookingController {
     },
   })
   public readAll(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Query() queries: ReadAllBookingsQueryDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.bookingService.readAll(queries, {
       transaction,
@@ -195,8 +195,8 @@ export class BookingController {
     },
   })
   public async readById(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Param() params: ReadBookingByIdParamDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     const existingBooking = await this.bookingService.readById(params.id, {
       transaction,
@@ -220,9 +220,9 @@ export class BookingController {
     },
   })
   public update(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Param() params: UpdateBookingParamDto,
     @Body() payload: UpdateBookingBodyDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.bookingService.update(params.id, payload, {
       transaction,
@@ -238,8 +238,8 @@ export class BookingController {
     },
   })
   public delete(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Param() params: DeleteBookingParamDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.bookingService.delete(params.id, {
       transaction,

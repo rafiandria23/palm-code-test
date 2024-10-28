@@ -17,21 +17,25 @@ import {
 } from '@nestjs/swagger';
 import { Transaction as SequelizeTransaction } from 'sequelize';
 
-import { ApiAuth } from '../common/interfaces/api.interface';
-import { DocumentTag } from '../common/constants/docs.constant';
-import { Transaction } from '../common/decorators/transaction.decorator';
-import { Public, Auth } from '../common/decorators/auth.decorator';
-import { RawSuccessTimestampDto } from '../common/dtos/success-timestamp.dto';
-import { TransactionInterceptor } from '../common/interceptors/transaction.interceptor';
+import { ApiAuth } from '../common/common.interface';
+import { SwaggerTag } from '../common/common.constant';
+import { DbTransaction } from '../common/common.decorator';
+import { Public, Auth } from './auth.decorator';
+import { RawSuccessTimestampDto } from '../common/common.dto';
+import { DbTransactionInterceptor } from '../common/common.interceptor';
 
-import { AuthTokenDataDto } from './dtos';
-import { SignUpBodyDto, SignInBodyDto } from './dtos/sign.dto';
-import { UpdateEmailBodyDto, UpdatePasswordBodyDto } from './dtos/update.dto';
+import {
+  AuthTokenDataDto,
+  SignUpBodyDto,
+  SignInBodyDto,
+  UpdateEmailBodyDto,
+  UpdatePasswordBodyDto,
+} from './auth.dto';
 import { AuthService } from './auth.service';
 
 @Controller('/auth')
-@UseInterceptors(TransactionInterceptor)
-@ApiTags(DocumentTag.AUTH)
+@UseInterceptors(DbTransactionInterceptor)
+@ApiTags(SwaggerTag.Auth)
 @ApiExtraModels(RawSuccessTimestampDto, AuthTokenDataDto)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -59,8 +63,8 @@ export class AuthController {
     },
   })
   public signUp(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Body() payload: SignUpBodyDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.authService.signUp(payload, { transaction });
   }
@@ -88,8 +92,8 @@ export class AuthController {
     },
   })
   public signIn(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Body() payload: SignInBodyDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.authService.signIn(payload, { transaction });
   }
@@ -104,9 +108,9 @@ export class AuthController {
     },
   })
   public updateEmail(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Auth() auth: ApiAuth,
     @Body() payload: UpdateEmailBodyDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.authService.updateEmail(auth.user_id, payload, { transaction });
   }
@@ -121,9 +125,9 @@ export class AuthController {
     },
   })
   public updatePassword(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Auth() auth: ApiAuth,
     @Body() payload: UpdatePasswordBodyDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.authService.updatePassword(auth.user_id, payload, {
       transaction,
@@ -140,8 +144,8 @@ export class AuthController {
     },
   })
   public deactivate(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Auth() auth: ApiAuth,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.authService.deactivate(auth.user_id, { transaction });
   }
@@ -156,8 +160,8 @@ export class AuthController {
     },
   })
   public delete(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Auth() auth: ApiAuth,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.authService.delete(auth.user_id, { transaction });
   }

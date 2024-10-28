@@ -9,7 +9,7 @@ import { SettingService } from './setting.service';
 import { SettingController } from './setting.controller';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Country, Surfboard]), CommonModule],
+  imports: [CommonModule, SequelizeModule.forFeature([Country, Surfboard])],
   controllers: [SettingController],
   providers: [SettingService],
   exports: [SettingService],

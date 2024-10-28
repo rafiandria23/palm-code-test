@@ -1,15 +1,18 @@
 import _ from 'lodash';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Transaction as SequelizeTransaction } from 'sequelize';
 import { faker } from '@faker-js/faker';
 
-import { TransactionInterceptor } from '../common/interceptors/transaction.interceptor';
+import { DbTransactionInterceptor } from '../common/common.interceptor';
 
-import { PasswordLength } from './constants/user-password.constant';
+import { PasswordLength } from './auth.constant';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 
 describe('AuthController', () => {
   let controller: AuthController;
+
+  const mockedDbTransaction: SequelizeTransaction = {} as SequelizeTransaction;
 
   const mockedAuthService = {
     signUp: jest.fn(),
@@ -30,8 +33,8 @@ describe('AuthController', () => {
         },
       ],
     })
-      .overrideInterceptor(TransactionInterceptor)
-      .useValue({})
+      .overrideInterceptor(DbTransactionInterceptor)
+      .useValue(mockedDbTransaction)
       .compile();
 
     controller = module.get<AuthController>(AuthController);
@@ -53,7 +56,7 @@ describe('AuthController', () => {
     id: faker.string.uuid(),
     user_id: mockedUser.id,
     password: faker.internet.password({
-      length: PasswordLength.MIN,
+      length: PasswordLength.Min,
     }),
   };
 
@@ -68,7 +71,7 @@ describe('AuthController', () => {
         data: mockedAuthToken,
       });
 
-      const { success, data } = await controller.signUp({
+      const { success, data } = await controller.signUp(mockedDbTransaction, {
         ..._.omit(mockedUser, ['id']),
         ..._.pick(mockedUserPassword, ['password']),
       });
@@ -87,7 +90,7 @@ describe('AuthController', () => {
         data: mockedAuthToken,
       });
 
-      const { success, data } = await controller.signIn({
+      const { success, data } = await controller.signIn(mockedDbTransaction, {
         ..._.pick(mockedUser, ['email']),
         ..._.pick(mockedUserPassword, ['password']),
       });
@@ -104,6 +107,7 @@ describe('AuthController', () => {
       mockedAuthService.updateEmail.mockResolvedValue({ success: true });
 
       const { success } = await controller.updateEmail(
+        mockedDbTransaction,
         {
           user_id: mockedUser.id,
         },
@@ -123,13 +127,14 @@ describe('AuthController', () => {
       mockedAuthService.updatePassword.mockResolvedValue({ success: true });
 
       const { success } = await controller.updatePassword(
+        mockedDbTransaction,
         {
           user_id: mockedUser.id,
         },
         {
           old_password: mockedUserPassword.password,
           new_password: faker.internet.password({
-            length: PasswordLength.MIN,
+            length: PasswordLength.Min,
           }),
         },
       );
@@ -144,7 +149,7 @@ describe('AuthController', () => {
     it('should return success', async () => {
       mockedAuthService.deactivate.mockResolvedValue({ success: true });
 
-      const { success } = await controller.deactivate({
+      const { success } = await controller.deactivate(mockedDbTransaction, {
         user_id: mockedUser.id,
       });
 
@@ -158,7 +163,7 @@ describe('AuthController', () => {
     it('should return success', async () => {
       mockedAuthService.delete.mockResolvedValue({ success: true });
 
-      const { success } = await controller.delete({
+      const { success } = await controller.delete(mockedDbTransaction, {
         user_id: mockedUser.id,
       });
 

@@ -9,17 +9,21 @@ import { CommonService } from '../common/common.service';
 import { UserService } from '../user/user.service';
 
 import { UserPassword } from './models/user-password.model';
-import { AuthTokenDataDto } from './dtos';
-import { SignUpBodyDto, SignInBodyDto } from './dtos/sign.dto';
-import { UpdateEmailBodyDto, UpdatePasswordBodyDto } from './dtos/update.dto';
+import {
+  AuthTokenDataDto,
+  SignUpBodyDto,
+  SignInBodyDto,
+  UpdateEmailBodyDto,
+  UpdatePasswordBodyDto,
+} from './auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(UserPassword)
-    private readonly userPasswordModel: typeof UserPassword,
     private readonly commonService: CommonService,
     private readonly jwtService: JwtService,
+    @InjectModel(UserPassword)
+    private readonly userPasswordModel: typeof UserPassword,
     private readonly userService: UserService,
   ) {}
 

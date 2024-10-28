@@ -9,13 +9,10 @@ import {
   PaginationPage,
   PaginationSize,
   SortDirection,
-} from '../common/constants/pagination.constant';
+} from '../common/common.constant';
 import { CommonService } from '../common/common.service';
 
-import {
-  CountrySortProperty,
-  SurfboardSortProperty,
-} from './constants/read.constant';
+import { CountrySortProperty, SurfboardSortProperty } from './setting.constant';
 import { Country } from './models/country.model';
 import { Surfboard } from './models/surfboard.model';
 import { SettingService } from './setting.service';
@@ -42,7 +39,8 @@ describe('SettingService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        SettingService,
+        ConfigService,
+        CommonService,
         {
           provide: getModelToken(Country),
           useValue: mockedCountryModel,
@@ -51,8 +49,7 @@ describe('SettingService', () => {
           provide: getModelToken(Surfboard),
           useValue: mockedSurfboardModel,
         },
-        ConfigService,
-        CommonService,
+        SettingService,
       ],
     }).compile();
 
@@ -115,10 +112,10 @@ describe('SettingService', () => {
       });
 
       const { success, data } = await service.readAllCountries({
-        page: PaginationPage.MIN,
-        page_size: PaginationSize.MAX,
-        sort: SortDirection.ASC,
-        sort_by: CountrySortProperty.ID,
+        page: PaginationPage.Min,
+        page_size: PaginationSize.Max,
+        sort: SortDirection.Asc,
+        sort_by: CountrySortProperty.Id,
       });
 
       expect(mockedCountryModel.findAndCountAll).toHaveBeenCalledTimes(1);
@@ -134,10 +131,10 @@ describe('SettingService', () => {
       });
 
       const { success, data } = await service.readAllCountries({
-        page: PaginationPage.MIN,
-        page_size: PaginationSize.MAX,
-        sort: SortDirection.ASC,
-        sort_by: CountrySortProperty.ID,
+        page: PaginationPage.Min,
+        page_size: PaginationSize.Max,
+        sort: SortDirection.Asc,
+        sort_by: CountrySortProperty.Id,
         name: mockedCountry.name,
       });
 
@@ -168,10 +165,10 @@ describe('SettingService', () => {
       });
 
       const { success, data } = await service.readAllSurfboards({
-        page: PaginationPage.MIN,
-        page_size: PaginationSize.MAX,
-        sort: SortDirection.ASC,
-        sort_by: SurfboardSortProperty.ID,
+        page: PaginationPage.Min,
+        page_size: PaginationSize.Max,
+        sort: SortDirection.Asc,
+        sort_by: SurfboardSortProperty.Id,
       });
 
       expect(mockedSurfboardModel.findAndCountAll).toHaveBeenCalledTimes(1);
@@ -187,10 +184,10 @@ describe('SettingService', () => {
       });
 
       const { success, data } = await service.readAllSurfboards({
-        page: PaginationPage.MIN,
-        page_size: PaginationSize.MAX,
-        sort: SortDirection.ASC,
-        sort_by: SurfboardSortProperty.ID,
+        page: PaginationPage.Min,
+        page_size: PaginationSize.Max,
+        sort: SortDirection.Asc,
+        sort_by: SurfboardSortProperty.Id,
         name: mockedSurfboard.name,
       });
 
@@ -232,6 +229,7 @@ describe('SettingService', () => {
 
       expect(mockedCountryModel.update).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -267,6 +265,7 @@ describe('SettingService', () => {
 
       expect(mockedSurfboardModel.update).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -297,6 +296,7 @@ describe('SettingService', () => {
 
       expect(mockedCountryModel.destroy).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -325,6 +325,7 @@ describe('SettingService', () => {
 
       expect(mockedSurfboardModel.destroy).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 

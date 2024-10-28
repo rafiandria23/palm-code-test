@@ -18,22 +18,27 @@ import {
   ReadAllMetadataDto,
   PaginationQueryDto,
   SortQueryDto,
-} from '../common/dtos/pagination.dto';
+} from '../common/common.dto';
 import { CommonService } from '../common/common.service';
+import { FileService } from '../file/file.service';
 import { SettingService } from '../setting/setting.service';
 
 import { Booking } from './models/booking.model';
-import { BookingDto } from './dtos';
-import { CreateBookingBodyDto } from './dtos/create.dto';
-import { ReadAllBookingsQueryDto } from './dtos/read.dto';
-import { UpdateBookingBodyDto } from './dtos/update.dto';
+import {
+  BookingDto,
+  CreateBookingBodyDto,
+  ReadAllBookingsQueryDto,
+  UpdateBookingBodyDto,
+} from './booking.dto';
 
 @Injectable()
 export class BookingService {
+  private readonly logger = new Logger(BookingService.name);
+
   constructor(
-    private readonly logger: Logger,
-    @InjectModel(Booking) private readonly bookingModel: typeof Booking,
     private readonly commonService: CommonService,
+    private readonly fileService: FileService,
+    @InjectModel(Booking) private readonly bookingModel: typeof Booking,
     private readonly settingService: SettingService,
   ) {}
 
@@ -43,13 +48,15 @@ export class BookingService {
   ) {
     const [existingCountry, existingSurfboard, existingNationalIdPhotoFile] =
       await Promise.all([
-        this.settingService.readCountryById(payload.country_id, {
-          transaction: options.transaction,
-        }),
-        this.settingService.readSurfboardById(payload.surfboard_id, {
-          transaction: options.transaction,
-        }),
-        this.commonService.getFile(payload.national_id_photo_file_key),
+        this.settingService.readCountryById(
+          payload.country_id,
+          _.pick(options, ['transaction']),
+        ),
+        this.settingService.readSurfboardById(
+          payload.surfboard_id,
+          _.pick(options, ['transaction']),
+        ),
+        this.fileService.get(payload.national_id_photo_file_key),
       ]);
 
     if (!existingCountry) {
@@ -82,7 +89,7 @@ export class BookingService {
 
     const result = {
       ..._.omit(createdBooking.toJSON(), ['national_id_photo_file_key']),
-      national_id_photo_url: this.commonService.getFileUrl(
+      national_id_photo_url: this.fileService.getUrl(
         createdBooking.national_id_photo_file_key,
       ),
       country: existingCountry.toJSON(),
@@ -90,7 +97,7 @@ export class BookingService {
     };
 
     return this.commonService.successTimestamp<undefined, BookingDto>({
-      data: result as BookingDto,
+      data: result,
     });
   }
 
@@ -132,17 +139,19 @@ export class BookingService {
       existingBooking.toJSON(),
     )) {
       const [existingCountry, existingSurfboard] = await Promise.all([
-        this.settingService.readCountryById(existingBooking.country_id, {
-          transaction: options.transaction,
-        }),
-        this.settingService.readSurfboardById(existingBooking.surfboard_id, {
-          transaction: options.transaction,
-        }),
+        this.settingService.readCountryById(
+          existingBooking.country_id,
+          _.pick(options, ['transaction']),
+        ),
+        this.settingService.readSurfboardById(
+          existingBooking.surfboard_id,
+          _.pick(options, ['transaction']),
+        ),
       ]);
 
       result.push({
         ..._.omit(existingBooking, ['national_id_photo_file_key']),
-        national_id_photo_url: this.commonService.getFileUrl(
+        national_id_photo_url: this.fileService.getUrl(
           existingBooking.national_id_photo_file_key,
         ),
         country: existingCountry.toJSON(),
@@ -172,17 +181,19 @@ export class BookingService {
     }
 
     const [existingCountry, existingSurfboard] = await Promise.all([
-      this.settingService.readCountryById(existingBooking.country_id, {
-        transaction: options.transaction,
-      }),
-      this.settingService.readSurfboardById(existingBooking.surfboard_id, {
-        transaction: options.transaction,
-      }),
+      this.settingService.readCountryById(
+        existingBooking.country_id,
+        _.pick(options, ['transaction']),
+      ),
+      this.settingService.readSurfboardById(
+        existingBooking.surfboard_id,
+        _.pick(options, ['transaction']),
+      ),
     ]);
 
     const result = {
       ..._.omit(existingBooking.toJSON(), ['national_id_photo_file_key']),
-      national_id_photo_url: this.commonService.getFileUrl(
+      national_id_photo_url: this.fileService.getUrl(
         existingBooking.national_id_photo_file_key,
       ),
       country: existingCountry.toJSON(),
@@ -197,9 +208,10 @@ export class BookingService {
     payload: UpdateBookingBodyDto,
     options?: InstanceUpdateOptions<Booking>,
   ) {
-    const existingBooking = await this.bookingModel.findByPk(id, {
-      transaction: options.transaction,
-    });
+    const existingBooking = await this.bookingModel.findByPk(
+      id,
+      _.pick(options, ['transaction']),
+    );
 
     if (!existingBooking) {
       throw new UnprocessableEntityException('Booking does not exist!');
@@ -207,13 +219,15 @@ export class BookingService {
 
     const [existingCountry, existingSurfboard, existingNationalIdPhotoFile] =
       await Promise.all([
-        this.settingService.readCountryById(payload.country_id, {
-          transaction: options.transaction,
-        }),
-        this.settingService.readSurfboardById(payload.surfboard_id, {
-          transaction: options.transaction,
-        }),
-        this.commonService.getFile(payload.national_id_photo_file_key),
+        this.settingService.readCountryById(
+          payload.country_id,
+          _.pick(options, ['transaction']),
+        ),
+        this.settingService.readSurfboardById(
+          payload.surfboard_id,
+          _.pick(options, ['transaction']),
+        ),
+        this.fileService.get(payload.national_id_photo_file_key),
       ]);
 
     if (!existingCountry) {
@@ -235,7 +249,7 @@ export class BookingService {
       payload.national_id_photo_file_key
     ) {
       try {
-        await this.commonService.deleteFile(
+        await this.fileService.delete(
           existingBooking.national_id_photo_file_key,
         );
       } catch (err) {
@@ -261,16 +275,17 @@ export class BookingService {
   }
 
   public async delete(id: string, options?: InstanceDestroyOptions) {
-    const existingBooking = await this.bookingModel.findByPk(id, {
-      transaction: options.transaction,
-    });
+    const existingBooking = await this.bookingModel.findByPk(
+      id,
+      _.pick(options, ['transaction']),
+    );
 
     if (!existingBooking) {
       throw new UnprocessableEntityException('Booking does not exist!');
     }
 
     await Promise.all([
-      this.commonService.deleteFile(existingBooking.national_id_photo_file_key),
+      this.fileService.delete(existingBooking.national_id_photo_file_key),
       existingBooking.destroy(options),
     ]);
 

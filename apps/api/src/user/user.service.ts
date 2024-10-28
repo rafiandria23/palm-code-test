@@ -14,20 +14,23 @@ import {
   ReadAllMetadataDto,
   PaginationQueryDto,
   SortQueryDto,
-} from '../common/dtos/pagination.dto';
+} from '../common/common.dto';
 import { CommonService } from '../common/common.service';
 
 import { User } from './models/user.model';
-import { UserDto } from './dtos';
-import { CreateUserBodyDto } from './dtos/create.dto';
-import { ReadAllUsersQueryDto } from './dtos/read.dto';
-import { UpdateUserEmailBodyDto, UpdateUserBodyDto } from './dtos/update.dto';
+import {
+  UserDto,
+  CreateUserBodyDto,
+  ReadAllUsersQueryDto,
+  UpdateUserEmailBodyDto,
+  UpdateUserBodyDto,
+} from './user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User) private readonly userModel: typeof User,
     private readonly commonService: CommonService,
+    @InjectModel(User) private readonly userModel: typeof User,
   ) {}
 
   public create(payload: CreateUserBodyDto, options?: CreateOptions<User>) {

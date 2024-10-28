@@ -8,5 +8,5 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api',
-  coveragePathIgnorePatterns: ['/models/'],
+  coveragePathIgnorePatterns: ['.model.ts', '.dto.ts'],
 };

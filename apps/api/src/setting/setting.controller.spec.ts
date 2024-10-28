@@ -2,25 +2,25 @@ import _ from 'lodash';
 import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
+import { Transaction as SequelizeTransaction } from 'sequelize';
 import { faker } from '@faker-js/faker';
 
 import {
   PaginationPage,
   PaginationSize,
   SortDirection,
-} from '../common/constants/pagination.constant';
-import { TransactionInterceptor } from '../common/interceptors/transaction.interceptor';
+} from '../common/common.constant';
+import { DbTransactionInterceptor } from '../common/common.interceptor';
 import { CommonService } from '../common/common.service';
 
-import {
-  CountrySortProperty,
-  SurfboardSortProperty,
-} from './constants/read.constant';
+import { CountrySortProperty, SurfboardSortProperty } from './setting.constant';
 import { SettingService } from './setting.service';
 import { SettingController } from './setting.controller';
 
 describe('SettingController', () => {
   let controller: SettingController;
+
+  const mockedDbTransaction: SequelizeTransaction = {} as SequelizeTransaction;
 
   const mockedSettingService = {
     createCountry: jest.fn(),
@@ -47,8 +47,8 @@ describe('SettingController', () => {
         },
       ],
     })
-      .overrideInterceptor(TransactionInterceptor)
-      .useValue({})
+      .overrideInterceptor(DbTransactionInterceptor)
+      .useValue(mockedDbTransaction)
       .compile();
 
     controller = module.get<SettingController>(SettingController);
@@ -80,6 +80,7 @@ describe('SettingController', () => {
       });
 
       const { success, data } = await controller.createCountry(
+        mockedDbTransaction,
         _.omit(mockedCountry, ['id']),
       );
 
@@ -98,6 +99,7 @@ describe('SettingController', () => {
       });
 
       const { success, data } = await controller.createSurfboard(
+        mockedDbTransaction,
         _.omit(mockedSurfboard, ['id']),
       );
 
@@ -115,13 +117,16 @@ describe('SettingController', () => {
         data: [mockedCountry],
       });
 
-      const { success, data } = await controller.readAllCountries({
-        page: PaginationPage.MIN,
-        page_size: PaginationSize.MAX,
-        sort: SortDirection.ASC,
-        sort_by: CountrySortProperty.ID,
-        name: mockedCountry.name,
-      });
+      const { success, data } = await controller.readAllCountries(
+        mockedDbTransaction,
+        {
+          page: PaginationPage.Min,
+          page_size: PaginationSize.Max,
+          sort: SortDirection.Asc,
+          sort_by: CountrySortProperty.Id,
+          name: mockedCountry.name,
+        },
+      );
 
       expect(mockedSettingService.readAllCountries).toHaveBeenCalledTimes(1);
 
@@ -137,7 +142,7 @@ describe('SettingController', () => {
       let err: UnprocessableEntityException;
 
       try {
-        await controller.readCountryById({
+        await controller.readCountryById(mockedDbTransaction, {
           id: faker.string.uuid(),
         });
       } catch (error) {
@@ -146,6 +151,7 @@ describe('SettingController', () => {
 
       expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -153,6 +159,7 @@ describe('SettingController', () => {
       mockedSettingService.readCountryById.mockResolvedValue(mockedCountry);
 
       const { success, data } = await controller.readCountryById(
+        mockedDbTransaction,
         _.pick(mockedCountry, ['id']),
       );
 
@@ -170,13 +177,16 @@ describe('SettingController', () => {
         data: [mockedSurfboard],
       });
 
-      const { success, data } = await controller.readAllSurfboards({
-        page: PaginationPage.MIN,
-        page_size: PaginationSize.MAX,
-        sort: SortDirection.ASC,
-        sort_by: SurfboardSortProperty.ID,
-        name: mockedSurfboard.name,
-      });
+      const { success, data } = await controller.readAllSurfboards(
+        mockedDbTransaction,
+        {
+          page: PaginationPage.Min,
+          page_size: PaginationSize.Max,
+          sort: SortDirection.Asc,
+          sort_by: SurfboardSortProperty.Id,
+          name: mockedSurfboard.name,
+        },
+      );
 
       expect(mockedSettingService.readAllSurfboards).toHaveBeenCalledTimes(1);
 
@@ -192,7 +202,7 @@ describe('SettingController', () => {
       let err: UnprocessableEntityException;
 
       try {
-        await controller.readSurfboardById({
+        await controller.readSurfboardById(mockedDbTransaction, {
           id: faker.string.uuid(),
         });
       } catch (error) {
@@ -201,6 +211,7 @@ describe('SettingController', () => {
 
       expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -208,6 +219,7 @@ describe('SettingController', () => {
       mockedSettingService.readSurfboardById.mockResolvedValue(mockedSurfboard);
 
       const { success, data } = await controller.readSurfboardById(
+        mockedDbTransaction,
         _.pick(mockedSurfboard, ['id']),
       );
 
@@ -223,6 +235,7 @@ describe('SettingController', () => {
       mockedSettingService.updateCountry.mockResolvedValue({ success: true });
 
       const { success } = await controller.updateCountry(
+        mockedDbTransaction,
         _.pick(mockedCountry, ['id']),
         {
           name: faker.string.alpha(),
@@ -243,6 +256,7 @@ describe('SettingController', () => {
       mockedSettingService.updateSurfboard.mockResolvedValue({ success: true });
 
       const { success } = await controller.updateSurfboard(
+        mockedDbTransaction,
         _.pick(mockedSurfboard, ['id']),
         {
           name: faker.string.alpha(),
@@ -260,6 +274,7 @@ describe('SettingController', () => {
       mockedSettingService.deleteCountry.mockResolvedValue({ success: true });
 
       const { success } = await controller.deleteCountry(
+        mockedDbTransaction,
         _.pick(mockedCountry, ['id']),
       );
 
@@ -276,6 +291,7 @@ describe('SettingController', () => {
       });
 
       const { success } = await controller.deleteSurfboard(
+        mockedDbTransaction,
         _.pick(mockedSurfboard, ['id']),
       );
 

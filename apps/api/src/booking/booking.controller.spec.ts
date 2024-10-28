@@ -2,27 +2,30 @@ import _ from 'lodash';
 import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
+import { Transaction as SequelizeTransaction } from 'sequelize';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 
-import { DATE_FORMAT } from '../common/constants/date.constant';
 import {
+  DATE_FORMAT,
   PaginationPage,
   PaginationSize,
   SortDirection,
-} from '../common/constants/pagination.constant';
-import { TransactionInterceptor } from '../common/interceptors/transaction.interceptor';
+} from '../common/common.constant';
+import { DbTransactionInterceptor } from '../common/common.interceptor';
 import { CommonService } from '../common/common.service';
+import { FileService } from '../file/file.service';
 
-import { SurfingExperience } from './constants';
-import { BookingSortProperty } from './constants/read.constant';
+import { SurfingExperience, BookingSortProperty } from './booking.constant';
 import { BookingService } from './booking.service';
 import { BookingController } from './booking.controller';
 
 describe('BookingController', () => {
-  let commonService: CommonService;
+  let fileService: FileService;
 
   let controller: BookingController;
+
+  const mockedDbTransaction: SequelizeTransaction = {} as SequelizeTransaction;
 
   const mockedBookingService = {
     create: jest.fn(),
@@ -38,17 +41,18 @@ describe('BookingController', () => {
       providers: [
         ConfigService,
         CommonService,
+        FileService,
         {
           provide: BookingService,
           useValue: mockedBookingService,
         },
       ],
     })
-      .overrideInterceptor(TransactionInterceptor)
-      .useValue({})
+      .overrideInterceptor(DbTransactionInterceptor)
+      .useValue(mockedDbTransaction)
       .compile();
 
-    commonService = module.get<CommonService>(CommonService);
+    fileService = module.get<FileService>(FileService);
 
     controller = module.get<BookingController>(BookingController);
   });
@@ -78,8 +82,8 @@ describe('BookingController', () => {
     phone: faker.phone.number(),
     country_id: mockedCountry.id,
     surfing_experience: faker.number.int({
-      min: SurfingExperience.MIN,
-      max: SurfingExperience.MAX,
+      min: SurfingExperience.Min,
+      max: SurfingExperience.Max,
     }),
     date: dayjs().format(DATE_FORMAT),
     surfboard_id: mockedSurfboard.id,
@@ -92,7 +96,7 @@ describe('BookingController', () => {
         success: true,
         data: {
           ..._.omit(mockedBooking, ['national_id_photo_file_key']),
-          national_id_photo_url: commonService.getFileUrl(
+          national_id_photo_url: fileService.getUrl(
             mockedBooking.national_id_photo_file_key,
           ),
 
@@ -104,6 +108,7 @@ describe('BookingController', () => {
       mockedBookingService.create.mockResolvedValue(expectedResult);
 
       const { success, data } = await controller.create(
+        mockedDbTransaction,
         _.omit(mockedBooking, ['id']),
       );
 
@@ -139,7 +144,7 @@ describe('BookingController', () => {
         data: [
           {
             ..._.omit(mockedBooking, ['national_id_photo_file_key']),
-            national_id_photo_url: commonService.getFileUrl(
+            national_id_photo_url: fileService.getUrl(
               mockedBooking.national_id_photo_file_key,
             ),
 
@@ -151,11 +156,11 @@ describe('BookingController', () => {
 
       mockedBookingService.readAll.mockResolvedValue(expectedResult);
 
-      const { success, data } = await controller.readAll({
-        page: PaginationPage.MIN,
-        page_size: PaginationSize.MAX,
-        sort: SortDirection.ASC,
-        sort_by: BookingSortProperty.ID,
+      const { success, data } = await controller.readAll(mockedDbTransaction, {
+        page: PaginationPage.Min,
+        page_size: PaginationSize.Max,
+        sort: SortDirection.Asc,
+        sort_by: BookingSortProperty.Id,
         name: mockedBooking.name,
       });
 
@@ -173,7 +178,7 @@ describe('BookingController', () => {
       let err: UnprocessableEntityException;
 
       try {
-        await controller.readById({
+        await controller.readById(mockedDbTransaction, {
           id: faker.string.uuid(),
         });
       } catch (error) {
@@ -182,13 +187,14 @@ describe('BookingController', () => {
 
       expect(mockedBookingService.readById).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return booking', async () => {
       const expectedResult = {
         ..._.omit(mockedBooking, ['national_id_photo_file_key']),
-        national_id_photo_url: commonService.getFileUrl(
+        national_id_photo_url: fileService.getUrl(
           mockedBooking.national_id_photo_file_key,
         ),
 
@@ -199,6 +205,7 @@ describe('BookingController', () => {
       mockedBookingService.readById.mockResolvedValue(expectedResult);
 
       const { success, data } = await controller.readById(
+        mockedDbTransaction,
         _.pick(mockedBooking, ['id']),
       );
 
@@ -214,6 +221,7 @@ describe('BookingController', () => {
       mockedBookingService.update.mockResolvedValue({ success: true });
 
       const { success } = await controller.update(
+        mockedDbTransaction,
         _.pick(mockedBooking, ['id']),
         {
           name: faker.person.fullName(),
@@ -221,8 +229,8 @@ describe('BookingController', () => {
           phone: faker.phone.number(),
           country_id: mockedCountry.id,
           surfing_experience: faker.number.int({
-            min: SurfingExperience.MIN,
-            max: SurfingExperience.MAX,
+            min: SurfingExperience.Min,
+            max: SurfingExperience.Max,
           }),
           date: dayjs().format(DATE_FORMAT),
           surfboard_id: mockedSurfboard.id,
@@ -241,6 +249,7 @@ describe('BookingController', () => {
       mockedBookingService.delete.mockResolvedValue({ success: true });
 
       const { success } = await controller.delete(
+        mockedDbTransaction,
         _.pick(mockedBooking, ['id']),
       );
 

@@ -10,7 +10,7 @@ import bcrypt from 'bcrypt';
 import { CommonService } from '../common/common.service';
 import { UserService } from '../user/user.service';
 
-import { PasswordLength } from './constants/user-password.constant';
+import { PasswordLength } from './auth.constant';
 import { UserPassword } from './models/user-password.model';
 import { AuthService } from './auth.service';
 
@@ -81,7 +81,7 @@ describe('AuthService', () => {
     id: faker.string.uuid(),
     user_id: mockedUser.id,
     password: faker.internet.password({
-      length: PasswordLength.MIN,
+      length: PasswordLength.Min,
     }),
 
     update: jest.fn(),
@@ -109,6 +109,7 @@ describe('AuthService', () => {
 
       expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -152,6 +153,7 @@ describe('AuthService', () => {
 
       expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -165,7 +167,7 @@ describe('AuthService', () => {
         await service.signIn({
           ..._.pick(mockedUser, ['email']),
           password: faker.internet.password({
-            length: PasswordLength.MIN,
+            length: PasswordLength.Min,
           }),
         });
       } catch (error) {
@@ -175,6 +177,7 @@ describe('AuthService', () => {
       expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
       expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -189,7 +192,7 @@ describe('AuthService', () => {
         await service.signIn({
           ..._.pick(mockedUser, ['email']),
           password: faker.internet.password({
-            length: PasswordLength.MIN,
+            length: PasswordLength.Min,
           }),
         });
       } catch (error) {
@@ -200,6 +203,7 @@ describe('AuthService', () => {
       expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
       expect(mockedBcrypt.compare).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -216,7 +220,7 @@ describe('AuthService', () => {
       const { success, data } = await service.signIn({
         ..._.pick(mockedUser, ['email']),
         password: faker.internet.password({
-          length: PasswordLength.MIN,
+          length: PasswordLength.Min,
         }),
       });
 
@@ -245,6 +249,7 @@ describe('AuthService', () => {
 
       expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -266,6 +271,7 @@ describe('AuthService', () => {
 
       expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -293,7 +299,7 @@ describe('AuthService', () => {
         await service.updatePassword(mockedUser.id, {
           old_password: mockedUserPassword.password,
           new_password: faker.internet.password({
-            length: PasswordLength.MIN,
+            length: PasswordLength.Min,
           }),
         });
       } catch (error) {
@@ -302,6 +308,7 @@ describe('AuthService', () => {
 
       expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -316,10 +323,10 @@ describe('AuthService', () => {
       try {
         await service.updatePassword(mockedUser.id, {
           old_password: faker.internet.password({
-            length: PasswordLength.MIN,
+            length: PasswordLength.Min,
           }),
           new_password: faker.internet.password({
-            length: PasswordLength.MIN,
+            length: PasswordLength.Min,
           }),
         });
       } catch (error) {
@@ -329,6 +336,7 @@ describe('AuthService', () => {
       expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
       expect(mockedBcrypt.compare).toHaveBeenCalledTimes(2);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -352,6 +360,7 @@ describe('AuthService', () => {
       expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
       expect(mockedBcrypt.compare).toHaveBeenCalledTimes(2);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -365,7 +374,7 @@ describe('AuthService', () => {
       const { success } = await service.updatePassword(mockedUser.id, {
         old_password: mockedUserPassword.password,
         new_password: faker.internet.password({
-          length: PasswordLength.MIN,
+          length: PasswordLength.Min,
         }),
       });
 

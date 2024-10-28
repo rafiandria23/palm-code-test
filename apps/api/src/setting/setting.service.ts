@@ -14,31 +14,28 @@ import {
   ReadAllMetadataDto,
   PaginationQueryDto,
   SortQueryDto,
-} from '../common/dtos/pagination.dto';
+} from '../common/common.dto';
 import { CommonService } from '../common/common.service';
 
 import { Country } from './models/country.model';
 import { Surfboard } from './models/surfboard.model';
-import { CountryDto, SurfboardDto } from './dtos';
 import {
+  CountryDto,
+  SurfboardDto,
   CreateCountryBodyDto,
   CreateSurfboardBodyDto,
-} from './dtos/create.dto';
-import {
   ReadAllCountriesQueryDto,
   ReadAllSurfboardsQueryDto,
-} from './dtos/read.dto';
-import {
   UpdateCountryBodyDto,
   UpdateSurfboardBodyDto,
-} from './dtos/update.dto';
+} from './setting.dto';
 
 @Injectable()
 export class SettingService {
   constructor(
+    private readonly commonService: CommonService,
     @InjectModel(Country) private readonly countryModel: typeof Country,
     @InjectModel(Surfboard) private readonly surfboardModel: typeof Surfboard,
-    private readonly commonService: CommonService,
   ) {}
 
   public async createCountry(
