@@ -19,23 +19,28 @@ import {
 } from '@nestjs/swagger';
 import { Transaction as SequelizeTransaction } from 'sequelize';
 
-import { ApiAuth } from '../common/interfaces/api.interface';
-import { DocumentTag } from '../common/constants/docs.constant';
-import { Transaction } from '../common/decorators/transaction.decorator';
-import { Auth } from '../common/decorators/auth.decorator';
-import { RawSuccessTimestampDto } from '../common/dtos/success-timestamp.dto';
-import { ReadAllMetadataDto } from '../common/dtos/pagination.dto';
-import { TransactionInterceptor } from '../common/interceptors/transaction.interceptor';
+import { ApiAuth } from '../common/common.interface';
+import { SwaggerTag } from '../common/common.constant';
+import { DbTransaction } from '../common/common.decorator';
+import { Auth } from '../auth/auth.decorator';
+import {
+  RawSuccessTimestampDto,
+  ReadAllMetadataDto,
+} from '../common/common.dto';
+import { DbTransactionInterceptor } from '../common/common.interceptor';
 import { CommonService } from '../common/common.service';
 
-import { UserDto } from './dtos';
-import { ReadUserByIdParamDto, ReadAllUsersQueryDto } from './dtos/read.dto';
-import { UpdateUserBodyDto } from './dtos/update.dto';
+import {
+  UserDto,
+  ReadUserByIdParamDto,
+  ReadAllUsersQueryDto,
+  UpdateUserBodyDto,
+} from './user.dto';
 import { UserService } from './user.service';
 
 @Controller('/users')
-@UseInterceptors(TransactionInterceptor)
-@ApiTags(DocumentTag.USER)
+@UseInterceptors(DbTransactionInterceptor)
+@ApiTags(SwaggerTag.User)
 @ApiBearerAuth()
 @ApiExtraModels(RawSuccessTimestampDto, ReadAllMetadataDto, UserDto)
 export class UserController {
@@ -72,8 +77,8 @@ export class UserController {
     },
   })
   public readAll(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Query() queries: ReadAllUsersQueryDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.userService.readAll(queries, {
       transaction,
@@ -102,8 +107,8 @@ export class UserController {
     },
   })
   public async me(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Auth() auth: ApiAuth,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     const existingUser = await this.userService.readById(auth.user_id, {
       transaction,
@@ -140,8 +145,8 @@ export class UserController {
     },
   })
   public async readById(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Param() params: ReadUserByIdParamDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     const existingUser = await this.userService.readById(params.id, {
       transaction,
@@ -165,9 +170,9 @@ export class UserController {
     },
   })
   public update(
+    @DbTransaction() transaction: SequelizeTransaction,
     @Auth() auth: ApiAuth,
     @Body() payload: UpdateUserBodyDto,
-    @Transaction() transaction?: SequelizeTransaction,
   ) {
     return this.userService.update(auth.user_id, payload, { transaction });
   }

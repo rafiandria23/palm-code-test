@@ -12,7 +12,7 @@ import {
 } from 'sequelize-typescript';
 import dayjs from 'dayjs';
 
-import { DATE_FORMAT } from '../../common/constants/date.constant';
+import { DATE_FORMAT } from '../../common/common.constant';
 
 @Table({
   tableName: 'bookings',

@@ -10,8 +10,8 @@ import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([UserPassword]),
     CommonModule,
+    SequelizeModule.forFeature([UserPassword]),
     UserModule,
   ],
   controllers: [AuthController],

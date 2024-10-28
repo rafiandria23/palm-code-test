@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { CommonService } from './common.service';
 
 describe('CommonService', () => {
@@ -12,7 +13,17 @@ describe('CommonService', () => {
     service = module.get<CommonService>(CommonService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  afterEach(() => {
+    jest.resetModules();
+    jest.resetAllMocks();
+  });
+
+  describe('successTimestamp', () => {
+    it('should return success timestamp', () => {
+      const result = service.successTimestamp();
+
+      expect(result).toHaveProperty('success');
+      expect(result).toHaveProperty('timestamp');
+    });
   });
 });

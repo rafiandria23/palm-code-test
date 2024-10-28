@@ -1,27 +1,18 @@
 import { APP_PIPE, APP_GUARD, APP_FILTER } from '@nestjs/core';
-import {
-  Logger,
-  Module,
-  ValidationPipe,
-  BadRequestException,
-} from '@nestjs/common';
+import { Module, ValidationPipe, BadRequestException } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { JwtModule } from '@nestjs/jwt';
 
-import { apiConfig } from './common/configs/api.config';
-import { dbConfig } from './common/configs/db.config';
-import { jwtConfig } from './common/configs/jwt.config';
-import { awsConfig } from './common/configs/aws.config';
-import { AuthGuard } from './common/guards/auth.guard';
-import { ExceptionFilter } from './common/filters/exception.filter';
+import { apiConfig, dbConfig, jwtConfig, awsConfig } from './configs';
+import { AuthGuard } from './auth/auth.guard';
+import { ExceptionFilter } from './common/common.filter';
 import { CommonModule } from './common/common.module';
+import { FileModule } from './file/file.module';
 import { SettingModule } from './setting/setting.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { BookingModule } from './booking/booking.module';
-
-import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -67,10 +58,9 @@ import { AppService } from './app.service';
     AuthModule,
     UserModule,
     BookingModule,
+    FileModule,
   ],
   providers: [
-    Logger,
-    AppService,
     {
       provide: APP_PIPE,
       useFactory: () =>
@@ -95,6 +85,5 @@ import { AppService } from './app.service';
       useClass: ExceptionFilter,
     },
   ],
-  exports: [AppService],
 })
 export class AppModule {}

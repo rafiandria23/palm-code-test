@@ -1,17 +1,26 @@
 import _ from 'lodash';
 import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
+import { Transaction as SequelizeTransaction } from 'sequelize';
 import { faker } from '@faker-js/faker';
 
-import { TransactionInterceptor } from '../common/interceptors/transaction.interceptor';
+import {
+  PaginationPage,
+  PaginationSize,
+  SortDirection,
+} from '../common/common.constant';
+import { DbTransactionInterceptor } from '../common/common.interceptor';
 import { CommonService } from '../common/common.service';
 
+import { UserSortProperty } from './user.constant';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 
 describe('UserController', () => {
   let controller: UserController;
+
+  const mockedDbTransaction: SequelizeTransaction = {} as SequelizeTransaction;
 
   const mockedUserService = {
     readAll: jest.fn(),
@@ -31,8 +40,8 @@ describe('UserController', () => {
         },
       ],
     })
-      .overrideInterceptor(TransactionInterceptor)
-      .useValue({})
+      .overrideInterceptor(DbTransactionInterceptor)
+      .useValue(mockedDbTransaction)
       .compile();
 
     controller = module.get<UserController>(UserController);
@@ -51,14 +60,24 @@ describe('UserController', () => {
   };
 
   describe('readAll', () => {
-    it('should return success', async () => {
-      mockedUserService.readAll.mockResolvedValue({ success: true });
+    it('should return users', async () => {
+      mockedUserService.readAll.mockResolvedValue({
+        success: true,
+        data: [mockedUser],
+      });
 
-      const { success } = await controller.readAll({});
+      const { success, data } = await controller.readAll(mockedDbTransaction, {
+        page: PaginationPage.Min,
+        page_size: PaginationSize.Max,
+        sort: SortDirection.Asc,
+        sort_by: UserSortProperty.Id,
+        email: mockedUser.email,
+      });
 
       expect(mockedUserService.readAll).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
+      expect(data).toEqual([mockedUser]);
     });
   });
 
@@ -69,7 +88,7 @@ describe('UserController', () => {
       let err: UnprocessableEntityException;
 
       try {
-        await controller.me({
+        await controller.me(mockedDbTransaction, {
           user_id: faker.string.uuid(),
         });
       } catch (error) {
@@ -78,19 +97,21 @@ describe('UserController', () => {
 
       expect(mockedUserService.readById).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
-    it('should return success', async () => {
+    it('should return user', async () => {
       mockedUserService.readById.mockResolvedValue(mockedUser);
 
-      const { success } = await controller.me({
+      const { success, data } = await controller.me(mockedDbTransaction, {
         user_id: mockedUser.id,
       });
 
       expect(mockedUserService.readById).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
+      expect(data).toEqual(mockedUser);
     });
   });
 
@@ -101,7 +122,7 @@ describe('UserController', () => {
       let err: UnprocessableEntityException;
 
       try {
-        await controller.readById({
+        await controller.readById(mockedDbTransaction, {
           id: faker.string.uuid(),
         });
       } catch (error) {
@@ -110,17 +131,22 @@ describe('UserController', () => {
 
       expect(mockedUserService.readById).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
-    it('should return success', async () => {
+    it('should return user', async () => {
       mockedUserService.readById.mockResolvedValue(mockedUser);
 
-      const { success } = await controller.readById(_.pick(mockedUser, ['id']));
+      const { success, data } = await controller.readById(
+        mockedDbTransaction,
+        _.pick(mockedUser, ['id']),
+      );
 
       expect(mockedUserService.readById).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
+      expect(data).toEqual(mockedUser);
     });
   });
 
@@ -129,6 +155,7 @@ describe('UserController', () => {
       mockedUserService.update.mockResolvedValue({ success: true });
 
       const { success } = await controller.update(
+        mockedDbTransaction,
         {
           user_id: mockedUser.id,
         },

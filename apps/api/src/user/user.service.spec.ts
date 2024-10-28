@@ -5,11 +5,15 @@ import { ConfigService } from '@nestjs/config';
 import { getModelToken } from '@nestjs/sequelize';
 import { faker } from '@faker-js/faker';
 
-import { SortDirection } from '../common/constants/pagination.constant';
+import {
+  PaginationPage,
+  PaginationSize,
+  SortDirection,
+} from '../common/common.constant';
 import { CommonService } from '../common/common.service';
 
 import { User } from './models/user.model';
-import { UserSortProperty } from './constants/read.constant';
+import { UserSortProperty } from './user.constant';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
@@ -27,12 +31,12 @@ describe('UserService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ConfigService,
         UserService,
         {
           provide: getModelToken(User),
           useValue: mockedUserModel,
         },
+        ConfigService,
         CommonService,
       ],
     }).compile();
@@ -72,10 +76,10 @@ describe('UserService', () => {
       });
 
       const { success, data } = await service.readAll({
-        page: faker.number.int(),
-        page_size: faker.number.int(),
-        sort: SortDirection.ASC,
-        sort_by: UserSortProperty.ID,
+        page: PaginationPage.Min,
+        page_size: PaginationSize.Max,
+        sort: SortDirection.Asc,
+        sort_by: UserSortProperty.Id,
       });
 
       expect(mockedUserModel.findAndCountAll).toHaveBeenCalledTimes(1);
@@ -93,8 +97,8 @@ describe('UserService', () => {
       const { success, data } = await service.readAll({
         page: faker.number.int(),
         page_size: faker.number.int(),
-        sort: SortDirection.ASC,
-        sort_by: UserSortProperty.ID,
+        sort: SortDirection.Asc,
+        sort_by: UserSortProperty.Id,
         email: mockedUser.email,
       });
 
@@ -146,16 +150,17 @@ describe('UserService', () => {
 
       expect(mockedUserModel.update).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return success', async () => {
       mockedUserModel.update.mockResolvedValue([1]);
 
-      const { success } = await service.update(
-        mockedUser.id,
-        _.pick(mockedUser, ['first_name', 'last_name']),
-      );
+      const { success } = await service.update(mockedUser.id, {
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+      });
 
       expect(mockedUserModel.update).toHaveBeenCalledTimes(1);
 
@@ -179,6 +184,7 @@ describe('UserService', () => {
 
       expect(mockedUserModel.update).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
@@ -207,6 +213,7 @@ describe('UserService', () => {
 
       expect(mockedUserModel.destroy).toHaveBeenCalledTimes(1);
 
+      expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 

@@ -8,8 +8,8 @@ import {
 import multipart from '@fastify/multipart';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
-import { MEGABYTE } from './common/constants/file.constant';
-import { DocumentTag } from './common/constants/docs.constant';
+import { MEGABYTE } from './file/file.constant';
+import { SwaggerTag } from './common/common.constant';
 
 import { AppModule } from './app.module';
 
@@ -36,10 +36,10 @@ async function bootstrap() {
     .setTitle('Palm Code Test API')
     .setDescription('Test for Palm Code.')
     .setVersion('1.0')
-    .addTag(DocumentTag.SETTING)
-    .addTag(DocumentTag.AUTH)
-    .addTag(DocumentTag.USER)
-    .addTag(DocumentTag.BOOKING)
+    .addTag(SwaggerTag.Setting)
+    .addTag(SwaggerTag.Auth)
+    .addTag(SwaggerTag.User)
+    .addTag(SwaggerTag.Booking)
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

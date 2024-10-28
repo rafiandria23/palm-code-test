@@ -21,39 +21,36 @@ import {
 } from '@nestjs/swagger';
 import { Transaction as SequelizeTransaction } from 'sequelize';
 
-import { DocumentTag } from '../common/constants/docs.constant';
-import { Transaction } from '../common/decorators/transaction.decorator';
-import { RawSuccessTimestampDto } from '../common/dtos/success-timestamp.dto';
-import { ReadAllMetadataDto } from '../common/dtos/pagination.dto';
-import { TransactionInterceptor } from '../common/interceptors/transaction.interceptor';
+import { SwaggerTag } from '../common/common.constant';
+import { DbTransaction } from '../common/common.decorator';
+import {
+  RawSuccessTimestampDto,
+  ReadAllMetadataDto,
+} from '../common/common.dto';
+import { DbTransactionInterceptor } from '../common/common.interceptor';
 import { CommonService } from '../common/common.service';
 
-import { CountryDto, SurfboardDto } from './dtos';
 import {
+  CountryDto,
+  SurfboardDto,
   CreateCountryBodyDto,
   CreateSurfboardBodyDto,
-} from './dtos/create.dto';
-import {
   ReadCountryByIdParamDto,
   ReadAllCountriesQueryDto,
   ReadSurfboardByIdParamDto,
   ReadAllSurfboardsQueryDto,
-} from './dtos/read.dto';
-import {
   UpdateCountryParamDto,
   UpdateCountryBodyDto,
   UpdateSurfboardParamDto,
   UpdateSurfboardBodyDto,
-} from './dtos/update.dto';
-import {
   DeleteCountryParamDto,
   DeleteSurfboardParamDto,
-} from './dtos/delete.dto';
+} from './setting.dto';
 import { SettingService } from './setting.service';
 
 @Controller('/settings')
-@UseInterceptors(TransactionInterceptor)
-@ApiTags(DocumentTag.SETTING)
+@UseInterceptors(DbTransactionInterceptor)
+@ApiTags(SwaggerTag.Setting)
 @ApiBearerAuth()
 @ApiExtraModels(
   RawSuccessTimestampDto,
@@ -89,7 +86,7 @@ export class SettingController {
     },
   })
   public createCountry(
-    @Transaction() transaction: SequelizeTransaction,
+    @DbTransaction() transaction: SequelizeTransaction,
     @Body() payload: CreateCountryBodyDto,
   ) {
     return this.settingService.createCountry(payload, {
@@ -119,7 +116,7 @@ export class SettingController {
     },
   })
   public createSurfboard(
-    @Transaction() transaction: SequelizeTransaction,
+    @DbTransaction() transaction: SequelizeTransaction,
     @Body() payload: CreateSurfboardBodyDto,
   ) {
     return this.settingService.createSurfboard(payload, {
@@ -155,7 +152,7 @@ export class SettingController {
     },
   })
   public readAllCountries(
-    @Transaction() transaction: SequelizeTransaction,
+    @DbTransaction() transaction: SequelizeTransaction,
     @Query() queries: ReadAllCountriesQueryDto,
   ) {
     return this.settingService.readAllCountries(queries, {
@@ -185,7 +182,7 @@ export class SettingController {
     },
   })
   public async readCountryById(
-    @Transaction() transaction: SequelizeTransaction,
+    @DbTransaction() transaction: SequelizeTransaction,
     @Param() params: ReadCountryByIdParamDto,
   ) {
     const existingCountry = await this.settingService.readCountryById(
@@ -232,7 +229,7 @@ export class SettingController {
     },
   })
   public readAllSurfboards(
-    @Transaction() transaction: SequelizeTransaction,
+    @DbTransaction() transaction: SequelizeTransaction,
     @Query() queries: ReadAllSurfboardsQueryDto,
   ) {
     return this.settingService.readAllSurfboards(queries, {
@@ -262,7 +259,7 @@ export class SettingController {
     },
   })
   public async readSurfboardById(
-    @Transaction() transaction: SequelizeTransaction,
+    @DbTransaction() transaction: SequelizeTransaction,
     @Param() params: ReadSurfboardByIdParamDto,
   ) {
     const existingSurfboard = await this.settingService.readSurfboardById(
@@ -290,7 +287,7 @@ export class SettingController {
     },
   })
   public updateCountry(
-    @Transaction() transaction: SequelizeTransaction,
+    @DbTransaction() transaction: SequelizeTransaction,
     @Param() params: UpdateCountryParamDto,
     @Body() payload: UpdateCountryBodyDto,
   ) {
@@ -308,7 +305,7 @@ export class SettingController {
     },
   })
   public updateSurfboard(
-    @Transaction() transaction: SequelizeTransaction,
+    @DbTransaction() transaction: SequelizeTransaction,
     @Param() params: UpdateSurfboardParamDto,
     @Body() payload: UpdateSurfboardBodyDto,
   ) {
@@ -326,7 +323,7 @@ export class SettingController {
     },
   })
   public deleteCountry(
-    @Transaction() transaction: SequelizeTransaction,
+    @DbTransaction() transaction: SequelizeTransaction,
     @Param() params: DeleteCountryParamDto,
   ) {
     return this.settingService.deleteCountry(params.id, {
@@ -343,7 +340,7 @@ export class SettingController {
     },
   })
   public deleteSurfboard(
-    @Transaction() transaction: SequelizeTransaction,
+    @DbTransaction() transaction: SequelizeTransaction,
     @Param() params: DeleteSurfboardParamDto,
   ) {
     return this.settingService.deleteSurfboard(params.id, { transaction });
