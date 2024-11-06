@@ -7143,9 +7143,9 @@ eslint-plugin-jsx-a11y@6.10.2, eslint-plugin-jsx-a11y@^6.10.0:
     string.prototype.includes "^2.0.1"
 
 eslint-plugin-playwright@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-playwright/-/eslint-plugin-playwright-2.0.0.tgz#efca4efa2f2e7a1cceeb31bbb0a6ab0bc53ddd79"
-  integrity sha512-nPa44nSp48mp/U+GSneabrhlyIyGvrcv+Z14u6sgno+jX8N0bH+ooSLEC1L6dvMDSHs7tj+kMIbls3l8gCJJSg==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-playwright/-/eslint-plugin-playwright-2.0.1.tgz#16b228398703007b86f72eb00e176322636491d9"
+  integrity sha512-f4a73xgCOK5Ug/5dtC82BVvND62lLqlMqgGkZn42teyvk6ccSyybHZXRHkpE7vKZSCjV57bnbR+3ucwItOhXlA==
   dependencies:
     globals "^13.23.0"
 
