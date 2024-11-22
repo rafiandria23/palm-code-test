@@ -1975,10 +1975,10 @@
     fastify-plugin "^5.0.0"
     secure-json-parse "^3.0.0"
 
-"@fastify/send@^3.1.0":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@fastify/send/-/send-3.1.1.tgz#455a8fa56ae005c4c387ddf111364f346b848117"
-  integrity sha512-LdiV2mle/2tH8vh6GwGl0ubfUAgvY+9yF9oGI1iiwVyNUVOQamvw5n+OFu6iCNNoyuCY80FFURBn4TZCbTe8LA==
+"@fastify/send@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@fastify/send/-/send-3.2.0.tgz#c1cf5a1c18de1e266db1d7886e63ab3564d38c95"
+  integrity sha512-qF4TIEMjqk92jrOXjcqBrkk+HOXE70AwDKas9/AweFslbvSq0o1JEAHzC7YlggBaj4bN9pU70XIPyseEJ6vlXg==
   dependencies:
     "@lukeed/ms" "^2.0.2"
     escape-html "~1.0.3"
@@ -1987,12 +1987,12 @@
     mime "^3"
 
 "@fastify/static@^8.0.0":
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/@fastify/static/-/static-8.0.2.tgz#870cb045f2b5fe3498bc38180dad0010964683c0"
-  integrity sha512-xJ+XaZVl4Y+lKztx8jGi+BE73aByhOmjMgaTx98E4XtVZxUpiaYQIMBlwACsJz+xohm0kvzV34BZoiZ+bsJtBQ==
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/@fastify/static/-/static-8.0.3.tgz#53300bc4eb81b7a97a3f31b84c4cd4b161439ea3"
+  integrity sha512-GHSoOVDIxEYEeVR5l044bRCuAKDErD/+9VE+Z9fnaTRr+DDz0Avrm4kKai1mHbPx6C0U7BVNthjd/gcMquZZUA==
   dependencies:
     "@fastify/accept-negotiator" "^2.0.0"
-    "@fastify/send" "^3.1.0"
+    "@fastify/send" "^3.2.0"
     content-disposition "^0.5.4"
     fastify-plugin "^5.0.0"
     fastq "^1.17.1"
@@ -6287,7 +6287,16 @@ cron-parser@^4.2.0:
   dependencies:
     luxon "^3.2.1"
 
-cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
+cross-spawn@^7.0.0:
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.6.tgz#8a58fe78f00dcd70c370451759dfbfaf03e8ee9f"
+  integrity sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==
+  dependencies:
+    path-key "^3.1.0"
+    shebang-command "^2.0.0"
+    which "^2.0.1"
+
+cross-spawn@^7.0.2, cross-spawn@^7.0.3:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.3.tgz#f73a85b9d5d41d045551c177e2882d4ac85728a6"
   integrity sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==
@@ -9781,9 +9790,9 @@ lru-cache@^10.0.1, lru-cache@^10.2.0:
   integrity sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==
 
 lru-cache@^11.0.0:
-  version "11.0.1"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-11.0.1.tgz#3a732fbfedb82c5ba7bca6564ad3f42afcb6e147"
-  integrity sha512-CgeuL5uom6j/ZVrg7G/+1IXqRY8JXX4Hghfy5YE0EhoYQWvndP1kufu58cmZLNIDKnRhZrXfdS9urVWx98AipQ==
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-11.0.2.tgz#fbd8e7cf8211f5e7e5d91905c415a3f55755ca39"
+  integrity sha512-123qHRfJBmo2jXDbo/a5YOQrJoHF/GNQTLzQ5+IdK5pWpceK17yRc6ozlWd25FxvGKQbIUs91fDFkXmDHTKcyA==
 
 lru-cache@^5.1.1:
   version "5.1.1"
