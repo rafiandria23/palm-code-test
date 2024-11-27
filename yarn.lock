@@ -2835,9 +2835,9 @@
     "@tybys/wasm-util" "^0.9.0"
 
 "@nestjs/common@^10.0.2":
-  version "10.4.9"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-10.4.9.tgz#addf28b78265b28debfb7d0e5ea2e826d7828bce"
-  integrity sha512-bVUIeCr22T3xxivzLEj54ouxt9vHnatapeM+DEdusz1X62kGiK9Q8c9AQDrIOAhv/wBXqvDXoaq2exGZ6WOnmA==
+  version "10.4.10"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-10.4.10.tgz#bc5b35e2f30eb6c300d220730dee110376d8cb90"
+  integrity sha512-oGZfcP46ZQJVf22Htl5jGCCAErNz/0iiDMYj5t7tQftMwYga/7CJ/hHLlflA0awLyjLMdZZ0X7LqEa2T/2X/DA==
   dependencies:
     uid "2.0.2"
     iterare "1.2.1"
@@ -2853,9 +2853,9 @@
     lodash "4.17.21"
 
 "@nestjs/core@^10.0.2":
-  version "10.4.9"
-  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-10.4.9.tgz#a4299edaf76849d046093efb572c9da5eef7b22a"
-  integrity sha512-ZrbnK67U5T1296tmhxYSdsWkZjLe+MX7FGuRtSjkl02INIYA+4lfV+igZjGc+dyhWkkdvmIg3khSfwoBNjxLWg==
+  version "10.4.10"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-10.4.10.tgz#76d51a74df43ba815bc823076c41d407530ddb30"
+  integrity sha512-KHSGspb6J4EXznxMzUZLtwhUilg7N2nsIBR+fUG75r0kpudHRrZ0/gtFDLIfGvP5tcHalG/WfcnZFsHuUkGrcA==
   dependencies:
     uid "2.0.2"
     "@nuxtjs/opencollective" "0.3.2"
@@ -2889,9 +2889,9 @@
     tslib "2.7.0"
 
 "@nestjs/platform-fastify@^10.3.8":
-  version "10.4.9"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-10.4.9.tgz#3bb52aff585253da65c16ff26515c5dcb6bf737c"
-  integrity sha512-oW4BQMA+ImkKldJ2LsW0ommtJ/vdM8iGCoKBwlndgImTRFu9B0tGOaKudqlGjs9tv/blVbkrPefUbkYHyJ/BXA==
+  version "10.4.10"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-fastify/-/platform-fastify-10.4.10.tgz#d7f8fd5bbea45b036dc6bda684d891a9eae3b16d"
+  integrity sha512-7NEDCWSmDAyG09Nv/wT4OvirAcsM17d6cE5XMvFPLhLPw08GTsLKfwWCv84K9aUlZADQOEb1mAaP6kxcu09s1Q==
   dependencies:
     "@fastify/cors" "9.0.1"
     "@fastify/formbody" "7.4.0"
@@ -2942,9 +2942,9 @@
     swagger-ui-dist "5.18.2"
 
 "@nestjs/testing@^10.0.2":
-  version "10.4.9"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-10.4.9.tgz#c826d9df6be6a573c12ac4ce135f9c5be1a57aff"
-  integrity sha512-+zkhjXluB3nnZgOjLoyjFQkpVUMqtsZhyVw8mlfxtOc6DHTtColhzX/iCQHGyTXQRIvBbBYmJc6qI+DKfOfLvg==
+  version "10.4.10"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-10.4.10.tgz#b7bf83c5d6d9ea6834148c2b201c4688a701f572"
+  integrity sha512-KBcXQpGJwEDofklvjysA4V1D+2/sWHoRdccHl23lciXnmpsMtBZxGu3GLJDspimJoNp47HFtjMHtAcKcC8EL/g==
   dependencies:
     tslib "2.7.0"
 
