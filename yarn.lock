@@ -1919,9 +1919,9 @@
   integrity sha512-r0tJ3ZOkMd9xsu3VRfqlFR6cz0V/jFYRswAIpC+m/DIfAUXq7g8N7wTAlhSANySXYGKzGryfDXwtwsY8TxEIDw==
 
 "@fastify/accept-negotiator@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@fastify/accept-negotiator/-/accept-negotiator-2.0.0.tgz#efce76b4d658e7ee669e681c2d79bffc9a654fdb"
-  integrity sha512-/Sce/kBzuTxIq5tJh85nVNOq9wKD8s+viIgX0fFMDBdw95gnpf53qmF1oBgJym3cPFliWUuSloVg/1w/rH0FcQ==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@fastify/accept-negotiator/-/accept-negotiator-2.0.1.tgz#77afd6254ba77f6c22c6f35c4fb0c1b6d005199b"
+  integrity sha512-/c/TW2bO/v9JeEgoD/g1G5GxGeCF1Hafdf79WPmUlgYiBXummY0oX3VVq4yFkKKVBKDNlaDUYoab7g38RpPqCQ==
 
 "@fastify/ajv-compiler@^3.5.0":
   version "3.6.0"
@@ -2004,9 +2004,9 @@
     secure-json-parse "^3.0.0"
 
 "@fastify/send@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@fastify/send/-/send-3.2.0.tgz#c1cf5a1c18de1e266db1d7886e63ab3564d38c95"
-  integrity sha512-qF4TIEMjqk92jrOXjcqBrkk+HOXE70AwDKas9/AweFslbvSq0o1JEAHzC7YlggBaj4bN9pU70XIPyseEJ6vlXg==
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@fastify/send/-/send-3.3.1.tgz#cb5759480eb4110b44d9af613d61b3f8b2933d8b"
+  integrity sha512-6pofeVwaHN+E/MAofCwDqkWUliE3i++jlD0VH/LOfU8TJlCkMUSgKvA9bawDdVXxjve7XrdYMyDmkiYaoGWEtA==
   dependencies:
     "@lukeed/ms" "^2.0.2"
     escape-html "~1.0.3"
@@ -2015,9 +2015,9 @@
     mime "^3"
 
 "@fastify/static@^8.0.0":
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/@fastify/static/-/static-8.0.3.tgz#53300bc4eb81b7a97a3f31b84c4cd4b161439ea3"
-  integrity sha512-GHSoOVDIxEYEeVR5l044bRCuAKDErD/+9VE+Z9fnaTRr+DDz0Avrm4kKai1mHbPx6C0U7BVNthjd/gcMquZZUA==
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/@fastify/static/-/static-8.0.4.tgz#7410ac5f73d6027d46e5b759b6a0365f9c5bca76"
+  integrity sha512-JdJIlXDYXZxbTFQazWOEfHxyD5uRXqRsLnp4rV9MwJnxadA0rrWBI8ZelPF2TPk/xDi5wunY/6ZmfwHXld13bA==
   dependencies:
     "@fastify/accept-negotiator" "^2.0.0"
     "@fastify/send" "^3.2.0"
@@ -8053,14 +8053,7 @@ fastify@4.28.1:
     semver "^7.5.4"
     toad-cache "^3.3.0"
 
-fastq@^1.17.1:
-  version "1.17.1"
-  resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.17.1.tgz#2a523f07a4e7b1e81a42b91b8bf2254107753b47"
-  integrity sha512-sRVD3lWVIXWg6By68ZN7vho9a1pQcN/WBFaAAsDDFzlJjvoGx0P8z7V1t72grFJfJhu3YPZBuu25f7Kaw2jN1w==
-  dependencies:
-    reusify "^1.0.4"
-
-fastq@^1.6.0:
+fastq@^1.17.1, fastq@^1.6.0:
   version "1.18.0"
   resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.18.0.tgz#d631d7e25faffea81887fe5ea8c9010e1b36fee0"
   integrity sha512-QKHXPW0hD8g4UET03SdOdunzSouc9N4AuHdsX8XNcTsuz+yYFILVNIX4l9yHABMhiEI9Db0JTTIpu0wB+Y1QQw==
@@ -8525,9 +8518,9 @@ glob@^10.3.3, glob@^10.4.5:
     path-scurry "^1.11.1"
 
 glob@^11.0.0:
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/glob/-/glob-11.0.0.tgz#6031df0d7b65eaa1ccb9b29b5ced16cea658e77e"
-  integrity sha512-9UiX/Bl6J2yaBbxKoEBRm4Cipxgok8kQYcOPEhScPwebu2I0HoQOuYdIO6S3hLuWoZgpDpwQZMzTFxgpkyT76g==
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-11.0.1.tgz#1c3aef9a59d680e611b53dcd24bb8639cef064d9"
+  integrity sha512-zrQDm8XPnYEKawJScsnM0QzobJxlT/kHOOlRTio8IH/GrmxRE5fjllkzdaHclIuNjUQTJYH2xHNIGfdpJkDJUw==
   dependencies:
     foreground-child "^3.1.0"
     jackspeak "^4.0.1"
