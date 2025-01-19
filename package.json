@@ -19,7 +19,7 @@
     "@mui/material-nextjs": "^6.0.0",
     "@mui/x-date-pickers": "^7.4.0",
     "@nestjs/common": "^11.0.0",
-    "@nestjs/config": "^3.2.2",
+    "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "^2.0.5",
