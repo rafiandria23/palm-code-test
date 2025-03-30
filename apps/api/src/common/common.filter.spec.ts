@@ -1,6 +1,5 @@
 import { HttpAdapterHost } from '@nestjs/core';
 import { ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
-import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 
@@ -10,10 +9,13 @@ import { ExceptionFilter } from './common.filter';
 describe('Common filters', () => {
   describe('ExceptionFilter', () => {
     let commonService: CommonService;
-    let service: ExceptionFilter;
+
+    let filter: ExceptionFilter;
 
     const mockedHttpAdapterHost = {
-      httpAdapter: jest.fn(),
+      httpAdapter: {
+        reply: jest.fn(),
+      },
     };
 
     const mockedArgumentsHost = {
@@ -23,21 +25,18 @@ describe('Common filters', () => {
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: [
-          CommonService,
+          ExceptionFilter,
           {
-            provide: ExceptionFilter,
-            useFactory: (commonService: CommonService) => {
-              return new ExceptionFilter(
-                mockedHttpAdapterHost as unknown as HttpAdapterHost<FastifyAdapter>,
-                commonService,
-              );
-            },
+            provide: HttpAdapterHost,
+            useValue: mockedHttpAdapterHost,
           },
+          CommonService,
         ],
       }).compile();
 
       commonService = module.get<CommonService>(CommonService);
-      service = module.get<ExceptionFilter>(ExceptionFilter);
+
+      filter = module.get<ExceptionFilter>(ExceptionFilter);
     });
 
     afterEach(() => {
@@ -50,16 +49,13 @@ describe('Common filters', () => {
         getResponse: jest.fn(),
       });
 
-      service.catch(
+      filter.catch(
         new Error(faker.string.alpha()),
         mockedArgumentsHost as unknown as ArgumentsHost,
       );
     });
 
     it('should return proper HTTP status and error message when error data is not object', () => {
-      const expectedHttpStatus = faker.helpers.arrayElement(
-        Object.values(HttpStatus),
-      );
       const expectedResponseData = commonService.successTimestamp({
         success: false,
         data: {
@@ -71,7 +67,7 @@ describe('Common filters', () => {
         getResponse: jest.fn(),
       });
 
-      service.catch(
+      filter.catch(
         new HttpException(
           expectedResponseData.data,
           HttpStatus.UNPROCESSABLE_ENTITY,
@@ -81,9 +77,6 @@ describe('Common filters', () => {
     });
 
     it('should return proper HTTP status and error message when error data is object', () => {
-      const expectedHttpStatus = faker.helpers.arrayElement(
-        Object.values(HttpStatus),
-      );
       const expectedResponseData = commonService.successTimestamp({
         success: false,
         data: [
@@ -97,7 +90,7 @@ describe('Common filters', () => {
         getResponse: jest.fn(),
       });
 
-      service.catch(
+      filter.catch(
         new HttpException(
           expectedResponseData.data,
           HttpStatus.UNPROCESSABLE_ENTITY,

@@ -17,6 +17,4 @@ export const authFactory = (__: unknown, ctx: ExecutionContext): ApiAuth => {
   return _.get(request, 'auth');
 };
 
-export const Auth = createParamDecorator<unknown, ExecutionContext, ApiAuth>(
-  authFactory,
-);
+export const Auth = createParamDecorator<unknown, ApiAuth>(authFactory);
