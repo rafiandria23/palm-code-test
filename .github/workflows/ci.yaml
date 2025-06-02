@@ -23,22 +23,22 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
 
-      - name: Run API Lint
+      - name: Lint API
         run: yarn nx lint api
 
-      - name: Run API Build
+      - name: Build API
         run: yarn nx build api
 
-      - name: Run API Unit Tests
+      - name: Unit Test API
         run: yarn nx test api
 
-      - name: Run Web Lint
+      - name: Lint Web
         run: yarn nx lint web
 
-      - name: Run Web Build
+      - name: Build Web
         run: yarn nx build web
 
-      - name: Run Web Unit Tests
+      - name: Unit Test Web
         run: yarn nx test web
 
       - name: Analyze Code
