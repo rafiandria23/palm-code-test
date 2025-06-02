@@ -20,8 +20,23 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
 
-      - name: Run Unit Tests
+      - name: Run API Lint
+        run: yarn nx lint api
+
+      - name: Run API Build
+        run: yarn nx build api
+
+      - name: Run API Unit Tests
         run: yarn nx test api
+
+      - name: Run Web Lint
+        run: yarn nx lint web
+
+      - name: Run Web Build
+        run: yarn nx build web
+
+      - name: Run Web Unit Tests
+        run: yarn nx test web
 
       - name: Analyze Code
         uses: SonarSource/sonarqube-scan-action@v5
