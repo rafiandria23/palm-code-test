@@ -1,7 +1,7 @@
 {
   "name": "@rafiandria23/palm-code-test",
   "version": "1.0.0",
-  "packageManager": "yarn@4.8.1",
+  "packageManager": "yarn@4.9.1",
   "license": "MIT",
   "private": true,
   "dependencies": {
