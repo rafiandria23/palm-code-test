@@ -3295,22 +3295,22 @@
     react-is "^19.1.0"
 
 "@mui/x-date-pickers@^8.0.0":
-  version "8.5.3"
-  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-8.5.3.tgz#a67613ef80eee976ea079ff03fc04a1bbdc88080"
-  integrity sha512-rToJOgIfVN/mG8QPX5RSPcP7QdnNN4yk+37fBztVUnmR7mhiWdUNSHlazGpnRGRqDdr4lXRkJbTjtJLviWkhKg==
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-8.6.0.tgz#aa59e0a9a0cfdaba4ab9e97a0495838f11a74f85"
+  integrity sha512-zZsyEJrmC2zv9noQGTLpjsKmbHxiaO0exKwQgvn/CbCIl6Dqlo6E6l+R3V5uB93u5mUK3yLsVHzeLWARLZBC9A==
   dependencies:
     "@babel/runtime" "^7.27.6"
     "@mui/utils" "^7.1.1"
-    "@mui/x-internals" "8.5.3"
+    "@mui/x-internals" "8.6.0"
     "@types/react-transition-group" "^4.4.12"
     clsx "^2.1.1"
     prop-types "^15.8.1"
     react-transition-group "^4.4.5"
 
-"@mui/x-internals@8.5.3":
-  version "8.5.3"
-  resolved "https://registry.yarnpkg.com/@mui/x-internals/-/x-internals-8.5.3.tgz#60756111fae9b5d5c56e6eb72ee0a869dc900441"
-  integrity sha512-ImCg4E3DT3XoDIZO0pNCbB7iw14N+YCFY3J1V28POwCD7P2f3HSIz4jwzM006oYxI6bqeE6LMfpdPRDW6s6dQw==
+"@mui/x-internals@8.6.0":
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-internals/-/x-internals-8.6.0.tgz#f42e62d4059c8a6368edd5520582987286fc8023"
+  integrity sha512-ed6IOmnUpm18b607JRTJS+xya731CrQtJKX35l/4TlH8Df1SpkSJsmoyBBmZ09DNX8YNEFpYt5EyfXI28iyM2A==
   dependencies:
     "@babel/runtime" "^7.27.6"
     "@mui/utils" "^7.1.1"
