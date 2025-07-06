@@ -14,6 +14,5 @@ export const dbTransactionFactory = (
 
 export const DbTransaction = createParamDecorator<
   unknown,
-  ExecutionContext,
   ApiRequest['db']['transaction']
 >(dbTransactionFactory);

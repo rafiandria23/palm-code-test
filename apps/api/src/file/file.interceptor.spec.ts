@@ -7,6 +7,7 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import path from 'path';
 import { of } from 'rxjs';
 import { faker } from '@faker-js/faker';
@@ -35,11 +36,22 @@ describe('FileInterceptor', () => {
     set: jest.spyOn(_, 'set'),
   };
 
-  beforeEach(() => {
-    interceptor = new FileInterceptor(
-      mockedReflector as unknown as Reflector,
-      mockedFileService as unknown as FileService,
-    );
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        FileInterceptor,
+        {
+          provide: Reflector,
+          useValue: mockedReflector,
+        },
+        {
+          provide: FileService,
+          useValue: mockedFileService,
+        },
+      ],
+    }).compile();
+
+    interceptor = module.get<FileInterceptor>(FileInterceptor);
   });
 
   afterEach(() => {

@@ -1,8 +1,8 @@
 {
   "name": "@rafiandria23/palm-code-test",
   "version": "1.0.0",
+  "packageManager": "yarn@4.9.2",
   "license": "MIT",
-  "scripts": {},
   "private": true,
   "dependencies": {
     "@aws-sdk/client-s3": "^3.574.0",

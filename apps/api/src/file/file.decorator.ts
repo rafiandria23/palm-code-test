@@ -22,8 +22,6 @@ export const uploadedFileFactory = (
   return _.get(response, 'file');
 };
 
-export const UploadedFile = createParamDecorator<
-  unknown,
-  ExecutionContext,
-  ApiFile
->(uploadedFileFactory);
+export const UploadedFile = createParamDecorator<unknown, ApiFile>(
+  uploadedFileFactory,
+);

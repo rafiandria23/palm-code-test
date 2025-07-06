@@ -37,7 +37,7 @@ describe('Common interceptors', () => {
       });
 
       const mockedCallHandler = {
-        handle: () => of(),
+        handle: () => of(undefined),
       };
 
       (
