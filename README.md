@@ -38,8 +38,8 @@ Environment variables are available in `.env.example` file inside each app.
 ## Installation
 
 ```zsh
-# Install Nx CLI
-yarn add --global nx
+# Enable Corepack
+corepack enable
 
 # Install project dependencies
 yarn
@@ -49,7 +49,7 @@ yarn
 
 ```zsh
 # Run all apps
-nx run-many -t serve dev
+yarn nx run-many -t serve dev
 ```
 
 ## API Docs
