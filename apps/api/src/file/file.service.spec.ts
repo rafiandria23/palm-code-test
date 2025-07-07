@@ -126,9 +126,7 @@ describe('FileService', () => {
         },
       });
 
-      await service.delete(
-        `${faker.string.uuid()}.${faker.system.fileExt()}`,
-      );
+      await service.delete(`${faker.string.uuid()}.${faker.system.fileExt()}`);
 
       expect(mockedS3Client.send.callCount).toEqual(1);
       expect(
