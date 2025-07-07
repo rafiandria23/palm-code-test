@@ -347,6 +347,7 @@ describe('FileInterceptor', () => {
     });
     const mockedFilename = faker.system.fileName();
     const mockedFileMimeType = faker.system.mimeType();
+    const mockedFileSize = faker.number.int();
 
     const mockedResponse = {};
 
@@ -371,13 +372,15 @@ describe('FileInterceptor', () => {
           extensions: [path.extname(mockedFilename)],
         },
       ],
-      size: faker.number.int(),
+      size: mockedFileSize,
     });
 
     const expectedFileKey = faker.string.alphanumeric();
 
     mockedFileService.upload.mockReturnValue({
-      on: jest.fn().mockReturnValue(undefined),
+      on: jest
+        .fn()
+        .mockImplementation((__, cb) => cb({ loaded: mockedFileSize })),
       abort: jest.fn().mockResolvedValue(undefined),
       done: jest.fn().mockResolvedValue({
         Key: expectedFileKey,

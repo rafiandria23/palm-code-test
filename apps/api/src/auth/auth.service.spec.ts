@@ -70,19 +70,29 @@ describe('AuthService', () => {
 
   const mockedUser = {
     id: faker.string.uuid(),
+
     first_name: faker.person.firstName(),
     last_name: faker.person.lastName(),
     email: faker.internet.email(),
+
+    created_at: faker.date.anytime(),
+    updated_at: faker.date.anytime(),
+    deleted_at: null,
 
     restore: jest.fn(),
   };
 
   const mockedUserPassword = {
     id: faker.string.uuid(),
+
     user_id: mockedUser.id,
     password: faker.internet.password({
       length: PasswordLength.Min,
     }),
+
+    created_at: faker.date.anytime(),
+    updated_at: faker.date.anytime(),
+    deleted_at: null,
 
     update: jest.fn(),
     restore: jest.fn(),
@@ -207,6 +217,39 @@ describe('AuthService', () => {
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
+    it('should return auth token when user is deactivated', async () => {
+      mockedUserService.readByEmail.mockResolvedValue({
+        ...mockedUser,
+        deleted_at: faker.date.anytime(),
+      });
+      mockedUserPasswordModel.findOne.mockResolvedValue({
+        ...mockedUserPassword,
+        deleted_at: faker.date.anytime(),
+      });
+      mockedBcrypt.compare.mockResolvedValue(true as never);
+      mockedUserPassword.restore.mockResolvedValue({});
+      mockedUser.restore.mockResolvedValue({});
+      mockedJwtService.signAsync.mockResolvedValue(
+        mockedAuthToken.access_token,
+      );
+
+      const { success, data } = await service.signIn({
+        ..._.pick(mockedUser, ['email']),
+        password: faker.internet.password({
+          length: PasswordLength.Min,
+        }),
+      });
+
+      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
+      expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
+      expect(mockedBcrypt.compare).toHaveBeenCalledTimes(1);
+      expect(mockedUser.restore).toHaveBeenCalledTimes(1);
+      expect(mockedUserPassword.restore).toHaveBeenCalledTimes(1);
+
+      expect(success).toBeTruthy();
+      expect(data).toEqual(mockedAuthToken);
+    });
+
     it('should return auth token', async () => {
       mockedUserService.readByEmail.mockResolvedValue(mockedUser);
       mockedUserPasswordModel.findOne.mockResolvedValue(mockedUserPassword);
@@ -227,8 +270,6 @@ describe('AuthService', () => {
       expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
       expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
       expect(mockedBcrypt.compare).toHaveBeenCalledTimes(1);
-      expect(mockedUser.restore).toHaveBeenCalledTimes(1);
-      expect(mockedUserPassword.restore).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
       expect(data).toEqual(mockedAuthToken);
