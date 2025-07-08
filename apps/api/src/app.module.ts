@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { JwtModule } from '@nestjs/jwt';
 
-import { apiConfig, dbConfig, jwtConfig, awsConfig } from './configs';
+import { apiConfigs, dbConfigs, jwtConfigs, awsConfigs } from './configs';
 import { AuthGuard } from './auth/auth.guard';
 import { ExceptionFilter } from './common/common.filter';
 import { CommonModule } from './common/common.module';
@@ -18,7 +18,7 @@ import { BookingModule } from './booking/booking.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [apiConfig, dbConfig, jwtConfig, awsConfig],
+      load: [apiConfigs, dbConfigs, jwtConfigs, awsConfigs],
     }),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
@@ -37,7 +37,7 @@ import { BookingModule } from './booking/booking.module';
         host: configService.get<string>('db.host'),
         port: configService.get<number>('db.port'),
         username: configService.get<string>('db.user'),
-        password: configService.get<string>('db.pass'),
+        password: configService.get<string>('db.password'),
         database: configService.get<string>('db.name'),
         autoLoadModels: true,
       }),

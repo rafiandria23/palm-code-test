@@ -41,6 +41,7 @@ module.exports = {
       );
     });
   },
+
   async down(queryInterface) {
     await queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.dropTable(tableName, { transaction });

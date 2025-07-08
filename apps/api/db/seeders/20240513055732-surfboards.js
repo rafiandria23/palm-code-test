@@ -39,6 +39,7 @@ module.exports = {
       );
     });
   },
+
   async down(queryInterface) {
     await queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.bulkDelete(tableName, null, { transaction });
