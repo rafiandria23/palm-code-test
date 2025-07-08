@@ -19,7 +19,7 @@ module.exports = {
             type: Sequelize.UUID,
             allowNull: false,
           },
-          password: {
+          hash: {
             type: Sequelize.TEXT,
             allowNull: false,
           },

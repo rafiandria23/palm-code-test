@@ -52,7 +52,7 @@ export class AuthService {
       this.userPasswordModel.create(
         {
           user_id: createdUser.id,
-          password: payload.password,
+          hash: payload.password,
         },
         options,
       ),
@@ -90,9 +90,7 @@ export class AuthService {
       throw new UnprocessableEntityException('Please reset your password!');
     }
 
-    if (
-      !(await bcrypt.compare(payload.password, existingUserPassword.password))
-    ) {
+    if (!(await bcrypt.compare(payload.password, existingUserPassword.hash))) {
       throw new UnprocessableEntityException('Wrong email or password!');
     }
 
@@ -158,8 +156,8 @@ export class AuthService {
     }
 
     const [oldPasswordComparison, newPasswordComparison] = await Promise.all([
-      bcrypt.compare(payload.old_password, existingUserPassword.password),
-      bcrypt.compare(payload.new_password, existingUserPassword.password),
+      bcrypt.compare(payload.old_password, existingUserPassword.hash),
+      bcrypt.compare(payload.new_password, existingUserPassword.hash),
     ]);
 
     if (!oldPasswordComparison) {
@@ -172,7 +170,7 @@ export class AuthService {
 
     await existingUserPassword.update(
       {
-        password: payload.new_password,
+        hash: payload.new_password,
       },
       options,
     );
