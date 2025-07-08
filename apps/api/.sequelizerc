@@ -5,7 +5,7 @@ const path = require('path');
 
 module.exports = {
   env: _.defaultTo(process.env.NODE_ENV, 'development'),
-  config: path.resolve('db', 'config.js'),
+  config: path.resolve('db', 'db.config.js'),
   'migrations-path': path.resolve('db', 'migrations'),
   'seeders-path': path.resolve('db', 'seeders'),
 };

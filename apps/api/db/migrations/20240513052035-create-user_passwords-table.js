@@ -19,7 +19,7 @@ module.exports = {
             type: Sequelize.UUID,
             allowNull: false,
           },
-          password: {
+          hash: {
             type: Sequelize.TEXT,
             allowNull: false,
           },
@@ -41,6 +41,7 @@ module.exports = {
       );
     });
   },
+
   async down(queryInterface) {
     await queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.dropTable(tableName, { transaction });

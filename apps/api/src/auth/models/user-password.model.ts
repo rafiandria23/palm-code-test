@@ -1,4 +1,3 @@
-import { UUIDV4 } from 'sequelize';
 import {
   Table,
   Model,
@@ -28,7 +27,7 @@ export class UserPassword extends Model<UserPassword> {
   @Column({
     type: DataType.UUID,
     primaryKey: true,
-    defaultValue: UUIDV4,
+    defaultValue: DataType.UUIDV4,
   })
   public id: string;
 
@@ -40,7 +39,7 @@ export class UserPassword extends Model<UserPassword> {
   @Column({
     type: DataType.TEXT,
   })
-  public password: string;
+  public hash: string;
 
   @CreatedAt
   @Column
@@ -58,8 +57,8 @@ export class UserPassword extends Model<UserPassword> {
   @BeforeCreate
   @BeforeUpdate
   public static async hashPassword(userPassword: UserPassword) {
-    userPassword.password = await bcrypt.hash(
-      userPassword.password,
+    userPassword.hash = await bcrypt.hash(
+      userPassword.hash,
       PasswordSaltRound.Default,
     );
   }

@@ -1,4 +1,3 @@
-import { UUIDV4 } from 'sequelize';
 import {
   Table,
   Model,
@@ -27,7 +26,7 @@ export class Booking extends Model<Booking> {
   @Column({
     type: DataType.UUID,
     primaryKey: true,
-    defaultValue: UUIDV4,
+    defaultValue: DataType.UUIDV4,
   })
   public id: string;
 
