@@ -34,7 +34,7 @@
     "class-validator": "^0.14.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.11",
-    "filesize": "^10.1.2",
+    "filesize": "^11.0.0",
     "lodash": "^4.17.21",
     "next": "15.3.5",
     "notistack": "^3.0.1",
