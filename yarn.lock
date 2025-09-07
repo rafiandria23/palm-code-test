@@ -2710,10 +2710,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/deepmerge@npm:^2.0.0":
-  version: 2.0.2
-  resolution: "@fastify/deepmerge@npm:2.0.2"
-  checksum: 10c0/dfb30896d374c25a3f5bc0550cb19d2014946392b2858fadd5feb1486eb3c37751db1db24dcbf801bb11465435939d0d75fb7ee65501287e77b4df7022b3509a
+"@fastify/deepmerge@npm:^3.0.0":
+  version: 3.1.0
+  resolution: "@fastify/deepmerge@npm:3.1.0"
+  checksum: 10c0/57eda9079e9ed6d137f966e8b0d08f219cbca6e79706a1be76fe10ba2b8fd87c33846f1c653299b09a2e8260ffba8c8fc708f9b40b54243648d6821061999c9b
   languageName: node
   linkType: hard
 
@@ -2772,15 +2772,15 @@ __metadata:
   linkType: hard
 
 "@fastify/multipart@npm:^9.0.0":
-  version: 9.0.3
-  resolution: "@fastify/multipart@npm:9.0.3"
+  version: 9.2.1
+  resolution: "@fastify/multipart@npm:9.2.1"
   dependencies:
     "@fastify/busboy": "npm:^3.0.0"
-    "@fastify/deepmerge": "npm:^2.0.0"
+    "@fastify/deepmerge": "npm:^3.0.0"
     "@fastify/error": "npm:^4.0.0"
     fastify-plugin: "npm:^5.0.0"
-    secure-json-parse: "npm:^3.0.0"
-  checksum: 10c0/589571e71954e28b6445dcaeef3f4e978931f9a697cf259ef45327ee646f85db2195cd38fe4bf758aab3e0d61ceb30429b1389fd9e176f55a3c83b4186ebb20d
+    secure-json-parse: "npm:^4.0.0"
+  checksum: 10c0/d49c14ac84c93e65145f3f6cbdfb0405b3bc00642c7a347359c894a125bfe136b7cec3dd0f529f374ebd232eb98f04594788d5f3fe75cec8300b10c39b1c087f
   languageName: node
   linkType: hard
 
@@ -19707,13 +19707,6 @@ __metadata:
   version: 3.0.1
   resolution: "secure-compare@npm:3.0.1"
   checksum: 10c0/af3102f3f555d917c8ffff7a5f6f00f70195708f4faf82d48794485c9f3cb365cee0dd4da6b4e53e8964f172970bce6069b6101ba3ce8c309bff54f460d1f650
-  languageName: node
-  linkType: hard
-
-"secure-json-parse@npm:^3.0.0":
-  version: 3.0.2
-  resolution: "secure-json-parse@npm:3.0.2"
-  checksum: 10c0/4c9c005e7fdd8528df35fcdec41dc4e8e15820ce52de19f8102da808f9400a9ed8c0a28971e3efe24b001ee1e60296af553f12bbaab81a152f702dd00af2092d
   languageName: node
   linkType: hard
 
