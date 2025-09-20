@@ -12351,9 +12351,9 @@ __metadata:
   linkType: hard
 
 "filesize@npm:^11.0.0":
-  version: 11.0.7
-  resolution: "filesize@npm:11.0.7"
-  checksum: 10c0/72f01e4c7dba04af690df033aa3b93dfbe370b40aadb7544df6618f8659490e48234a0f0c93a192322c82f0946a5bbcbd2c461ba50bba9f138f2d3cc95d4d051
+  version: 11.0.8
+  resolution: "filesize@npm:11.0.8"
+  checksum: 10c0/26d0540ff870b0bc006618818aae22f39fdff8c32e0b3e9491b6327ec77a033180e41147ac9dc6f67d9cc7dcda4826430b7a56fad256c590f1e7dfb95ff4bb31
   languageName: node
   linkType: hard
 
