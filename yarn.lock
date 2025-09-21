@@ -12062,9 +12062,9 @@ __metadata:
   linkType: hard
 
 "filesize@npm:^11.0.0":
-  version: 11.0.10
-  resolution: "filesize@npm:11.0.10"
-  checksum: 10c0/34ebc21d4559492a696f1eaa2c895020bb09b79be3a5ded7b86d496ab9a55c08789b9c8762c9fab6ae92efc354e6222af5c7533da256040aebfeaa53b5b706fd
+  version: 11.0.12
+  resolution: "filesize@npm:11.0.12"
+  checksum: 10c0/3fef16a124ef427feba819fbaba7434443d5a76e9fbba6a0b904dbda6d0c69c21ad4e4ced0d738e8d8a6c13f6b8d49783a06486d02e78391ae8debda7a8177ca
   languageName: node
   linkType: hard
 
