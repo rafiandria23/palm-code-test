@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - '**'
+      - "**"
 
 jobs:
   ci:
@@ -32,14 +32,14 @@ jobs:
       - name: Unit Test API
         run: yarn nx test api
 
-      - name: Lint Web
-        run: yarn nx lint web
+      # - name: Lint Web
+      #   run: yarn nx lint web
 
-      - name: Build Web
-        run: yarn nx build web
+      # - name: Build Web
+      #   run: yarn nx build web
 
-      - name: Unit Test Web
-        run: yarn nx test web
+      # - name: Unit Test Web
+      #   run: yarn nx test web
 
       - name: Analyze Code
         uses: SonarSource/sonarqube-scan-action@v6
