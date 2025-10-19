@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "@faker-js/faker": "^9.9.0",
+    "@faker-js/faker": "^10.0.0",
     "@nestjs/schematics": "^11.0.9",
     "@nestjs/testing": "^11.1.6",
     "@nx/devkit": "^21.6.5",
