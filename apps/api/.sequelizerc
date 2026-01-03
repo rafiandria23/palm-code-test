@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
-const path = require('path');
+const path = require('node:path');
 
 module.exports = {
   env: _.defaultTo(process.env.NODE_ENV, 'development'),

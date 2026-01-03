@@ -31,7 +31,7 @@ const VisitorDetailsForm: FC = () => {
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={6}>
+      <Grid size={6}>
         <Controller
           key="name"
           control={formCtx.control}
@@ -50,25 +50,27 @@ const VisitorDetailsForm: FC = () => {
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={_.get(fieldState, 'error.message')}
-              InputProps={{
-                endAdornment: (
-                  <IconButton
-                    size="small"
-                    onClick={handleClear('name')}
-                    sx={{
-                      visibility: !field.value ? 'hidden' : 'visible',
-                    }}
-                  >
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <IconButton
+                      size="small"
+                      onClick={handleClear('name')}
+                      sx={{
+                        visibility: field.value ? 'visible' : 'hidden',
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  ),
+                },
               }}
             />
           )}
         />
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid size={6}>
         <Controller
           key="country_id"
           control={formCtx.control}
@@ -100,7 +102,7 @@ const VisitorDetailsForm: FC = () => {
         />
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid size={6}>
         <Controller
           key="email"
           control={formCtx.control}
@@ -119,25 +121,27 @@ const VisitorDetailsForm: FC = () => {
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={_.get(fieldState, 'error.message')}
-              InputProps={{
-                endAdornment: (
-                  <IconButton
-                    size="small"
-                    onClick={handleClear('email')}
-                    sx={{
-                      visibility: !field.value ? 'hidden' : 'visible',
-                    }}
-                  >
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <IconButton
+                      size="small"
+                      onClick={handleClear('email')}
+                      sx={{
+                        visibility: field.value ? 'visible' : 'hidden',
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  ),
+                },
               }}
             />
           )}
         />
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid size={6}>
         <Controller
           key="phone"
           control={formCtx.control}
@@ -156,18 +160,20 @@ const VisitorDetailsForm: FC = () => {
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={_.get(fieldState, 'error.message')}
-              InputProps={{
-                endAdornment: (
-                  <IconButton
-                    size="small"
-                    onClick={handleClear('phone')}
-                    sx={{
-                      visibility: !field.value ? 'hidden' : 'visible',
-                    }}
-                  >
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <IconButton
+                      size="small"
+                      onClick={handleClear('phone')}
+                      sx={{
+                        visibility: field.value ? 'visible' : 'hidden',
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  ),
+                },
               }}
             />
           )}

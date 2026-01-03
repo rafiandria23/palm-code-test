@@ -19,31 +19,29 @@ export interface Booking {
   deleted_at: Timestamp | null;
 }
 
-export interface CreateBookingPayload
-  extends Pick<
-    Booking,
-    | 'name'
-    | 'email'
-    | 'phone'
-    | 'country_id'
-    | 'surfing_experience'
-    | 'date'
-    | 'surfboard_id'
-  > {
+export interface CreateBookingPayload extends Pick<
+  Booking,
+  | 'name'
+  | 'email'
+  | 'phone'
+  | 'country_id'
+  | 'surfing_experience'
+  | 'date'
+  | 'surfboard_id'
+> {
   national_id_photo_file_key: string;
 }
 
-export interface CreateBookingFormPayload
-  extends Pick<
-    Booking,
-    | 'name'
-    | 'email'
-    | 'phone'
-    | 'country_id'
-    | 'surfing_experience'
-    | 'date'
-    | 'surfboard_id'
-  > {
+export interface CreateBookingFormPayload extends Pick<
+  Booking,
+  | 'name'
+  | 'email'
+  | 'phone'
+  | 'country_id'
+  | 'surfing_experience'
+  | 'surfboard_id'
+> {
+  date: Date;
   national_id_photo: File;
 }
 

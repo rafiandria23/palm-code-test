@@ -127,6 +127,7 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
             size="large"
             disableElevation
             disabled={bookingState.loading}
+            loading={bookingState.loading}
             sx={{
               paddingX: theme.spacing(8),
               borderRadius: 'unset',

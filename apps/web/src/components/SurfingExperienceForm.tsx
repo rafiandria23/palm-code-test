@@ -50,26 +50,26 @@ const SurfingExperienceForm: FC = () => {
     return today.add(1, 'day');
   }, []);
 
+  const handleDateClear = useCallback(() => {
+    formCtx.resetField('date');
+  }, [formCtx]);
+
   const handleDateChange = useCallback(
     (date: Dayjs | null) => {
       if (date !== null) {
-        formCtx.setValue('date', dayjs(date).format('YYYY-MM-DD'));
+        formCtx.setValue('date', date.toDate(), { shouldValidate: true });
         return;
       }
 
-      formCtx.setValue('date', '');
+      handleDateClear();
     },
-    [formCtx],
+    [formCtx, handleDateClear],
   );
-
-  const handleDateClear = useCallback(() => {
-    formCtx.setValue('date', '');
-  }, [formCtx]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container columnSpacing={4}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography gutterBottom>Your Surfing Experience</Typography>
 
           <Controller
@@ -119,7 +119,7 @@ const SurfingExperienceForm: FC = () => {
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Controller
             key="date"
             control={formCtx.control}
@@ -166,7 +166,7 @@ const SurfingExperienceForm: FC = () => {
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Controller
             key="surfboard_id"
             control={formCtx.control}

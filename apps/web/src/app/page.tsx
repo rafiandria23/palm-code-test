@@ -3,7 +3,6 @@
 import _ from 'lodash';
 import type { FC } from 'react';
 import { useCallback, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { Container, Stack, Paper, Box, CircularProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -21,10 +20,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/store';
 import authApi from '../services/auth';
 import bookingApi from '../services/booking';
 
-const BookingForm = dynamic(() => import('../components/BookingForm'), {
-  ssr: false,
-  loading: () => <CircularProgress />,
-});
+import BookingForm from '../components/BookingForm';
 
 const IndexPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -37,16 +33,6 @@ const IndexPage: FC = () => {
   const form = useForm<CreateBookingFormPayload>({
     mode: 'onBlur',
     resolver: zodResolver(CreateBookingValidationSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      country_id: '',
-      surfing_experience: 0,
-      date: '',
-      surfboard_id: '',
-      national_id_photo: null as unknown as File,
-    },
   });
 
   const handleSignUp = useCallback(async () => {
@@ -148,7 +134,7 @@ const IndexPage: FC = () => {
               alignItems: 'center',
             }}
           >
-            {authState.token.access !== null ? (
+            {authState.token.access ? (
               <BookingForm onSubmit={handleSubmit} />
             ) : (
               <CircularProgress />

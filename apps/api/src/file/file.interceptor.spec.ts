@@ -8,7 +8,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import path from 'path';
+import path from 'node:path';
 import { of } from 'rxjs';
 import { faker } from '@faker-js/faker';
 

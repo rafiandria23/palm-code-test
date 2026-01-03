@@ -23,23 +23,14 @@ jobs:
       - name: Install Dependencies
         run: yarn --immutable
 
-      - name: Lint API
-        run: yarn nx lint api
+      - name: Lint
+        run: yarn nx run-many --all --target lint
 
-      - name: Build API
-        run: yarn nx build api
+      - name: Build
+        run: yarn nx run-many --all --target build
 
-      - name: Unit Test API
-        run: yarn nx test api
-
-      # - name: Lint Web
-      #   run: yarn nx lint web
-
-      # - name: Build Web
-      #   run: yarn nx build web
-
-      # - name: Unit Test Web
-      #   run: yarn nx test web
+      - name: Unit Test
+        run: yarn nx run-many --all --target test
 
       - name: Analyze Code
         uses: SonarSource/sonarqube-scan-action@v6
