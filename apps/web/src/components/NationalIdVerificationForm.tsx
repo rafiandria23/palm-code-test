@@ -76,14 +76,14 @@ const NationalIdVerificationForm: FC = () => {
         height: '50%',
       }}
     >
-      <Grid item xs={12}>
-        <Typography gutterBottom paragraph>
+      <Grid size={12}>
+        <Typography gutterBottom>
           Help us verify your identity by uploading a photo of your ID/KTP or
           Passport
         </Typography>
       </Grid>
 
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Controller
           key="national_id_photo"
           control={formCtx.control}
@@ -99,7 +99,7 @@ const NationalIdVerificationForm: FC = () => {
                   background: '#1A1A1A',
                 }}
               >
-                {_.get(field, 'value', null) !== null ? (
+                {_.get(field, 'value', null) ? (
                   <Stack
                     direction="row"
                     spacing={4}

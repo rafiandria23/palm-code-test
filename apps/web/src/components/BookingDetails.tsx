@@ -44,14 +44,14 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
       <Box>
         <Typography gutterBottom>You&apos;re In!</Typography>
 
-        <Typography paragraph>
+        <Typography>
           Your store visit is booking and you&apos;re ready to ride the shopping
           wave. Here&apos;s your detail:
         </Typography>
       </Box>
 
       <Grid container rowSpacing={2}>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Typography
             variant="body2"
             sx={{
@@ -64,7 +64,7 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
           <Typography>{_.get(bookingState, 'data.name')}</Typography>
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Typography
             variant="body2"
             sx={{
@@ -80,7 +80,7 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
           </Typography>
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Typography
             variant="body2"
             sx={{
@@ -93,7 +93,7 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
           <Typography>{_.get(bookingState, 'data.email')}</Typography>
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Typography
             variant="body2"
             sx={{
@@ -111,7 +111,7 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
         </Grid>
       </Grid>
 
-      <Typography paragraph>
+      <Typography>
         We look forward to seeing you at the #Swellmatch store! Your booking
         details already sent to your email and whatsapp
       </Typography>

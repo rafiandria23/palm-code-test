@@ -1,30 +1,26 @@
 import _ from 'lodash';
-import { object, any, string, number } from 'zod';
+import * as z from 'zod';
 import validator from 'validator';
 import dayjs from 'dayjs';
-import { extname } from 'path';
+import { extname } from 'node:path';
 
 import type { SupportedFileType } from '../interfaces/file';
 import { SUPPORTED_FILE_TYPE, MEGABYTE } from '../constants/file';
 
-export const CreateBookingValidationSchema = object({
-  name: string({
-    required_error: 'Name must not be empty!',
-    invalid_type_error: 'Name is invalid!',
-  })
+export const CreateBookingValidationSchema = z.object({
+  name: z
+    .string({
+      error: 'Name is invalid',
+    })
     .trim()
-    .min(2, 'Name must not be empty!'),
-  email: string({
-    required_error: 'Email must not be empty!',
-    invalid_type_error: 'Email is invalid!',
-  })
-    .trim()
-    .email('Email is invalid!'),
-  phone: string({
-    required_error: 'Phone must not be empty!',
-    invalid_type_error: 'Phone is invalid!',
-  })
-    .trim()
+    .min(2, 'Name must be at least 2 characters long'),
+  email: z.email({
+    error: 'Email is invalid',
+  }),
+  phone: z
+    .string({
+      error: 'Phone is invalid',
+    })
     .refine((value?: string) => {
       if (!value) {
         return false;
@@ -33,52 +29,26 @@ export const CreateBookingValidationSchema = object({
       return validator.isMobilePhone(value, 'any', {
         strictMode: true,
       });
-    }, 'Phone is invalid!'),
-  country_id: string({
-    required_error: 'Country must not be empty!',
-    invalid_type_error: 'Country is invalid!',
-  })
-    .trim()
-    .uuid('Country is invalid!'),
-  surfing_experience: number({
-    required_error: 'Surfing experience must not be empty!',
-    invalid_type_error: 'Surfing experience is invalid!',
-  })
-    .min(0, 'Surfing experience must be between 0 and 10!')
-    .max(10, 'Surfing experience must be between 0 and 10!'),
-  date: string({
-    required_error: 'Date must not be empty!',
-    invalid_type_error: 'Date is invalid!',
-  })
-    .trim()
-    .refine((value?: string) => {
-      if (!value) {
-        return false;
-      }
-
-      const parsedDate = dayjs(value, 'YYYY-MM-DD');
-
-      return parsedDate.isValid();
-    }, 'Date is invalid!')
-    .refine((value?: string) => {
-      if (!value) {
-        return false;
-      }
-
-      const parsedDate = dayjs(value, 'YYYY-MM-DD');
-
-      return parsedDate.isAfter(dayjs(), 'date');
-    }, 'Date must be at least tomorrow!'),
-  surfboard_id: string({
-    required_error: 'Surfboard must not be empty!',
-    invalid_type_error: 'Surfboard is invalid!',
-  })
-    .trim()
-    .uuid('Surfboard is invalid!'),
-  national_id_photo: any({
-    required_error: 'National ID photo must not be empty!',
-    invalid_type_error: 'National ID photo is invalid!',
-  })
+    }, 'Phone is invalid'),
+  country_id: z.uuid({
+    error: 'Country is invalid',
+  }),
+  surfing_experience: z
+    .number({
+      error: 'Surfing experience is invalid',
+    })
+    .min(0, 'Surfing experience must be between 0 and 10')
+    .max(10, 'Surfing experience must be between 0 and 10'),
+  date: z
+    .date({
+      error: 'Date is invalid',
+    })
+    .min(dayjs().add(1, 'day').toDate(), 'Date must be at least tomorrow'),
+  surfboard_id: z.uuid({
+    error: 'Surfboard is invalid',
+  }),
+  national_id_photo: z
+    .any()
     .refine((value?: File) => {
       if (!value) {
         return false;
@@ -94,12 +64,12 @@ export const CreateBookingValidationSchema = object({
         'extensions',
         [],
       ).includes(extension.toLowerCase());
-    }, 'File format must be one of PNG, JPEG, and JPG!')
+    }, 'File format must be one of PNG, JPEG, or JPG')
     .refine((value?: File) => {
       if (!value) {
         return false;
       }
 
       return value.size <= 2 * MEGABYTE;
-    }, 'File size must not exceed 2MB!'),
+    }, 'File size must not exceed 2MB'),
 });

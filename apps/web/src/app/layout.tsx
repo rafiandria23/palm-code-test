@@ -1,6 +1,5 @@
 import type { FC, ReactNode } from 'react';
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import {
@@ -19,13 +18,8 @@ import LogoImage from '../assets/logo.svg';
 import SkyImage from '../assets/sky.png';
 import SurfingImage from '../assets/surfing.png';
 
-const ReduxProvider = dynamic(() => import('../components/ReduxProvider'), {
-  ssr: false,
-});
-const NotistackProvider = dynamic(
-  () => import('../components/NotistackProvider'),
-  { ssr: false },
-);
+import ReduxProvider from '../components/ReduxProvider';
+import NotistackProvider from '../components/NotistackProvider';
 
 export const metadata: Metadata = {
   title: 'Palm Code Test Web',
