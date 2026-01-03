@@ -7,7 +7,7 @@ import {
   GetObjectCommand,
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
-import path from 'path';
+import path from 'node:path';
 import * as uuid from 'uuid';
 
 @Injectable()

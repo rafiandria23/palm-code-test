@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 import {
   ThemeProvider,
   CssBaseline,

@@ -202,7 +202,7 @@ export class ReadAllBookingsQueryDto extends IntersectionType(
     maximum: SurfingExperience.Max,
     default: SurfingExperience.Min,
   })
-  @Transform(({ value }) => parseInt(value, RADIX))
+  @Transform(({ value }) => Number.parseInt(value, RADIX))
   @Max(SurfingExperience.Max)
   @Min(SurfingExperience.Min)
   @IsNumber()

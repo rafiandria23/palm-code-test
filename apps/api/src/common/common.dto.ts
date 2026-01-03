@@ -28,7 +28,7 @@ export class PaginationQueryDto {
     minimum: PaginationPage.Min,
     default: PaginationPage.Min,
   })
-  @Transform(({ value }) => parseInt(value, RADIX))
+  @Transform(({ value }) => Number.parseInt(value, RADIX))
   @Min(PaginationPage.Min)
   @IsNumber()
   @IsOptional()
@@ -40,7 +40,7 @@ export class PaginationQueryDto {
     maximum: PaginationSize.Max,
     default: PaginationSize.Default,
   })
-  @Transform(({ value }) => parseInt(value, RADIX))
+  @Transform(({ value }) => Number.parseInt(value, RADIX))
   @Max(PaginationSize.Max)
   @Min(PaginationSize.Min)
   @IsNumber()
