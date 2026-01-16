@@ -1,5 +1,5 @@
 import type { FC, ReactNode, ImgHTMLAttributes } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -109,7 +109,7 @@ describe('NationalIdVerificationForm', () => {
     SUPPORTED_FILE_TYPE.image,
   );
 
-  const nationalIdPhotoMock = new File(
+  const nationalIdPhotoFileMock = new File(
     [faker.string.alphanumeric()],
     `${faker.string.alphanumeric()}${faker.helpers.arrayElement(nationalIdPhotoFileTypeMock.extensions)}`,
     { type: nationalIdPhotoFileTypeMock.mimeType },
@@ -151,20 +151,20 @@ describe('NationalIdVerificationForm', () => {
 
     expect(nationalIdPhotoInput).toBeInTheDocument();
 
-    await userEvent.upload(nationalIdPhotoInput, nationalIdPhotoMock);
+    await userEvent.upload(nationalIdPhotoInput, nationalIdPhotoFileMock);
 
-    const nationalIdPhotoFilename = await screen.findByText(
-      new RegExp(nationalIdPhotoMock.name, 'i'),
+    const nationalIdPhotoFilename = screen.getByText(
+      new RegExp(nationalIdPhotoFileMock.name, 'i'),
     );
-    const nationalIdPhotoFileSize = await screen.findByText(
-      new RegExp(filesize(nationalIdPhotoMock.size), 'i'),
+    const nationalIdPhotoFileSize = screen.getByText(
+      new RegExp(filesize(nationalIdPhotoFileMock.size), 'i'),
     );
 
     expect(nationalIdPhotoFilename).toBeInTheDocument();
     expect(nationalIdPhotoFileSize).toBeInTheDocument();
   });
 
-  it('should render and handle upload via drag and drop', async () => {
+  it('should render and handle upload via drag and drop', () => {
     render(
       <Wrapper>
         <NationalIdVerificationForm />
@@ -176,6 +176,63 @@ describe('NationalIdVerificationForm', () => {
     );
 
     expect(nationalIdPhotoDropZone).toBeInTheDocument();
+
+    fireEvent.dragOver(nationalIdPhotoDropZone);
+    fireEvent.drop(nationalIdPhotoDropZone, {
+      dataTransfer: {
+        files: [nationalIdPhotoFileMock],
+      },
+    });
+
+    const nationalIdPhotoFilename = screen.getByText(
+      new RegExp(nationalIdPhotoFileMock.name, 'i'),
+    );
+    const nationalIdPhotoFileSize = screen.getByText(
+      new RegExp(filesize(nationalIdPhotoFileMock.size), 'i'),
+    );
+
+    expect(nationalIdPhotoFilename).toBeInTheDocument();
+    expect(nationalIdPhotoFileSize).toBeInTheDocument();
+  });
+
+  it('should render and prevent handling upload via drag and drop when loading', () => {
+    useAppSelectorMock.mockImplementation((selector) =>
+      selector({
+        booking: {
+          ...bookingStateMock,
+          loading: true,
+        },
+      }),
+    );
+
+    render(
+      <Wrapper>
+        <NationalIdVerificationForm />
+      </Wrapper>,
+    );
+
+    const nationalIdPhotoDropZone = screen.getByTestId(
+      'national_id_photo-drop-zone',
+    );
+
+    expect(nationalIdPhotoDropZone).toBeInTheDocument();
+
+    fireEvent.dragOver(nationalIdPhotoDropZone);
+    fireEvent.drop(nationalIdPhotoDropZone, {
+      dataTransfer: {
+        files: [nationalIdPhotoFileMock],
+      },
+    });
+
+    const nationalIdPhotoFilename = screen.queryByText(
+      new RegExp(nationalIdPhotoFileMock.name, 'i'),
+    );
+    const nationalIdPhotoFileSize = screen.queryByText(
+      new RegExp(filesize(nationalIdPhotoFileMock.size), 'i'),
+    );
+
+    expect(nationalIdPhotoFilename).not.toBeInTheDocument();
+    expect(nationalIdPhotoFileSize).not.toBeInTheDocument();
   });
 
   it('should render and handle clearing upload', async () => {
@@ -189,13 +246,13 @@ describe('NationalIdVerificationForm', () => {
 
     expect(nationalIdPhotoInput).toBeInTheDocument();
 
-    await userEvent.upload(nationalIdPhotoInput, nationalIdPhotoMock);
+    await userEvent.upload(nationalIdPhotoInput, nationalIdPhotoFileMock);
 
-    const nationalIdPhotoFilename = await screen.findByText(
-      new RegExp(nationalIdPhotoMock.name, 'i'),
+    const nationalIdPhotoFilename = screen.getByText(
+      new RegExp(nationalIdPhotoFileMock.name, 'i'),
     );
-    const nationalIdPhotoFileSize = await screen.findByText(
-      new RegExp(filesize(nationalIdPhotoMock.size), 'i'),
+    const nationalIdPhotoFileSize = screen.getByText(
+      new RegExp(filesize(nationalIdPhotoFileMock.size), 'i'),
     );
 
     expect(nationalIdPhotoFilename).toBeInTheDocument();
