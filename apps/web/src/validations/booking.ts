@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { extname } from 'node:path';
 
 import type { SupportedFileType } from '../interfaces/file';
-import { SUPPORTED_FILE_TYPE, MEGABYTE } from '../constants/file';
+import { SUPPORTED_FILE_TYPE, MAX_FILE_SIZE } from '../constants/file';
 
 export const CreateBookingValidationSchema = z.object({
   name: z
@@ -21,11 +21,7 @@ export const CreateBookingValidationSchema = z.object({
     .string({
       error: 'Phone is invalid',
     })
-    .refine((value?: string) => {
-      if (!value) {
-        return false;
-      }
-
+    .refine((value: string) => {
       return validator.isMobilePhone(value, 'any', {
         strictMode: true,
       });
@@ -70,6 +66,6 @@ export const CreateBookingValidationSchema = z.object({
         return false;
       }
 
-      return value.size <= 2 * MEGABYTE;
+      return value.size <= MAX_FILE_SIZE.image;
     }, 'File size must not exceed 2MB'),
 });

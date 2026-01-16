@@ -13,6 +13,8 @@ const config = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/apps/web',
   testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  coveragePathIgnorePatterns: ['/constants/', '/interfaces/', '/services/'],
 };
 
 module.exports = createJestConfig(config);

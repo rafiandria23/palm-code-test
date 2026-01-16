@@ -19,6 +19,7 @@ import SkyImage from '../assets/sky.png';
 import SurfingImage from '../assets/surfing.png';
 
 import ReduxProvider from '../components/ReduxProvider';
+import DatePickersProvider from '../components/DatePickersProvider';
 import NotistackProvider from '../components/NotistackProvider';
 
 export const metadata: Metadata = {
@@ -41,87 +42,89 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
         }}
       >
         <ReduxProvider>
-          <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
+          <DatePickersProvider>
+            <AppRouterCacheProvider>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
 
-              <NotistackProvider>
-                {/* Background */}
-                <>
-                  <Image
-                    alt="Sky."
-                    src={SkyImage}
-                    priority
-                    quality={100}
-                    fill
-                    sizes="100vw"
-                    style={{
-                      objectFit: 'cover',
-                      objectPosition: '0 -8rem',
-                      opacity: '20%',
-                      position: 'absolute',
-                    }}
-                  />
-
-                  <Image
-                    alt="Surfing."
-                    src={SurfingImage}
-                    priority
-                    quality={100}
-                    fill
-                    sizes="100vw"
-                    style={{
-                      position: 'absolute',
-                      objectFit: 'cover',
-                      objectPosition: '0 8rem',
-                      zIndex: 2,
-                    }}
-                  />
-                </>
-
-                {/* Header */}
-                <AppBar
-                  component="header"
-                  sx={{
-                    zIndex: 3,
-                    mt: '2rem',
-                    background: 'transparent',
-                    boxShadow: 'none',
-                  }}
-                >
-                  <Toolbar
-                    sx={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
+                <NotistackProvider>
+                  {/* Background */}
+                  <>
                     <Image
-                      alt="Logo."
-                      src={LogoImage}
-                      width={8}
-                      height={4}
+                      alt="Sky."
+                      src={SkyImage}
+                      priority
+                      quality={100}
+                      fill
+                      sizes="100vw"
                       style={{
-                        width: '8rem',
-                        height: '4rem',
+                        objectFit: 'cover',
+                        objectPosition: '0 -8rem',
+                        opacity: '20%',
+                        position: 'absolute',
                       }}
                     />
-                  </Toolbar>
-                </AppBar>
 
-                {/* Main */}
-                <Box
-                  component="main"
-                  sx={{
-                    position: 'relative',
-                    zIndex: 4,
-                    mt: '8rem',
-                  }}
-                >
-                  {children}
-                </Box>
-              </NotistackProvider>
-            </ThemeProvider>
-          </AppRouterCacheProvider>
+                    <Image
+                      alt="Surfing."
+                      src={SurfingImage}
+                      priority
+                      quality={100}
+                      fill
+                      sizes="100vw"
+                      style={{
+                        position: 'absolute',
+                        objectFit: 'cover',
+                        objectPosition: '0 8rem',
+                        zIndex: 2,
+                      }}
+                    />
+                  </>
+
+                  {/* Header */}
+                  <AppBar
+                    component="header"
+                    sx={{
+                      zIndex: 3,
+                      mt: '2rem',
+                      background: 'transparent',
+                      boxShadow: 'none',
+                    }}
+                  >
+                    <Toolbar
+                      sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Image
+                        alt="Logo."
+                        src={LogoImage}
+                        width={8}
+                        height={4}
+                        style={{
+                          width: '8rem',
+                          height: '4rem',
+                        }}
+                      />
+                    </Toolbar>
+                  </AppBar>
+
+                  {/* Main */}
+                  <Box
+                    component="main"
+                    sx={{
+                      position: 'relative',
+                      zIndex: 4,
+                      mt: '8rem',
+                    }}
+                  >
+                    {children}
+                  </Box>
+                </NotistackProvider>
+              </ThemeProvider>
+            </AppRouterCacheProvider>
+          </DatePickersProvider>
         </ReduxProvider>
       </Stack>
     </html>

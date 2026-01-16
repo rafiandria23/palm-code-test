@@ -125,6 +125,7 @@ const NationalIdVerificationForm: FC = () => {
                     <div style={{ flexGrow: 1 }} />
 
                     <IconButton
+                      data-testid={`clear-${field.name}-button`}
                       size="small"
                       disabled={field.disabled}
                       onClick={handleClear}
@@ -134,6 +135,7 @@ const NationalIdVerificationForm: FC = () => {
                   </Stack>
                 ) : (
                   <Stack
+                    data-testid={`${field.name}-drop-zone`}
                     spacing={1}
                     onDrop={handleDrop}
                     sx={{
@@ -175,6 +177,7 @@ const NationalIdVerificationForm: FC = () => {
                       >
                         Upload{' '}
                         <input
+                          data-testid={`${field.name}-input`}
                           type="file"
                           multiple={false}
                           hidden

@@ -1,7 +1,14 @@
 'use client';
 
-import type { FC, ReactElement, FormEventHandler } from 'react';
-import { useState, useMemo, useCallback, memo } from 'react';
+import {
+  type FC,
+  type ReactElement,
+  type FormEventHandler,
+  useState,
+  useMemo,
+  useCallback,
+  memo,
+} from 'react';
 import { useTheme, Stack, Box, Typography, Button } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 
@@ -59,6 +66,14 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
       },
     ],
     [handleReset],
+  );
+
+  const validStep = useMemo<boolean>(
+    () =>
+      steps[activeStep].fields?.every(
+        (field) => !formCtx.formState.errors[field],
+      ) ?? true,
+    [steps, activeStep, formCtx],
   );
 
   const lastStep = useMemo<boolean>(() => {
@@ -126,7 +141,7 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
             variant="contained"
             size="large"
             disableElevation
-            disabled={bookingState.loading}
+            disabled={!validStep}
             loading={bookingState.loading}
             sx={{
               paddingX: theme.spacing(8),

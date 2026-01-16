@@ -4,7 +4,13 @@ import _ from 'lodash';
 import type { FC } from 'react';
 import { useCallback } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { Grid, Autocomplete, TextField, IconButton } from '@mui/material';
+import {
+  Grid,
+  Autocomplete,
+  TextField,
+  type IconButtonProps,
+  IconButton,
+} from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 
 import type { CreateBookingFormPayload } from '../interfaces/booking';
@@ -19,13 +25,12 @@ const VisitorDetailsForm: FC = () => {
   const formCtx = useFormContext<CreateBookingFormPayload>();
 
   const handleClear = useCallback(
-    (key: keyof Pick<CreateBookingFormPayload, 'name' | 'email' | 'phone'>) => {
-      return () => {
+    (key: keyof Pick<CreateBookingFormPayload, 'name' | 'email' | 'phone'>) =>
+      () => {
         formCtx.setValue(key, '', {
           shouldValidate: true,
         });
-      };
-    },
+      },
     [formCtx],
   );
 
@@ -39,6 +44,7 @@ const VisitorDetailsForm: FC = () => {
           disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <TextField
+              data-testid={`${field.name}-input`}
               fullWidth
               disabled={field.disabled}
               type="txt"
@@ -54,6 +60,7 @@ const VisitorDetailsForm: FC = () => {
                 input: {
                   endAdornment: (
                     <IconButton
+                      data-testid={`clear-${field.name}-button`}
                       size="small"
                       onClick={handleClear('name')}
                       sx={{
@@ -90,6 +97,7 @@ const VisitorDetailsForm: FC = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
+                  data-testid={`${field.name}-input`}
                   type="text"
                   name={field.name}
                   label="Country"
@@ -97,6 +105,11 @@ const VisitorDetailsForm: FC = () => {
                   helperText={_.get(fieldState, 'error.message')}
                 />
               )}
+              slotProps={{
+                clearIndicator: {
+                  ['data-testid']: `clear-${field.name}-button`,
+                } as IconButtonProps,
+              }}
             />
           )}
         />
@@ -110,6 +123,7 @@ const VisitorDetailsForm: FC = () => {
           disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <TextField
+              data-testid={`${field.name}-input`}
               fullWidth
               disabled={field.disabled}
               type="email"
@@ -125,6 +139,7 @@ const VisitorDetailsForm: FC = () => {
                 input: {
                   endAdornment: (
                     <IconButton
+                      data-testid={`clear-${field.name}-button`}
                       size="small"
                       onClick={handleClear('email')}
                       sx={{
@@ -149,11 +164,12 @@ const VisitorDetailsForm: FC = () => {
           disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <TextField
+              data-testid={`${field.name}-input`}
               fullWidth
               disabled={field.disabled}
               type="tel"
               name={field.name}
-              label="Whatsapp number"
+              label="WhatsApp number"
               placeholder="Your active number"
               value={field.value}
               onChange={field.onChange}
@@ -164,6 +180,7 @@ const VisitorDetailsForm: FC = () => {
                 input: {
                   endAdornment: (
                     <IconButton
+                      data-testid={`clear-${field.name}-button`}
                       size="small"
                       onClick={handleClear('phone')}
                       sx={{

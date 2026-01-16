@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Stack, Grid, Box, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 
+import { API_DATE_FORMAT, WEB_DATE_FORMAT } from '../constants/date';
 import { useAppSelector } from '../hooks/store';
 
 export interface BookingDetailsProps {
@@ -28,9 +29,7 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
     }, 1000);
 
     return () => {
-      if (countdownRef.current) {
-        clearTimeout(countdownRef.current);
-      }
+      clearTimeout(countdownRef.current as NodeJS.Timeout);
     };
   }, [onTimeout, remainingSeconds, setRemainingSeconds]);
 
@@ -93,22 +92,24 @@ const BookingDetails: FC<BookingDetailsProps> = ({ onTimeout }) => {
           <Typography>{_.get(bookingState, 'data.email')}</Typography>
         </Grid>
 
-        <Grid size={6}>
-          <Typography
-            variant="body2"
-            sx={{
-              color: '#6A6A6A',
-            }}
-          >
-            Visit date:
-          </Typography>
-
-          {bookingState.data !== null && (
-            <Typography>
-              {dayjs(bookingState.data.date, 'YYYY-MM-DD').format('DD/MM/YYYY')}
+        {bookingState.data !== null && (
+          <Grid size={6}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#6A6A6A',
+              }}
+            >
+              Visit date:
             </Typography>
-          )}
-        </Grid>
+
+            <Typography>
+              {dayjs(bookingState.data.date, API_DATE_FORMAT).format(
+                WEB_DATE_FORMAT,
+              )}
+            </Typography>
+          </Grid>
+        )}
       </Grid>
 
       <Typography>

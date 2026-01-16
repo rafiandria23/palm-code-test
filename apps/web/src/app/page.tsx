@@ -33,6 +33,16 @@ const IndexPage: FC = () => {
   const form = useForm<CreateBookingFormPayload>({
     mode: 'onBlur',
     resolver: zodResolver(CreateBookingValidationSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      country_id: '',
+      surfing_experience: 0,
+      date: null as unknown as Date,
+      surfboard_id: '',
+      national_id_photo: null as unknown as File,
+    },
   });
 
   const handleSignUp = useCallback(async () => {
