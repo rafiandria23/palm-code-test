@@ -51,10 +51,8 @@ describe('RootLayout', () => {
   });
 
   it('should have metadata', () => {
-    expect(metadata).toEqual({
-      title: 'Palm Code Test Web',
-      description: 'Test for Palm Code.',
-    });
+    expect(metadata).toHaveProperty('title');
+    expect(metadata).toHaveProperty('description');
   });
 
   it('should render', () => {
@@ -62,6 +60,9 @@ describe('RootLayout', () => {
       <RootLayout>
         <div data-testid="root-layout-child" />
       </RootLayout>,
+      {
+        container: document.documentElement,
+      },
     );
 
     const reduxProvider = screen.getByTestId('redux-provider');

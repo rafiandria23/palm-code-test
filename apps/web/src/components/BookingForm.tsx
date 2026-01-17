@@ -96,7 +96,11 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
           await onSubmit(formCtx.getValues());
         }
 
-        setActiveStep(activeStep + 1);
+        const nextStep = activeStep + 1;
+
+        if (nextStep < steps.length) {
+          setActiveStep(nextStep);
+        }
       }
     },
     [formCtx, steps, activeStep, lastStep, onSubmit, setActiveStep],

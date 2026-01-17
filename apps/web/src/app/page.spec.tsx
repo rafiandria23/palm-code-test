@@ -249,8 +249,8 @@ describe('IndexPage', () => {
   it('should render and handle signing up error', async () => {
     const errMock: Error = new Error(faker.string.alpha());
 
-    authSignUpMutationMock.mockReturnValueOnce({
-      unwrap: jest.fn().mockRejectedValueOnce(errMock),
+    authSignUpMutationMock.mockReturnValue({
+      unwrap: jest.fn().mockRejectedValue(errMock),
     });
 
     render(<IndexPage />);
@@ -289,8 +289,8 @@ describe('IndexPage', () => {
   it('should render and handle form submission error', async () => {
     const errMock: Error = new Error(faker.string.alpha());
 
-    uploadBookingNationalIdPhotoMutationMock.mockReturnValueOnce({
-      unwrap: jest.fn().mockRejectedValueOnce(errMock),
+    uploadBookingNationalIdPhotoMutationMock.mockReturnValue({
+      unwrap: jest.fn().mockRejectedValue(errMock),
     });
 
     render(<IndexPage />);
@@ -312,7 +312,7 @@ describe('IndexPage', () => {
   });
 
   it('should render and handle signing up loading', () => {
-    useAppSelectorMock.mockImplementationOnce((selector) =>
+    useAppSelectorMock.mockImplementation((selector) =>
       selector({
         auth: {
           ...authStateMock,
@@ -326,7 +326,7 @@ describe('IndexPage', () => {
 
     render(<IndexPage />);
 
-    const bookingForm = screen.getByTestId('booking-form');
+    const bookingForm = screen.queryByTestId('booking-form');
 
     expect(bookingForm).not.toBeInTheDocument();
   });
