@@ -4,11 +4,11 @@ import { ExecutionContext } from '@nestjs/common';
 import { dbTransactionFactory } from './common.decorator';
 
 describe('Common decorators', () => {
-  const mockedExecutionContext = {
+  const executionContextMock = {
     switchToHttp: jest.fn(),
   };
 
-  const mockedLodash = {
+  const lodashMock = {
     get: jest.spyOn(_, 'get'),
   };
 
@@ -18,31 +18,31 @@ describe('Common decorators', () => {
   });
 
   describe('DbTransaction', () => {
-    const mockedDbTransaction = {};
+    const dbTransactionMock = {};
 
     it('should return API DB transaction', () => {
-      const mockedRequest = {
+      const requestMock = {
         db: {
-          transaction: mockedDbTransaction,
+          transaction: dbTransactionMock,
         },
       };
 
-      mockedExecutionContext.switchToHttp.mockReturnValue({
-        getRequest: jest.fn().mockReturnValue(mockedRequest),
+      executionContextMock.switchToHttp.mockReturnValue({
+        getRequest: jest.fn().mockReturnValue(requestMock),
       });
 
       const dbTransaction = dbTransactionFactory(
         {},
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
       );
 
-      expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(1);
-      expect(mockedLodash.get).toHaveBeenCalledWith(
-        mockedRequest,
+      expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
+      expect(lodashMock.get).toHaveBeenCalledWith(
+        requestMock,
         'db.transaction',
       );
 
-      expect(dbTransaction).toEqual(mockedDbTransaction);
+      expect(dbTransaction).toEqual(dbTransactionMock);
     });
   });
 });

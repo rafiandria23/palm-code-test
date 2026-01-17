@@ -5,11 +5,11 @@ import { faker } from '@faker-js/faker';
 import { authFactory } from './auth.decorator';
 
 describe('Auth decorators', () => {
-  const mockedExecutionContext = {
+  const executionContextMock = {
     switchToHttp: jest.fn(),
   };
 
-  const mockedLodash = {
+  const lodashMock = {
     get: jest.spyOn(_, 'get'),
   };
 
@@ -19,28 +19,28 @@ describe('Auth decorators', () => {
   });
 
   describe('Auth', () => {
-    const mockedAuth = {
+    const authMock = {
       user_id: faker.string.uuid(),
     };
 
     it('should return API auth', () => {
-      const mockedRequest = {
-        auth: mockedAuth,
+      const requestMock = {
+        auth: authMock,
       };
 
-      mockedExecutionContext.switchToHttp.mockReturnValue({
-        getRequest: jest.fn().mockReturnValue(mockedRequest),
+      executionContextMock.switchToHttp.mockReturnValue({
+        getRequest: jest.fn().mockReturnValue(requestMock),
       });
 
       const auth = authFactory(
         {},
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
       );
 
-      expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(1);
-      expect(mockedLodash.get).toHaveBeenCalledWith(mockedRequest, 'auth');
+      expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
+      expect(lodashMock.get).toHaveBeenCalledWith(requestMock, 'auth');
 
-      expect(auth).toEqual(mockedAuth);
+      expect(auth).toEqual(authMock);
     });
   });
 });

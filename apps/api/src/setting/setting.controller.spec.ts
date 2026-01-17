@@ -20,9 +20,9 @@ import { SettingController } from './setting.controller';
 describe('SettingController', () => {
   let controller: SettingController;
 
-  const mockedDbTransaction: SequelizeTransaction = {} as SequelizeTransaction;
+  const dbTransactionMock: SequelizeTransaction = {} as SequelizeTransaction;
 
-  const mockedSettingService = {
+  const settingServiceMock = {
     createCountry: jest.fn(),
     createSurfboard: jest.fn(),
     readAllCountries: jest.fn(),
@@ -43,12 +43,12 @@ describe('SettingController', () => {
         CommonService,
         {
           provide: SettingService,
-          useValue: mockedSettingService,
+          useValue: settingServiceMock,
         },
       ],
     })
       .overrideInterceptor(DbTransactionInterceptor)
-      .useValue(mockedDbTransaction)
+      .useValue(dbTransactionMock)
       .compile();
 
     controller = module.get<SettingController>(SettingController);
@@ -59,7 +59,7 @@ describe('SettingController', () => {
     jest.resetAllMocks();
   });
 
-  const mockedCountry = {
+  const countryMock = {
     id: faker.string.uuid(),
     name: faker.string.alpha(),
     code: faker.string.alphanumeric(),
@@ -67,176 +67,176 @@ describe('SettingController', () => {
     emoji: faker.string.alphanumeric(),
   };
 
-  const mockedSurfboard = {
+  const surfboardMock = {
     id: faker.string.uuid(),
     name: faker.string.alpha(),
   };
 
   describe('createCountry', () => {
     it('should return created country', async () => {
-      mockedSettingService.createCountry.mockResolvedValue({
+      settingServiceMock.createCountry.mockResolvedValue({
         success: true,
-        data: mockedCountry,
+        data: countryMock,
       });
 
       const { success, data } = await controller.createCountry(
-        mockedDbTransaction,
-        _.omit(mockedCountry, ['id']),
+        dbTransactionMock,
+        _.omit(countryMock, ['id']),
       );
 
-      expect(mockedSettingService.createCountry).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.createCountry).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual(mockedCountry);
+      expect(data).toEqual(countryMock);
     });
   });
 
   describe('createSurfboard', () => {
     it('should return created surfboard', async () => {
-      mockedSettingService.createSurfboard.mockResolvedValue({
+      settingServiceMock.createSurfboard.mockResolvedValue({
         success: true,
-        data: mockedSurfboard,
+        data: surfboardMock,
       });
 
       const { success, data } = await controller.createSurfboard(
-        mockedDbTransaction,
-        _.omit(mockedSurfboard, ['id']),
+        dbTransactionMock,
+        _.omit(surfboardMock, ['id']),
       );
 
-      expect(mockedSettingService.createSurfboard).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.createSurfboard).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual(mockedSurfboard);
+      expect(data).toEqual(surfboardMock);
     });
   });
 
   describe('readAllCountries', () => {
     it('should return countries', async () => {
-      mockedSettingService.readAllCountries.mockResolvedValue({
+      settingServiceMock.readAllCountries.mockResolvedValue({
         success: true,
-        data: [mockedCountry],
+        data: [countryMock],
       });
 
       const { success, data } = await controller.readAllCountries(
-        mockedDbTransaction,
+        dbTransactionMock,
         {
           page: PaginationPage.Min,
           page_size: PaginationSize.Max,
           sort: SortDirection.Asc,
           sort_by: CountrySortProperty.Id,
-          name: mockedCountry.name,
+          name: countryMock.name,
         },
       );
 
-      expect(mockedSettingService.readAllCountries).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readAllCountries).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual([mockedCountry]);
+      expect(data).toEqual([countryMock]);
     });
   });
 
   describe('readCountryById', () => {
     it('should return 422 when country does not exist', async () => {
-      mockedSettingService.readCountryById.mockResolvedValue(null);
+      settingServiceMock.readCountryById.mockResolvedValue(null);
 
       let err: UnprocessableEntityException;
 
       try {
-        await controller.readCountryById(mockedDbTransaction, {
+        await controller.readCountryById(dbTransactionMock, {
           id: faker.string.uuid(),
         });
       } catch (error) {
         err = error;
       }
 
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return country', async () => {
-      mockedSettingService.readCountryById.mockResolvedValue(mockedCountry);
+      settingServiceMock.readCountryById.mockResolvedValue(countryMock);
 
       const { success, data } = await controller.readCountryById(
-        mockedDbTransaction,
-        _.pick(mockedCountry, ['id']),
+        dbTransactionMock,
+        _.pick(countryMock, ['id']),
       );
 
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual(mockedCountry);
+      expect(data).toEqual(countryMock);
     });
   });
 
   describe('readAllSurfboards', () => {
     it('should return surfboards', async () => {
-      mockedSettingService.readAllSurfboards.mockResolvedValue({
+      settingServiceMock.readAllSurfboards.mockResolvedValue({
         success: true,
-        data: [mockedSurfboard],
+        data: [surfboardMock],
       });
 
       const { success, data } = await controller.readAllSurfboards(
-        mockedDbTransaction,
+        dbTransactionMock,
         {
           page: PaginationPage.Min,
           page_size: PaginationSize.Max,
           sort: SortDirection.Asc,
           sort_by: SurfboardSortProperty.Id,
-          name: mockedSurfboard.name,
+          name: surfboardMock.name,
         },
       );
 
-      expect(mockedSettingService.readAllSurfboards).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readAllSurfboards).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual([mockedSurfboard]);
+      expect(data).toEqual([surfboardMock]);
     });
   });
 
   describe('readSurfboardById', () => {
     it('should return 422 when surfboard does not exist', async () => {
-      mockedSettingService.readSurfboardById.mockResolvedValue(null);
+      settingServiceMock.readSurfboardById.mockResolvedValue(null);
 
       let err: UnprocessableEntityException;
 
       try {
-        await controller.readSurfboardById(mockedDbTransaction, {
+        await controller.readSurfboardById(dbTransactionMock, {
           id: faker.string.uuid(),
         });
       } catch (error) {
         err = error;
       }
 
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return surfboard', async () => {
-      mockedSettingService.readSurfboardById.mockResolvedValue(mockedSurfboard);
+      settingServiceMock.readSurfboardById.mockResolvedValue(surfboardMock);
 
       const { success, data } = await controller.readSurfboardById(
-        mockedDbTransaction,
-        _.pick(mockedSurfboard, ['id']),
+        dbTransactionMock,
+        _.pick(surfboardMock, ['id']),
       );
 
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual(mockedSurfboard);
+      expect(data).toEqual(surfboardMock);
     });
   });
 
   describe('updateCountry', () => {
     it('should return success', async () => {
-      mockedSettingService.updateCountry.mockResolvedValue({ success: true });
+      settingServiceMock.updateCountry.mockResolvedValue({ success: true });
 
       const { success } = await controller.updateCountry(
-        mockedDbTransaction,
-        _.pick(mockedCountry, ['id']),
+        dbTransactionMock,
+        _.pick(countryMock, ['id']),
         {
           name: faker.string.alpha(),
           code: faker.string.alphanumeric(),
@@ -245,7 +245,7 @@ describe('SettingController', () => {
         },
       );
 
-      expect(mockedSettingService.updateCountry).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.updateCountry).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
@@ -253,17 +253,17 @@ describe('SettingController', () => {
 
   describe('updateSurfboard', () => {
     it('should return success', async () => {
-      mockedSettingService.updateSurfboard.mockResolvedValue({ success: true });
+      settingServiceMock.updateSurfboard.mockResolvedValue({ success: true });
 
       const { success } = await controller.updateSurfboard(
-        mockedDbTransaction,
-        _.pick(mockedSurfboard, ['id']),
+        dbTransactionMock,
+        _.pick(surfboardMock, ['id']),
         {
           name: faker.string.alpha(),
         },
       );
 
-      expect(mockedSettingService.updateSurfboard).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.updateSurfboard).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
@@ -271,14 +271,14 @@ describe('SettingController', () => {
 
   describe('deleteCountry', () => {
     it('should return success', async () => {
-      mockedSettingService.deleteCountry.mockResolvedValue({ success: true });
+      settingServiceMock.deleteCountry.mockResolvedValue({ success: true });
 
       const { success } = await controller.deleteCountry(
-        mockedDbTransaction,
-        _.pick(mockedCountry, ['id']),
+        dbTransactionMock,
+        _.pick(countryMock, ['id']),
       );
 
-      expect(mockedSettingService.deleteCountry).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.deleteCountry).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
@@ -286,16 +286,16 @@ describe('SettingController', () => {
 
   describe('deleteSurfboard', () => {
     it('should return success', async () => {
-      mockedSettingService.deleteSurfboard.mockResolvedValue({
+      settingServiceMock.deleteSurfboard.mockResolvedValue({
         success: true,
       });
 
       const { success } = await controller.deleteSurfboard(
-        mockedDbTransaction,
-        _.pick(mockedSurfboard, ['id']),
+        dbTransactionMock,
+        _.pick(surfboardMock, ['id']),
       );
 
-      expect(mockedSettingService.deleteSurfboard).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.deleteSurfboard).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });

@@ -5,7 +5,7 @@ import { of, throwError } from 'rxjs';
 import { DbTransactionInterceptor } from './common.interceptor';
 
 describe('Common interceptors', () => {
-  const mockedExecutionContext = {
+  const executionContextMock = {
     switchToHttp: jest.fn(),
   };
 
@@ -17,73 +17,69 @@ describe('Common interceptors', () => {
   describe('DbTransactionInterceptor', () => {
     let interceptor: DbTransactionInterceptor;
 
-    const mockedSequelize = {
+    const sequelizeMock = {
       transaction: jest.fn(),
     };
 
     beforeEach(() => {
       interceptor = new DbTransactionInterceptor(
-        mockedSequelize as unknown as Sequelize,
+        sequelizeMock as unknown as Sequelize,
       );
     });
 
     it('should commit API DB transaction', async () => {
-      mockedExecutionContext.switchToHttp.mockReturnValue({
+      executionContextMock.switchToHttp.mockReturnValue({
         getRequest: jest.fn().mockReturnValue({}),
       });
 
-      mockedSequelize.transaction.mockResolvedValue({
+      sequelizeMock.transaction.mockResolvedValue({
         commit: jest.fn().mockResolvedValue(undefined),
       });
 
-      const mockedCallHandler = {
+      const callHandlerMock = {
         handle: () => of(undefined),
       };
 
       (
         await interceptor.intercept(
-          mockedExecutionContext as unknown as ExecutionContext,
-          mockedCallHandler as CallHandler,
+          executionContextMock as unknown as ExecutionContext,
+          callHandlerMock as CallHandler,
         )
       )
         .subscribe({
           next: () => {
-            expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(
-              1,
-            );
+            expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
           },
         })
         .unsubscribe();
 
-      expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(1);
-      expect(mockedSequelize.transaction).toHaveBeenCalledTimes(1);
+      expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
+      expect(sequelizeMock.transaction).toHaveBeenCalledTimes(1);
     });
 
     it('should rollback API DB transaction and throw error', async () => {
-      mockedExecutionContext.switchToHttp.mockReturnValue({
+      executionContextMock.switchToHttp.mockReturnValue({
         getRequest: jest.fn().mockReturnValue({}),
       });
 
-      mockedSequelize.transaction.mockResolvedValue({
+      sequelizeMock.transaction.mockResolvedValue({
         rollback: jest.fn().mockResolvedValue(undefined),
       });
 
-      const mockedCallHandler = {
+      const callHandlerMock = {
         handle: () => throwError(() => new Error()),
       };
 
       (
         await interceptor.intercept(
-          mockedExecutionContext as unknown as ExecutionContext,
-          mockedCallHandler as CallHandler,
+          executionContextMock as unknown as ExecutionContext,
+          callHandlerMock as CallHandler,
         )
       )
         .subscribe({
           error: (err) => {
-            expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(
-              1,
-            );
-            expect(mockedSequelize.transaction).toHaveBeenCalledTimes(1);
+            expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
+            expect(sequelizeMock.transaction).toHaveBeenCalledTimes(1);
 
             expect(err).toBeDefined();
           },

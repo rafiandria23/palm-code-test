@@ -5,11 +5,11 @@ import { faker } from '@faker-js/faker';
 import { uploadedFileFactory } from './file.decorator';
 
 describe('File decorators', () => {
-  const mockedExecutionContext = {
+  const executionContextMock = {
     switchToHttp: jest.fn(),
   };
 
-  const mockedLodash = {
+  const lodashMock = {
     get: jest.spyOn(_, 'get'),
   };
 
@@ -19,28 +19,28 @@ describe('File decorators', () => {
   });
 
   describe('UploadedFile', () => {
-    const mockedFile = {
+    const fileMock = {
       key: faker.string.alphanumeric(),
     };
 
     it('should return API file', () => {
-      const mockedResponse = {
-        file: mockedFile,
+      const responseMock = {
+        file: fileMock,
       };
 
-      mockedExecutionContext.switchToHttp.mockReturnValue({
-        getResponse: jest.fn().mockReturnValue(mockedResponse),
+      executionContextMock.switchToHttp.mockReturnValue({
+        getResponse: jest.fn().mockReturnValue(responseMock),
       });
 
       const file = uploadedFileFactory(
         {},
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
       );
 
-      expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(1);
-      expect(mockedLodash.get).toHaveBeenCalledWith(mockedResponse, 'file');
+      expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
+      expect(lodashMock.get).toHaveBeenCalledWith(responseMock, 'file');
 
-      expect(file).toEqual(mockedFile);
+      expect(file).toEqual(fileMock);
     });
   });
 });
