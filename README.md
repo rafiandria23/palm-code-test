@@ -1,7 +1,6 @@
 # Palm Code Test
 
 [![GitHub Actions Build](https://github.com/rafiandria23/palm-code-test/actions/workflows/ci.yaml/badge.svg)](https://github.com/rafiandria23/palm-code-test/actions/workflows/ci.yaml)
-
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rafiandria23_palm-code-test&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=rafiandria23_palm-code-test)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=rafiandria23_palm-code-test&metric=bugs)](https://sonarcloud.io/summary/new_code?id=rafiandria23_palm-code-test)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=rafiandria23_palm-code-test&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=rafiandria23_palm-code-test)
