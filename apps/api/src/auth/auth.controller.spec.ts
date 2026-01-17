@@ -12,9 +12,9 @@ import { AuthController } from './auth.controller';
 describe('AuthController', () => {
   let controller: AuthController;
 
-  const mockedDbTransaction: SequelizeTransaction = {} as SequelizeTransaction;
+  const dbTransactionMock: SequelizeTransaction = {} as SequelizeTransaction;
 
-  const mockedAuthService = {
+  const authServiceMock = {
     signUp: jest.fn(),
     signIn: jest.fn(),
     updateEmail: jest.fn(),
@@ -29,12 +29,12 @@ describe('AuthController', () => {
       providers: [
         {
           provide: AuthService,
-          useValue: mockedAuthService,
+          useValue: authServiceMock,
         },
       ],
     })
       .overrideInterceptor(DbTransactionInterceptor)
-      .useValue(mockedDbTransaction)
+      .useValue(dbTransactionMock)
       .compile();
 
     controller = module.get<AuthController>(AuthController);
@@ -45,78 +45,78 @@ describe('AuthController', () => {
     jest.resetAllMocks();
   });
 
-  const mockedUser = {
+  const userMock = {
     id: faker.string.uuid(),
     first_name: faker.person.firstName(),
     last_name: faker.person.lastName(),
     email: faker.internet.email(),
   };
 
-  const mockedUserPassword = {
+  const userPasswordMock = {
     id: faker.string.uuid(),
-    user_id: mockedUser.id,
+    user_id: userMock.id,
     password: faker.internet.password({
       length: PasswordLength.Min,
     }),
   };
 
-  const mockedAuthToken = {
+  const authTokenMock = {
     access_token: faker.string.alphanumeric(),
   };
 
   describe('signUp', () => {
     it('should return auth token', async () => {
-      mockedAuthService.signUp.mockResolvedValue({
+      authServiceMock.signUp.mockResolvedValue({
         success: true,
-        data: mockedAuthToken,
+        data: authTokenMock,
       });
 
-      const { success, data } = await controller.signUp(mockedDbTransaction, {
-        ..._.omit(mockedUser, ['id']),
-        ..._.pick(mockedUserPassword, ['password']),
+      const { success, data } = await controller.signUp(dbTransactionMock, {
+        ..._.omit(userMock, ['id']),
+        ..._.pick(userPasswordMock, ['password']),
       });
 
-      expect(mockedAuthService.signUp).toHaveBeenCalledTimes(1);
+      expect(authServiceMock.signUp).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual(mockedAuthToken);
+      expect(data).toEqual(authTokenMock);
     });
   });
 
   describe('signIn', () => {
     it('should return auth token', async () => {
-      mockedAuthService.signIn.mockResolvedValue({
+      authServiceMock.signIn.mockResolvedValue({
         success: true,
-        data: mockedAuthToken,
+        data: authTokenMock,
       });
 
-      const { success, data } = await controller.signIn(mockedDbTransaction, {
-        ..._.pick(mockedUser, ['email']),
-        ..._.pick(mockedUserPassword, ['password']),
+      const { success, data } = await controller.signIn(dbTransactionMock, {
+        ..._.pick(userMock, ['email']),
+        ..._.pick(userPasswordMock, ['password']),
       });
 
-      expect(mockedAuthService.signIn).toHaveBeenCalledTimes(1);
+      expect(authServiceMock.signIn).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual(mockedAuthToken);
+      expect(data).toEqual(authTokenMock);
     });
   });
 
   describe('updateEmail', () => {
     it('should return success', async () => {
-      mockedAuthService.updateEmail.mockResolvedValue({ success: true });
+      authServiceMock.updateEmail.mockResolvedValue({ success: true });
 
       const { success } = await controller.updateEmail(
-        mockedDbTransaction,
+        dbTransactionMock,
         {
-          user_id: mockedUser.id,
+          user_id: userMock.id,
         },
         {
           email: faker.internet.email(),
         },
       );
 
-      expect(mockedAuthService.updateEmail).toHaveBeenCalledTimes(1);
+      expect(authServiceMock.updateEmail).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
@@ -124,22 +124,22 @@ describe('AuthController', () => {
 
   describe('updatePassword', () => {
     it('should return success', async () => {
-      mockedAuthService.updatePassword.mockResolvedValue({ success: true });
+      authServiceMock.updatePassword.mockResolvedValue({ success: true });
 
       const { success } = await controller.updatePassword(
-        mockedDbTransaction,
+        dbTransactionMock,
         {
-          user_id: mockedUser.id,
+          user_id: userMock.id,
         },
         {
-          old_password: mockedUserPassword.password,
+          old_password: userPasswordMock.password,
           new_password: faker.internet.password({
             length: PasswordLength.Min,
           }),
         },
       );
 
-      expect(mockedAuthService.updatePassword).toHaveBeenCalledTimes(1);
+      expect(authServiceMock.updatePassword).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
@@ -147,13 +147,13 @@ describe('AuthController', () => {
 
   describe('deactivate', () => {
     it('should return success', async () => {
-      mockedAuthService.deactivate.mockResolvedValue({ success: true });
+      authServiceMock.deactivate.mockResolvedValue({ success: true });
 
-      const { success } = await controller.deactivate(mockedDbTransaction, {
-        user_id: mockedUser.id,
+      const { success } = await controller.deactivate(dbTransactionMock, {
+        user_id: userMock.id,
       });
 
-      expect(mockedAuthService.deactivate).toHaveBeenCalledTimes(1);
+      expect(authServiceMock.deactivate).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
@@ -161,13 +161,13 @@ describe('AuthController', () => {
 
   describe('delete', () => {
     it('should return success', async () => {
-      mockedAuthService.delete.mockResolvedValue({ success: true });
+      authServiceMock.delete.mockResolvedValue({ success: true });
 
-      const { success } = await controller.delete(mockedDbTransaction, {
-        user_id: mockedUser.id,
+      const { success } = await controller.delete(dbTransactionMock, {
+        user_id: userMock.id,
       });
 
-      expect(mockedAuthService.delete).toHaveBeenCalledTimes(1);
+      expect(authServiceMock.delete).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });

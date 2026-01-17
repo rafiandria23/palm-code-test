@@ -18,21 +18,21 @@ import { FileInterceptor } from './file.interceptor';
 describe('FileInterceptor', () => {
   let interceptor: FileInterceptor;
 
-  const mockedReflector = {
+  const reflectorMock = {
     getAllAndOverride: jest.fn(),
   };
 
-  const mockedFileService = {
+  const fileServiceMock = {
     upload: jest.fn(),
   };
 
-  const mockedExecutionContext = {
+  const executionContextMock = {
     switchToHttp: jest.fn(),
     getHandler: jest.fn(),
     getClass: jest.fn(),
   };
 
-  const mockedLodash = {
+  const lodashMock = {
     set: jest.spyOn(_, 'set'),
   };
 
@@ -42,11 +42,11 @@ describe('FileInterceptor', () => {
         FileInterceptor,
         {
           provide: Reflector,
-          useValue: mockedReflector,
+          useValue: reflectorMock,
         },
         {
           provide: FileService,
-          useValue: mockedFileService,
+          useValue: fileServiceMock,
         },
       ],
     }).compile();
@@ -60,7 +60,7 @@ describe('FileInterceptor', () => {
   });
 
   it('should return 400 when request is not multipart', async () => {
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         isMultipart: jest.fn().mockReturnValue(false),
       }),
@@ -71,93 +71,93 @@ describe('FileInterceptor', () => {
 
     try {
       await interceptor.intercept(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
         {} as CallHandler,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(2);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(2);
 
     expect(err).toBeInstanceOf(BadRequestException);
     expect(err.getStatus()).toBe(HttpStatus.BAD_REQUEST);
   });
 
   it('should return 500 when file config is not provided', async () => {
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         isMultipart: jest.fn().mockReturnValue(true),
       }),
       getResponse: jest.fn().mockReturnValue({}),
     });
-    mockedExecutionContext.getHandler.mockReturnValue(jest.fn());
-    mockedExecutionContext.getClass.mockReturnValue({});
-    mockedReflector.getAllAndOverride.mockReturnValue(null);
+    executionContextMock.getHandler.mockReturnValue(jest.fn());
+    executionContextMock.getClass.mockReturnValue({});
+    reflectorMock.getAllAndOverride.mockReturnValue(null);
 
     let err: InternalServerErrorException;
 
     try {
       await interceptor.intercept(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
         {} as CallHandler,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(2);
-    expect(mockedExecutionContext.getHandler).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.getClass).toHaveBeenCalledTimes(1);
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(2);
+    expect(executionContextMock.getHandler).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.getClass).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
 
     expect(err).toBeInstanceOf(InternalServerErrorException);
     expect(err.getStatus()).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
   });
 
   it('should return 400 when file is empty', async () => {
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         isMultipart: jest.fn().mockReturnValue(true),
         file: jest.fn().mockResolvedValue(null),
       }),
       getResponse: jest.fn().mockReturnValue({}),
     });
-    mockedExecutionContext.getHandler.mockReturnValue(jest.fn());
-    mockedExecutionContext.getClass.mockReturnValue({});
-    mockedReflector.getAllAndOverride.mockReturnValue({ field: 'file' });
+    executionContextMock.getHandler.mockReturnValue(jest.fn());
+    executionContextMock.getClass.mockReturnValue({});
+    reflectorMock.getAllAndOverride.mockReturnValue({ field: 'file' });
 
     let err: BadRequestException;
 
     try {
       await interceptor.intercept(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
         {} as CallHandler,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(2);
-    expect(mockedExecutionContext.getHandler).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.getClass).toHaveBeenCalledTimes(1);
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(2);
+    expect(executionContextMock.getHandler).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.getClass).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
 
     expect(err).toBeInstanceOf(BadRequestException);
     expect(err.getStatus()).toBe(HttpStatus.BAD_REQUEST);
   });
 
   it('should return 400 when file field name is invalid', async () => {
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         isMultipart: jest.fn().mockReturnValue(true),
         file: jest.fn().mockResolvedValue({ fieldname: faker.string.alpha() }),
       }),
       getResponse: jest.fn().mockReturnValue({}),
     });
-    mockedExecutionContext.getHandler.mockReturnValue(jest.fn());
-    mockedExecutionContext.getClass.mockReturnValue({});
-    mockedReflector.getAllAndOverride.mockReturnValue({
+    executionContextMock.getHandler.mockReturnValue(jest.fn());
+    executionContextMock.getClass.mockReturnValue({});
+    reflectorMock.getAllAndOverride.mockReturnValue({
       field: faker.string.alpha(),
     });
 
@@ -165,42 +165,42 @@ describe('FileInterceptor', () => {
 
     try {
       await interceptor.intercept(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
         {} as CallHandler,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(2);
-    expect(mockedExecutionContext.getHandler).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.getClass).toHaveBeenCalledTimes(1);
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(2);
+    expect(executionContextMock.getHandler).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.getClass).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
 
     expect(err).toBeInstanceOf(BadRequestException);
     expect(err.getStatus()).toBe(HttpStatus.BAD_REQUEST);
   });
 
   it('should return 400 when file extension is invalid', async () => {
-    const mockedFileFieldName = faker.string.alpha({
+    const fileFieldNameMock = faker.string.alpha({
       casing: 'lower',
     });
 
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         isMultipart: jest.fn().mockReturnValue(true),
         file: jest.fn().mockResolvedValue({
-          fieldname: mockedFileFieldName,
+          fieldname: fileFieldNameMock,
           filename: faker.system.fileName(),
           mimetype: faker.system.mimeType(),
         }),
       }),
       getResponse: jest.fn().mockReturnValue({}),
     });
-    mockedExecutionContext.getHandler.mockReturnValue(jest.fn());
-    mockedExecutionContext.getClass.mockReturnValue({});
-    mockedReflector.getAllAndOverride.mockReturnValue({
-      field: mockedFileFieldName,
+    executionContextMock.getHandler.mockReturnValue(jest.fn());
+    executionContextMock.getClass.mockReturnValue({});
+    reflectorMock.getAllAndOverride.mockReturnValue({
+      field: fileFieldNameMock,
       type: [{ mimeType: faker.system.mimeType(), extensions: [] }],
     });
 
@@ -208,48 +208,48 @@ describe('FileInterceptor', () => {
 
     try {
       await interceptor.intercept(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
         {} as CallHandler,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(2);
-    expect(mockedExecutionContext.getHandler).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.getClass).toHaveBeenCalledTimes(1);
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(2);
+    expect(executionContextMock.getHandler).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.getClass).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
 
     expect(err).toBeInstanceOf(BadRequestException);
     expect(err.getStatus()).toBe(HttpStatus.BAD_REQUEST);
   });
 
   it('should return 400 when file size limit is exceeded', async () => {
-    const mockedFileFieldName = faker.string.alpha({
+    const fileFieldNameMock = faker.string.alpha({
       casing: 'lower',
     });
-    const mockedFilename = faker.system.fileName();
-    const mockedFileMimeType = faker.system.mimeType();
+    const filenameMock = faker.system.fileName();
+    const fileMimeTypeMock = faker.system.mimeType();
 
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         isMultipart: jest.fn().mockReturnValue(true),
         file: jest.fn().mockResolvedValue({
-          fieldname: mockedFileFieldName,
-          filename: mockedFilename,
-          mimetype: mockedFileMimeType,
+          fieldname: fileFieldNameMock,
+          filename: filenameMock,
+          mimetype: fileMimeTypeMock,
         }),
       }),
       getResponse: jest.fn().mockReturnValue({}),
     });
-    mockedExecutionContext.getHandler.mockReturnValue(jest.fn());
-    mockedExecutionContext.getClass.mockReturnValue({});
-    mockedReflector.getAllAndOverride.mockReturnValue({
-      field: mockedFileFieldName,
+    executionContextMock.getHandler.mockReturnValue(jest.fn());
+    executionContextMock.getClass.mockReturnValue({});
+    reflectorMock.getAllAndOverride.mockReturnValue({
+      field: fileFieldNameMock,
       type: [
         {
-          mimeType: mockedFileMimeType,
-          extensions: [path.extname(mockedFilename)],
+          mimeType: fileMimeTypeMock,
+          extensions: [path.extname(filenameMock)],
         },
       ],
       size: 1,
@@ -258,7 +258,7 @@ describe('FileInterceptor', () => {
     const fileAbortError = new Error();
     fileAbortError.name = 'AbortError';
 
-    mockedFileService.upload.mockReturnValue({
+    fileServiceMock.upload.mockReturnValue({
       on: jest.fn().mockImplementation((__, cb) => cb({ loaded: 2 })),
       abort: jest.fn().mockResolvedValue(undefined),
       done: jest.fn().mockRejectedValue(fileAbortError),
@@ -268,54 +268,54 @@ describe('FileInterceptor', () => {
 
     try {
       await interceptor.intercept(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
         {} as CallHandler,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(2);
-    expect(mockedExecutionContext.getHandler).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.getClass).toHaveBeenCalledTimes(1);
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
-    expect(mockedFileService.upload).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(2);
+    expect(executionContextMock.getHandler).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.getClass).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(fileServiceMock.upload).toHaveBeenCalledTimes(1);
 
     expect(err).toBeInstanceOf(BadRequestException);
     expect(err.getStatus()).toBe(HttpStatus.BAD_REQUEST);
   });
 
   it('should throw error when file size limit is exceeded', async () => {
-    const mockedFileFieldName = faker.string.alpha({
+    const fileFieldNameMock = faker.string.alpha({
       casing: 'lower',
     });
-    const mockedFilename = faker.system.fileName();
-    const mockedFileMimeType = faker.system.mimeType();
+    const filenameMock = faker.system.fileName();
+    const fileMimeTypeMock = faker.system.mimeType();
 
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         isMultipart: jest.fn().mockReturnValue(true),
         file: jest.fn().mockResolvedValue({
-          fieldname: mockedFileFieldName,
-          filename: mockedFilename,
-          mimetype: mockedFileMimeType,
+          fieldname: fileFieldNameMock,
+          filename: filenameMock,
+          mimetype: fileMimeTypeMock,
         }),
       }),
       getResponse: jest.fn().mockReturnValue({}),
     });
-    mockedExecutionContext.getHandler.mockReturnValue(jest.fn());
-    mockedExecutionContext.getClass.mockReturnValue({});
-    mockedReflector.getAllAndOverride.mockReturnValue({
-      field: mockedFileFieldName,
+    executionContextMock.getHandler.mockReturnValue(jest.fn());
+    executionContextMock.getClass.mockReturnValue({});
+    reflectorMock.getAllAndOverride.mockReturnValue({
+      field: fileFieldNameMock,
       type: [
         {
-          mimeType: mockedFileMimeType,
-          extensions: [path.extname(mockedFilename)],
+          mimeType: fileMimeTypeMock,
+          extensions: [path.extname(filenameMock)],
         },
       ],
       size: faker.number.int(),
     });
-    mockedFileService.upload.mockReturnValue({
+    fileServiceMock.upload.mockReturnValue({
       on: jest.fn().mockReturnValue(undefined),
       abort: jest.fn().mockResolvedValue(undefined),
       done: jest.fn().mockRejectedValue(new Error()),
@@ -325,85 +325,85 @@ describe('FileInterceptor', () => {
 
     try {
       await interceptor.intercept(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
         {} as CallHandler,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(2);
-    expect(mockedExecutionContext.getHandler).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.getClass).toHaveBeenCalledTimes(1);
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
-    expect(mockedFileService.upload).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(2);
+    expect(executionContextMock.getHandler).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.getClass).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(fileServiceMock.upload).toHaveBeenCalledTimes(1);
 
     expect(err).toBeInstanceOf(Error);
   });
 
   it('should attach file key into response', async () => {
-    const mockedFileFieldName = faker.string.alpha({
+    const fileFieldNameMock = faker.string.alpha({
       casing: 'lower',
     });
-    const mockedFilename = faker.system.fileName();
-    const mockedFileMimeType = faker.system.mimeType();
-    const mockedFileSize = faker.number.int();
+    const filenameMock = faker.system.fileName();
+    const fileMimeTypeMock = faker.system.mimeType();
+    const fileSizeMock = faker.number.int();
 
-    const mockedResponse = {};
+    const responseMock = {};
 
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         isMultipart: jest.fn().mockReturnValue(true),
         file: jest.fn().mockResolvedValue({
-          fieldname: mockedFileFieldName,
-          filename: mockedFilename,
-          mimetype: mockedFileMimeType,
+          fieldname: fileFieldNameMock,
+          filename: filenameMock,
+          mimetype: fileMimeTypeMock,
         }),
       }),
-      getResponse: jest.fn().mockReturnValue(mockedResponse),
+      getResponse: jest.fn().mockReturnValue(responseMock),
     });
-    mockedExecutionContext.getHandler.mockReturnValue(jest.fn());
-    mockedExecutionContext.getClass.mockReturnValue({});
-    mockedReflector.getAllAndOverride.mockReturnValue({
-      field: mockedFileFieldName,
+    executionContextMock.getHandler.mockReturnValue(jest.fn());
+    executionContextMock.getClass.mockReturnValue({});
+    reflectorMock.getAllAndOverride.mockReturnValue({
+      field: fileFieldNameMock,
       type: [
         {
-          mimeType: mockedFileMimeType,
-          extensions: [path.extname(mockedFilename)],
+          mimeType: fileMimeTypeMock,
+          extensions: [path.extname(filenameMock)],
         },
       ],
-      size: mockedFileSize,
+      size: fileSizeMock,
     });
 
     const expectedFileKey = faker.string.alphanumeric();
 
-    mockedFileService.upload.mockReturnValue({
+    fileServiceMock.upload.mockReturnValue({
       on: jest
         .fn()
-        .mockImplementation((__, cb) => cb({ loaded: mockedFileSize })),
+        .mockImplementation((__, cb) => cb({ loaded: fileSizeMock })),
       abort: jest.fn().mockResolvedValue(undefined),
       done: jest.fn().mockResolvedValue({
         Key: expectedFileKey,
       }),
     });
 
-    const mockedCallHandler = {
+    const callHandlerMock = {
       handle: () => of(),
     };
 
     await interceptor.intercept(
-      mockedExecutionContext as unknown as ExecutionContext,
-      mockedCallHandler as CallHandler,
+      executionContextMock as unknown as ExecutionContext,
+      callHandlerMock as CallHandler,
     );
 
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(2);
-    expect(mockedExecutionContext.getHandler).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.getClass).toHaveBeenCalledTimes(1);
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
-    expect(mockedFileService.upload).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(2);
+    expect(executionContextMock.getHandler).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.getClass).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(fileServiceMock.upload).toHaveBeenCalledTimes(1);
 
-    expect(mockedLodash.set).toHaveBeenCalledWith(
-      mockedResponse,
+    expect(lodashMock.set).toHaveBeenCalledWith(
+      responseMock,
       'file.key',
       expectedFileKey,
     );

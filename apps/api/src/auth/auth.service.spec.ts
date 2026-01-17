@@ -17,25 +17,25 @@ import { AuthService } from './auth.service';
 describe('AuthService', () => {
   let service: AuthService;
 
-  const mockedUserPasswordModel = {
+  const userPasswordModelMock = {
     create: jest.fn(),
     findOne: jest.fn(),
     destroy: jest.fn(),
   };
 
-  const mockedJwtService = {
+  const jwtServiceMock = {
     signAsync: jest.fn(),
     verifyAsync: jest.fn(),
   };
 
-  const mockedUserService = {
+  const userServiceMock = {
     create: jest.fn(),
     readByEmail: jest.fn(),
     updateEmail: jest.fn(),
     delete: jest.fn(),
   };
 
-  const mockedBcrypt = {
+  const bcryptMock = {
     compare: jest.spyOn(bcrypt, 'compare'),
   };
 
@@ -45,17 +45,17 @@ describe('AuthService', () => {
         AuthService,
         {
           provide: getModelToken(UserPassword),
-          useValue: mockedUserPasswordModel,
+          useValue: userPasswordModelMock,
         },
         ConfigService,
         CommonService,
         {
           provide: JwtService,
-          useValue: mockedJwtService,
+          useValue: jwtServiceMock,
         },
         {
           provide: UserService,
-          useValue: mockedUserService,
+          useValue: userServiceMock,
         },
       ],
     }).compile();
@@ -68,7 +68,7 @@ describe('AuthService', () => {
     jest.resetAllMocks();
   });
 
-  const mockedUser = {
+  const userMock = {
     id: faker.string.uuid(),
 
     first_name: faker.person.firstName(),
@@ -82,10 +82,10 @@ describe('AuthService', () => {
     restore: jest.fn(),
   };
 
-  const mockedUserPassword = {
+  const userPasswordMock = {
     id: faker.string.uuid(),
 
-    user_id: mockedUser.id,
+    user_id: userMock.id,
     password: faker.internet.password({
       length: PasswordLength.Min,
     }),
@@ -98,84 +98,82 @@ describe('AuthService', () => {
     restore: jest.fn(),
   };
 
-  const mockedAuthToken = {
+  const authTokenMock = {
     access_token: faker.string.alphanumeric(),
   };
 
   describe('signUp', () => {
     it('should return 422 when user already exists', async () => {
-      mockedUserService.readByEmail.mockResolvedValue(mockedUser);
+      userServiceMock.readByEmail.mockResolvedValue(userMock);
 
       let err: UnprocessableEntityException;
 
       try {
         await service.signUp({
-          ..._.omit(mockedUser, ['id']),
-          ..._.pick(mockedUserPassword, ['password']),
+          ..._.omit(userMock, ['id']),
+          ..._.pick(userPasswordMock, ['password']),
         });
       } catch (error) {
         err = error;
       }
 
-      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.readByEmail).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return auth token', async () => {
-      mockedUserService.readByEmail.mockResolvedValue(null);
-      mockedUserService.create.mockResolvedValue(mockedUser);
-      mockedJwtService.signAsync.mockResolvedValue(
-        mockedAuthToken.access_token,
-      );
-      mockedUserPasswordModel.create.mockResolvedValue(mockedUserPassword);
+      userServiceMock.readByEmail.mockResolvedValue(null);
+      userServiceMock.create.mockResolvedValue(userMock);
+      jwtServiceMock.signAsync.mockResolvedValue(authTokenMock.access_token);
+      userPasswordModelMock.create.mockResolvedValue(userPasswordMock);
 
       const { success, data } = await service.signUp({
-        ..._.omit(mockedUser, ['id']),
-        ..._.pick(mockedUserPassword, ['password']),
+        ..._.omit(userMock, ['id']),
+        ..._.pick(userPasswordMock, ['password']),
       });
 
-      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
-      expect(mockedUserService.create).toHaveBeenCalledTimes(1);
-      expect(mockedJwtService.signAsync).toHaveBeenCalledTimes(1);
-      expect(mockedUserPasswordModel.create).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.readByEmail).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.create).toHaveBeenCalledTimes(1);
+      expect(jwtServiceMock.signAsync).toHaveBeenCalledTimes(1);
+      expect(userPasswordModelMock.create).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual(mockedAuthToken);
+      expect(data).toEqual(authTokenMock);
     });
   });
 
   describe('signIn', () => {
     it('should return 422 when user does not exist', async () => {
-      mockedUserService.readByEmail.mockResolvedValue(null);
+      userServiceMock.readByEmail.mockResolvedValue(null);
 
       let err: UnprocessableEntityException;
 
       try {
         await service.signIn({
-          ..._.pick(mockedUser, ['email']),
-          ..._.pick(mockedUserPassword, ['password']),
+          ..._.pick(userMock, ['email']),
+          ..._.pick(userPasswordMock, ['password']),
         });
       } catch (error) {
         err = error;
       }
 
-      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.readByEmail).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return 422 when user needs to reset their password', async () => {
-      mockedUserService.readByEmail.mockResolvedValue(mockedUser);
-      mockedUserPasswordModel.findOne.mockResolvedValue(null);
+      userServiceMock.readByEmail.mockResolvedValue(userMock);
+      userPasswordModelMock.findOne.mockResolvedValue(null);
 
       let err: UnprocessableEntityException;
 
       try {
         await service.signIn({
-          ..._.pick(mockedUser, ['email']),
+          ..._.pick(userMock, ['email']),
           password: faker.internet.password({
             length: PasswordLength.Min,
           }),
@@ -184,23 +182,23 @@ describe('AuthService', () => {
         err = error;
       }
 
-      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
-      expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.readByEmail).toHaveBeenCalledTimes(1);
+      expect(userPasswordModelMock.findOne).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return 422 when user password is wrong', async () => {
-      mockedUserService.readByEmail.mockResolvedValue(mockedUser);
-      mockedUserPasswordModel.findOne.mockResolvedValue(mockedUserPassword);
-      mockedBcrypt.compare.mockResolvedValue(false as never);
+      userServiceMock.readByEmail.mockResolvedValue(userMock);
+      userPasswordModelMock.findOne.mockResolvedValue(userPasswordMock);
+      bcryptMock.compare.mockResolvedValue(false as never);
 
       let err: UnprocessableEntityException;
 
       try {
         await service.signIn({
-          ..._.pick(mockedUser, ['email']),
+          ..._.pick(userMock, ['email']),
           password: faker.internet.password({
             length: PasswordLength.Min,
           }),
@@ -209,122 +207,118 @@ describe('AuthService', () => {
         err = error;
       }
 
-      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
-      expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
-      expect(mockedBcrypt.compare).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.readByEmail).toHaveBeenCalledTimes(1);
+      expect(userPasswordModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(bcryptMock.compare).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return auth token when user is deactivated', async () => {
-      mockedUserService.readByEmail.mockResolvedValue({
-        ...mockedUser,
+      userServiceMock.readByEmail.mockResolvedValue({
+        ...userMock,
         deleted_at: faker.date.anytime(),
       });
-      mockedUserPasswordModel.findOne.mockResolvedValue({
-        ...mockedUserPassword,
+      userPasswordModelMock.findOne.mockResolvedValue({
+        ...userPasswordMock,
         deleted_at: faker.date.anytime(),
       });
-      mockedBcrypt.compare.mockResolvedValue(true as never);
-      mockedUserPassword.restore.mockResolvedValue({});
-      mockedUser.restore.mockResolvedValue({});
-      mockedJwtService.signAsync.mockResolvedValue(
-        mockedAuthToken.access_token,
-      );
+      bcryptMock.compare.mockResolvedValue(true as never);
+      userPasswordMock.restore.mockResolvedValue({});
+      userMock.restore.mockResolvedValue({});
+      jwtServiceMock.signAsync.mockResolvedValue(authTokenMock.access_token);
 
       const { success, data } = await service.signIn({
-        ..._.pick(mockedUser, ['email']),
+        ..._.pick(userMock, ['email']),
         password: faker.internet.password({
           length: PasswordLength.Min,
         }),
       });
 
-      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
-      expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
-      expect(mockedBcrypt.compare).toHaveBeenCalledTimes(1);
-      expect(mockedUser.restore).toHaveBeenCalledTimes(1);
-      expect(mockedUserPassword.restore).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.readByEmail).toHaveBeenCalledTimes(1);
+      expect(userPasswordModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(bcryptMock.compare).toHaveBeenCalledTimes(1);
+      expect(userMock.restore).toHaveBeenCalledTimes(1);
+      expect(userPasswordMock.restore).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual(mockedAuthToken);
+      expect(data).toEqual(authTokenMock);
     });
 
     it('should return auth token', async () => {
-      mockedUserService.readByEmail.mockResolvedValue(mockedUser);
-      mockedUserPasswordModel.findOne.mockResolvedValue(mockedUserPassword);
-      mockedBcrypt.compare.mockResolvedValue(true as never);
-      mockedUserPassword.restore.mockResolvedValue({});
-      mockedUser.restore.mockResolvedValue({});
-      mockedJwtService.signAsync.mockResolvedValue(
-        mockedAuthToken.access_token,
-      );
+      userServiceMock.readByEmail.mockResolvedValue(userMock);
+      userPasswordModelMock.findOne.mockResolvedValue(userPasswordMock);
+      bcryptMock.compare.mockResolvedValue(true as never);
+      userPasswordMock.restore.mockResolvedValue({});
+      userMock.restore.mockResolvedValue({});
+      jwtServiceMock.signAsync.mockResolvedValue(authTokenMock.access_token);
 
       const { success, data } = await service.signIn({
-        ..._.pick(mockedUser, ['email']),
+        ..._.pick(userMock, ['email']),
         password: faker.internet.password({
           length: PasswordLength.Min,
         }),
       });
 
-      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
-      expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
-      expect(mockedBcrypt.compare).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.readByEmail).toHaveBeenCalledTimes(1);
+      expect(userPasswordModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(bcryptMock.compare).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
-      expect(data).toEqual(mockedAuthToken);
+      expect(data).toEqual(authTokenMock);
     });
   });
 
   describe('updateEmail', () => {
     it('should return 422 when user email is already theirs', async () => {
-      mockedUserService.readByEmail.mockResolvedValue(mockedUser);
+      userServiceMock.readByEmail.mockResolvedValue(userMock);
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.updateEmail(mockedUser.id, _.pick(mockedUser, ['email']));
+        await service.updateEmail(userMock.id, _.pick(userMock, ['email']));
       } catch (error) {
         err = error;
       }
 
-      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.readByEmail).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return 422 when user email is not available', async () => {
-      mockedUserService.readByEmail.mockResolvedValue({
+      userServiceMock.readByEmail.mockResolvedValue({
         id: faker.string.uuid(),
-        ..._.omit(mockedUser, ['id']),
+        ..._.omit(userMock, ['id']),
       });
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.updateEmail(mockedUser.id, {
+        await service.updateEmail(userMock.id, {
           email: faker.internet.email(),
         });
       } catch (error) {
         err = error;
       }
 
-      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.readByEmail).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return success', async () => {
-      mockedUserService.readByEmail.mockResolvedValue(null);
-      mockedUserService.updateEmail.mockResolvedValue({});
+      userServiceMock.readByEmail.mockResolvedValue(null);
+      userServiceMock.updateEmail.mockResolvedValue({});
 
-      const { success } = await service.updateEmail(mockedUser.id, {
+      const { success } = await service.updateEmail(userMock.id, {
         email: faker.internet.email(),
       });
 
-      expect(mockedUserService.readByEmail).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.readByEmail).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
@@ -332,13 +326,13 @@ describe('AuthService', () => {
 
   describe('updatePassword', () => {
     it('should return 422 when user needs to reset their password', async () => {
-      mockedUserPasswordModel.findOne.mockResolvedValue(null);
+      userPasswordModelMock.findOne.mockResolvedValue(null);
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.updatePassword(mockedUser.id, {
-          old_password: mockedUserPassword.password,
+        await service.updatePassword(userMock.id, {
+          old_password: userPasswordMock.password,
           new_password: faker.internet.password({
             length: PasswordLength.Min,
           }),
@@ -347,22 +341,22 @@ describe('AuthService', () => {
         err = error;
       }
 
-      expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
+      expect(userPasswordModelMock.findOne).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return 422 when old user password is wrong', async () => {
-      mockedUserPasswordModel.findOne.mockResolvedValue(mockedUserPassword);
-      mockedBcrypt.compare
+      userPasswordModelMock.findOne.mockResolvedValue(userPasswordMock);
+      bcryptMock.compare
         .mockResolvedValueOnce(false as never)
         .mockResolvedValueOnce(false as never);
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.updatePassword(mockedUser.id, {
+        await service.updatePassword(userMock.id, {
           old_password: faker.internet.password({
             length: PasswordLength.Min,
           }),
@@ -374,54 +368,54 @@ describe('AuthService', () => {
         err = error;
       }
 
-      expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
-      expect(mockedBcrypt.compare).toHaveBeenCalledTimes(2);
+      expect(userPasswordModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(bcryptMock.compare).toHaveBeenCalledTimes(2);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return 422 when both old and new user passwords are identical', async () => {
-      mockedUserPasswordModel.findOne.mockResolvedValue(mockedUserPassword);
-      mockedBcrypt.compare
+      userPasswordModelMock.findOne.mockResolvedValue(userPasswordMock);
+      bcryptMock.compare
         .mockResolvedValueOnce(true as never)
         .mockResolvedValueOnce(true as never);
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.updatePassword(mockedUser.id, {
-          old_password: mockedUserPassword.password,
-          new_password: mockedUserPassword.password,
+        await service.updatePassword(userMock.id, {
+          old_password: userPasswordMock.password,
+          new_password: userPasswordMock.password,
         });
       } catch (error) {
         err = error;
       }
 
-      expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
-      expect(mockedBcrypt.compare).toHaveBeenCalledTimes(2);
+      expect(userPasswordModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(bcryptMock.compare).toHaveBeenCalledTimes(2);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return success', async () => {
-      mockedUserPasswordModel.findOne.mockResolvedValue(mockedUserPassword);
-      mockedBcrypt.compare
+      userPasswordModelMock.findOne.mockResolvedValue(userPasswordMock);
+      bcryptMock.compare
         .mockResolvedValueOnce(true as never)
         .mockResolvedValueOnce(false as never);
-      mockedUserPassword.update.mockResolvedValue({});
+      userPasswordMock.update.mockResolvedValue({});
 
-      const { success } = await service.updatePassword(mockedUser.id, {
-        old_password: mockedUserPassword.password,
+      const { success } = await service.updatePassword(userMock.id, {
+        old_password: userPasswordMock.password,
         new_password: faker.internet.password({
           length: PasswordLength.Min,
         }),
       });
 
-      expect(mockedUserPasswordModel.findOne).toHaveBeenCalledTimes(1);
-      expect(mockedBcrypt.compare).toHaveBeenCalledTimes(2);
-      expect(mockedUserPassword.update).toHaveBeenCalledTimes(1);
+      expect(userPasswordModelMock.findOne).toHaveBeenCalledTimes(1);
+      expect(bcryptMock.compare).toHaveBeenCalledTimes(2);
+      expect(userPasswordMock.update).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
@@ -429,13 +423,13 @@ describe('AuthService', () => {
 
   describe('deactivate', () => {
     it('should return success', async () => {
-      mockedUserService.delete.mockResolvedValue({});
-      mockedUserPasswordModel.destroy.mockResolvedValue({});
+      userServiceMock.delete.mockResolvedValue({});
+      userPasswordModelMock.destroy.mockResolvedValue({});
 
-      const { success } = await service.deactivate(mockedUser.id);
+      const { success } = await service.deactivate(userMock.id);
 
-      expect(mockedUserService.delete).toHaveBeenCalledTimes(1);
-      expect(mockedUserPasswordModel.destroy).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
+      expect(userPasswordModelMock.destroy).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
@@ -443,13 +437,13 @@ describe('AuthService', () => {
 
   describe('delete', () => {
     it('should return success', async () => {
-      mockedUserService.delete.mockResolvedValue({});
-      mockedUserPasswordModel.destroy.mockResolvedValue({});
+      userServiceMock.delete.mockResolvedValue({});
+      userPasswordModelMock.destroy.mockResolvedValue({});
 
-      const { success } = await service.delete(mockedUser.id);
+      const { success } = await service.delete(userMock.id);
 
-      expect(mockedUserService.delete).toHaveBeenCalledTimes(1);
-      expect(mockedUserPasswordModel.destroy).toHaveBeenCalledTimes(1);
+      expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
+      expect(userPasswordModelMock.destroy).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });

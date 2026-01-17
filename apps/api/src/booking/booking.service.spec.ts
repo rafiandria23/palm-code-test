@@ -23,19 +23,19 @@ import { BookingService } from './booking.service';
 describe('BookingService', () => {
   let service: BookingService;
 
-  const mockedBookingModel = {
+  const bookingModelMock = {
     create: jest.fn(),
     findAndCountAll: jest.fn(),
     findByPk: jest.fn(),
   };
 
-  const mockedFileService = {
+  const fileServiceMock = {
     get: jest.fn(),
     getUrl: jest.fn(),
     delete: jest.fn(),
   };
 
-  const mockedSettingService = {
+  const settingServiceMock = {
     readCountryById: jest.fn(),
     readSurfboardById: jest.fn(),
   };
@@ -47,16 +47,16 @@ describe('BookingService', () => {
         CommonService,
         {
           provide: FileService,
-          useValue: mockedFileService,
+          useValue: fileServiceMock,
         },
         {
           provide: getModelToken(Booking),
-          useValue: mockedBookingModel,
+          useValue: bookingModelMock,
         },
         BookingService,
         {
           provide: SettingService,
-          useValue: mockedSettingService,
+          useValue: settingServiceMock,
         },
       ],
     }).compile();
@@ -69,7 +69,7 @@ describe('BookingService', () => {
     jest.resetAllMocks();
   });
 
-  const mockedCountry = {
+  const countryMock = {
     id: faker.string.uuid(),
     name: faker.string.alpha(),
     code: faker.string.alphanumeric(),
@@ -77,89 +77,89 @@ describe('BookingService', () => {
     emoji: faker.string.alphanumeric(),
   };
 
-  const mockedSurfboard = {
+  const surfboardMock = {
     id: faker.string.uuid(),
     name: faker.string.alpha(),
   };
 
-  const mockedNationalIdPhotoFile = {
+  const nationalIdPhotoFileMock = {
     Body: faker.string.alpha(),
   };
 
-  const mockedBooking = {
+  const bookingMock = {
     id: faker.string.uuid(),
     name: faker.person.fullName(),
     email: faker.internet.email(),
     phone: faker.phone.number(),
-    country_id: mockedCountry.id,
+    country_id: countryMock.id,
     surfing_experience: faker.number.int({
       min: SurfingExperience.Min,
       max: SurfingExperience.Max,
     }),
     date: dayjs(faker.date.future()).format(DATE_FORMAT),
-    surfboard_id: mockedSurfboard.id,
+    surfboard_id: surfboardMock.id,
     national_id_photo_file_key: faker.string.alphanumeric(),
   };
 
   describe('create', () => {
     it('should return 422 when country does not exist', async () => {
-      mockedSettingService.readCountryById.mockResolvedValue(null);
-      mockedSettingService.readSurfboardById.mockResolvedValue(mockedSurfboard);
-      mockedFileService.get.mockResolvedValue(mockedNationalIdPhotoFile);
+      settingServiceMock.readCountryById.mockResolvedValue(null);
+      settingServiceMock.readSurfboardById.mockResolvedValue(surfboardMock);
+      fileServiceMock.get.mockResolvedValue(nationalIdPhotoFileMock);
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.create(_.omit(mockedBooking, ['id']));
+        await service.create(_.omit(bookingMock, ['id']));
       } catch (error) {
         err = error;
       }
 
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.get).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.get).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return 422 when surfboard does not exist', async () => {
-      mockedSettingService.readCountryById.mockResolvedValue(mockedCountry);
-      mockedSettingService.readSurfboardById.mockResolvedValue(null);
-      mockedFileService.get.mockResolvedValue(mockedNationalIdPhotoFile);
+      settingServiceMock.readCountryById.mockResolvedValue(countryMock);
+      settingServiceMock.readSurfboardById.mockResolvedValue(null);
+      fileServiceMock.get.mockResolvedValue(nationalIdPhotoFileMock);
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.create(_.omit(mockedBooking, ['id']));
+        await service.create(_.omit(bookingMock, ['id']));
       } catch (error) {
         err = error;
       }
 
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.get).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.get).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return 422 when national ID photo file key is invalid', async () => {
-      mockedSettingService.readCountryById.mockResolvedValue(mockedCountry);
-      mockedSettingService.readSurfboardById.mockResolvedValue(mockedSurfboard);
-      mockedFileService.get.mockResolvedValue(null);
+      settingServiceMock.readCountryById.mockResolvedValue(countryMock);
+      settingServiceMock.readSurfboardById.mockResolvedValue(surfboardMock);
+      fileServiceMock.get.mockResolvedValue(null);
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.create(_.omit(mockedBooking, ['id']));
+        await service.create(_.omit(bookingMock, ['id']));
       } catch (error) {
         err = error;
       }
 
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.get).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.get).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -167,42 +167,42 @@ describe('BookingService', () => {
 
     it('should return created booking', async () => {
       const expectedResult = {
-        ..._.omit(mockedBooking, ['national_id_photo_file_key']),
+        ..._.omit(bookingMock, ['national_id_photo_file_key']),
         national_id_photo_url: faker.internet.url(),
-        country: mockedCountry,
-        surfboard: mockedSurfboard,
+        country: countryMock,
+        surfboard: surfboardMock,
       };
 
-      mockedSettingService.readCountryById.mockResolvedValue({
-        ...mockedCountry,
-        toJSON: jest.fn().mockReturnValue(mockedCountry),
+      settingServiceMock.readCountryById.mockResolvedValue({
+        ...countryMock,
+        toJSON: jest.fn().mockReturnValue(countryMock),
       });
-      mockedSettingService.readSurfboardById.mockResolvedValue({
-        ...mockedSurfboard,
-        toJSON: jest.fn().mockReturnValue(mockedSurfboard),
+      settingServiceMock.readSurfboardById.mockResolvedValue({
+        ...surfboardMock,
+        toJSON: jest.fn().mockReturnValue(surfboardMock),
       });
-      mockedFileService.get.mockResolvedValue(mockedNationalIdPhotoFile);
-      mockedBookingModel.create.mockResolvedValue({
-        ...mockedBooking,
-        toJSON: jest.fn().mockReturnValue(mockedBooking),
+      fileServiceMock.get.mockResolvedValue(nationalIdPhotoFileMock);
+      bookingModelMock.create.mockResolvedValue({
+        ...bookingMock,
+        toJSON: jest.fn().mockReturnValue(bookingMock),
       });
-      mockedBookingModel.create.mockResolvedValue({
-        ...mockedBooking,
-        toJSON: jest.fn().mockReturnValue(mockedBooking),
+      bookingModelMock.create.mockResolvedValue({
+        ...bookingMock,
+        toJSON: jest.fn().mockReturnValue(bookingMock),
       });
-      mockedFileService.getUrl.mockReturnValue(
+      fileServiceMock.getUrl.mockReturnValue(
         expectedResult.national_id_photo_url,
       );
 
       const { success, data } = await service.create(
-        _.omit(mockedBooking, ['id']),
+        _.omit(bookingMock, ['id']),
       );
 
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.get).toHaveBeenCalledTimes(1);
-      expect(mockedBookingModel.create).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.getUrl).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.create).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.getUrl).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
       expect(data).toEqual(expectedResult);
@@ -213,31 +213,31 @@ describe('BookingService', () => {
     it('should return bookings without filters', async () => {
       const expectedResult = [
         {
-          ..._.omit(mockedBooking, ['national_id_photo_file_key']),
+          ..._.omit(bookingMock, ['national_id_photo_file_key']),
           national_id_photo_url: faker.internet.url(),
-          country: mockedCountry,
-          surfboard: mockedSurfboard,
+          country: countryMock,
+          surfboard: surfboardMock,
         },
       ];
 
-      mockedBookingModel.findAndCountAll.mockResolvedValue({
+      bookingModelMock.findAndCountAll.mockResolvedValue({
         count: faker.number.int(),
         rows: [
           {
-            ...mockedBooking,
-            toJSON: jest.fn().mockReturnValue(mockedBooking),
+            ...bookingMock,
+            toJSON: jest.fn().mockReturnValue(bookingMock),
           },
         ],
       });
-      mockedSettingService.readCountryById.mockResolvedValue({
-        ...mockedCountry,
-        toJSON: jest.fn().mockReturnValue(mockedCountry),
+      settingServiceMock.readCountryById.mockResolvedValue({
+        ...countryMock,
+        toJSON: jest.fn().mockReturnValue(countryMock),
       });
-      mockedSettingService.readSurfboardById.mockResolvedValue({
-        ...mockedSurfboard,
-        toJSON: jest.fn().mockReturnValue(mockedSurfboard),
+      settingServiceMock.readSurfboardById.mockResolvedValue({
+        ...surfboardMock,
+        toJSON: jest.fn().mockReturnValue(surfboardMock),
       });
-      mockedFileService.getUrl.mockReturnValue(
+      fileServiceMock.getUrl.mockReturnValue(
         expectedResult[0].national_id_photo_url,
       );
 
@@ -248,14 +248,14 @@ describe('BookingService', () => {
         sort_by: BookingSortProperty.Id,
       });
 
-      expect(mockedBookingModel.findAndCountAll).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(
+      expect(bookingModelMock.findAndCountAll).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(
         expectedResult.length,
       );
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(
         expectedResult.length,
       );
-      expect(mockedFileService.getUrl).toHaveBeenCalledTimes(
+      expect(fileServiceMock.getUrl).toHaveBeenCalledTimes(
         expectedResult.length,
       );
 
@@ -266,31 +266,31 @@ describe('BookingService', () => {
     it('should return bookings with filters', async () => {
       const expectedResult = [
         {
-          ..._.omit(mockedBooking, ['national_id_photo_file_key']),
+          ..._.omit(bookingMock, ['national_id_photo_file_key']),
           national_id_photo_url: faker.internet.url(),
-          country: mockedCountry,
-          surfboard: mockedSurfboard,
+          country: countryMock,
+          surfboard: surfboardMock,
         },
       ];
 
-      mockedBookingModel.findAndCountAll.mockResolvedValue({
+      bookingModelMock.findAndCountAll.mockResolvedValue({
         count: faker.number.int(),
         rows: [
           {
-            ...mockedBooking,
-            toJSON: jest.fn().mockReturnValue(mockedBooking),
+            ...bookingMock,
+            toJSON: jest.fn().mockReturnValue(bookingMock),
           },
         ],
       });
-      mockedSettingService.readCountryById.mockResolvedValue({
-        ...mockedCountry,
-        toJSON: jest.fn().mockReturnValue(mockedCountry),
+      settingServiceMock.readCountryById.mockResolvedValue({
+        ...countryMock,
+        toJSON: jest.fn().mockReturnValue(countryMock),
       });
-      mockedSettingService.readSurfboardById.mockResolvedValue({
-        ...mockedSurfboard,
-        toJSON: jest.fn().mockReturnValue(mockedSurfboard),
+      settingServiceMock.readSurfboardById.mockResolvedValue({
+        ...surfboardMock,
+        toJSON: jest.fn().mockReturnValue(surfboardMock),
       });
-      mockedFileService.getUrl.mockReturnValue(
+      fileServiceMock.getUrl.mockReturnValue(
         expectedResult[0].national_id_photo_url,
       );
 
@@ -299,17 +299,17 @@ describe('BookingService', () => {
         page_size: PaginationSize.Max,
         sort: SortDirection.Asc,
         sort_by: BookingSortProperty.Id,
-        name: mockedBooking.name,
+        name: bookingMock.name,
       });
 
-      expect(mockedBookingModel.findAndCountAll).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(
+      expect(bookingModelMock.findAndCountAll).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(
         expectedResult.length,
       );
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(
         expectedResult.length,
       );
-      expect(mockedFileService.getUrl).toHaveBeenCalledTimes(
+      expect(fileServiceMock.getUrl).toHaveBeenCalledTimes(
         expectedResult.length,
       );
 
@@ -320,45 +320,45 @@ describe('BookingService', () => {
 
   describe('readById', () => {
     it('should return null when booking does not exist', async () => {
-      mockedBookingModel.findByPk.mockResolvedValue(null);
+      bookingModelMock.findByPk.mockResolvedValue(null);
 
       const result = await service.readById(faker.string.uuid());
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
 
       expect(result).toBeNull();
     });
 
     it('should return booking', async () => {
       const expectedResult = {
-        ..._.omit(mockedBooking, ['national_id_photo_file_key']),
+        ..._.omit(bookingMock, ['national_id_photo_file_key']),
         national_id_photo_url: faker.internet.url(),
-        country: mockedCountry,
-        surfboard: mockedSurfboard,
+        country: countryMock,
+        surfboard: surfboardMock,
       };
 
-      mockedBookingModel.findByPk.mockResolvedValue({
-        ...mockedBooking,
-        toJSON: jest.fn().mockReturnValue(mockedBooking),
+      bookingModelMock.findByPk.mockResolvedValue({
+        ...bookingMock,
+        toJSON: jest.fn().mockReturnValue(bookingMock),
       });
-      mockedSettingService.readCountryById.mockResolvedValue({
-        ...mockedCountry,
-        toJSON: jest.fn().mockReturnValue(mockedCountry),
+      settingServiceMock.readCountryById.mockResolvedValue({
+        ...countryMock,
+        toJSON: jest.fn().mockReturnValue(countryMock),
       });
-      mockedSettingService.readSurfboardById.mockResolvedValue({
-        ...mockedSurfboard,
-        toJSON: jest.fn().mockReturnValue(mockedSurfboard),
+      settingServiceMock.readSurfboardById.mockResolvedValue({
+        ...surfboardMock,
+        toJSON: jest.fn().mockReturnValue(surfboardMock),
       });
-      mockedFileService.getUrl.mockReturnValue(
+      fileServiceMock.getUrl.mockReturnValue(
         expectedResult.national_id_photo_url,
       );
 
-      const result = await service.readById(mockedBooking.id);
+      const result = await service.readById(bookingMock.id);
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.getUrl).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.getUrl).toHaveBeenCalledTimes(1);
 
       expect(result).toEqual(expectedResult);
     });
@@ -366,7 +366,7 @@ describe('BookingService', () => {
 
   describe('update', () => {
     it('should return 422 when booking does not exist', async () => {
-      mockedBookingModel.findByPk.mockResolvedValue(null);
+      bookingModelMock.findByPk.mockResolvedValue(null);
 
       let err: UnprocessableEntityException;
 
@@ -375,232 +375,232 @@ describe('BookingService', () => {
           name: faker.person.fullName(),
           email: faker.internet.email(),
           phone: faker.phone.number(),
-          country_id: mockedCountry.id,
+          country_id: countryMock.id,
           surfing_experience: faker.number.int({
             min: SurfingExperience.Min,
             max: SurfingExperience.Max,
           }),
           date: dayjs(faker.date.future()).format(DATE_FORMAT),
-          surfboard_id: mockedSurfboard.id,
+          surfboard_id: surfboardMock.id,
           national_id_photo_file_key: faker.string.alphanumeric(),
         });
       } catch (error) {
         err = error;
       }
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return 422 when country does not exist', async () => {
-      mockedBookingModel.findByPk.mockResolvedValue(mockedBooking);
-      mockedSettingService.readCountryById.mockResolvedValue(null);
-      mockedSettingService.readSurfboardById.mockResolvedValue(mockedSurfboard);
-      mockedFileService.get.mockResolvedValue(mockedNationalIdPhotoFile);
+      bookingModelMock.findByPk.mockResolvedValue(bookingMock);
+      settingServiceMock.readCountryById.mockResolvedValue(null);
+      settingServiceMock.readSurfboardById.mockResolvedValue(surfboardMock);
+      fileServiceMock.get.mockResolvedValue(nationalIdPhotoFileMock);
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.update(mockedBooking.id, {
+        await service.update(bookingMock.id, {
           name: faker.person.fullName(),
           email: faker.internet.email(),
           phone: faker.phone.number(),
-          country_id: mockedCountry.id,
+          country_id: countryMock.id,
           surfing_experience: faker.number.int({
             min: SurfingExperience.Min,
             max: SurfingExperience.Max,
           }),
           date: dayjs(faker.date.future()).format(DATE_FORMAT),
-          surfboard_id: mockedSurfboard.id,
+          surfboard_id: surfboardMock.id,
           national_id_photo_file_key: faker.string.alphanumeric(),
         });
       } catch (error) {
         err = error;
       }
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.get).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.get).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return 422 when surfboard does not exist', async () => {
-      mockedBookingModel.findByPk.mockResolvedValue(mockedBooking);
-      mockedSettingService.readCountryById.mockResolvedValue(mockedCountry);
-      mockedSettingService.readSurfboardById.mockResolvedValue(null);
-      mockedFileService.get.mockResolvedValue(mockedNationalIdPhotoFile);
+      bookingModelMock.findByPk.mockResolvedValue(bookingMock);
+      settingServiceMock.readCountryById.mockResolvedValue(countryMock);
+      settingServiceMock.readSurfboardById.mockResolvedValue(null);
+      fileServiceMock.get.mockResolvedValue(nationalIdPhotoFileMock);
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.update(mockedBooking.id, {
+        await service.update(bookingMock.id, {
           name: faker.person.fullName(),
           email: faker.internet.email(),
           phone: faker.phone.number(),
-          country_id: mockedCountry.id,
+          country_id: countryMock.id,
           surfing_experience: faker.number.int({
             min: SurfingExperience.Min,
             max: SurfingExperience.Max,
           }),
           date: dayjs(faker.date.future()).format(DATE_FORMAT),
-          surfboard_id: mockedSurfboard.id,
+          surfboard_id: surfboardMock.id,
           national_id_photo_file_key: faker.string.alphanumeric(),
         });
       } catch (error) {
         err = error;
       }
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.get).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.get).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return 422 when national ID photo file key is invalid', async () => {
-      mockedBookingModel.findByPk.mockResolvedValue(mockedBooking);
-      mockedSettingService.readCountryById.mockResolvedValue(mockedCountry);
-      mockedSettingService.readSurfboardById.mockResolvedValue(mockedSurfboard);
-      mockedFileService.get.mockResolvedValue(null);
+      bookingModelMock.findByPk.mockResolvedValue(bookingMock);
+      settingServiceMock.readCountryById.mockResolvedValue(countryMock);
+      settingServiceMock.readSurfboardById.mockResolvedValue(surfboardMock);
+      fileServiceMock.get.mockResolvedValue(null);
 
       let err: UnprocessableEntityException;
 
       try {
-        await service.update(mockedBooking.id, {
+        await service.update(bookingMock.id, {
           name: faker.person.fullName(),
           email: faker.internet.email(),
           phone: faker.phone.number(),
-          country_id: mockedCountry.id,
+          country_id: countryMock.id,
           surfing_experience: faker.number.int({
             min: SurfingExperience.Min,
             max: SurfingExperience.Max,
           }),
           date: dayjs(faker.date.future()).format(DATE_FORMAT),
-          surfboard_id: mockedSurfboard.id,
+          surfboard_id: surfboardMock.id,
           national_id_photo_file_key: faker.string.alphanumeric(),
         });
       } catch (error) {
         err = error;
       }
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.get).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.get).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return success when national ID photo file is new', async () => {
-      const localMockedBooking = {
-        ...mockedBooking,
+      const localBookingMock = {
+        ...bookingMock,
         update: jest.fn().mockResolvedValue(undefined),
       };
 
-      mockedBookingModel.findByPk.mockResolvedValue(localMockedBooking);
-      mockedSettingService.readCountryById.mockResolvedValue(mockedCountry);
-      mockedSettingService.readSurfboardById.mockResolvedValue(mockedSurfboard);
-      mockedFileService.get.mockResolvedValue(mockedNationalIdPhotoFile);
-      mockedFileService.delete.mockResolvedValue(undefined);
+      bookingModelMock.findByPk.mockResolvedValue(localBookingMock);
+      settingServiceMock.readCountryById.mockResolvedValue(countryMock);
+      settingServiceMock.readSurfboardById.mockResolvedValue(surfboardMock);
+      fileServiceMock.get.mockResolvedValue(nationalIdPhotoFileMock);
+      fileServiceMock.delete.mockResolvedValue(undefined);
 
-      const { success } = await service.update(mockedBooking.id, {
+      const { success } = await service.update(bookingMock.id, {
         name: faker.person.fullName(),
         email: faker.internet.email(),
         phone: faker.phone.number(),
-        country_id: mockedCountry.id,
+        country_id: countryMock.id,
         surfing_experience: faker.number.int({
           min: SurfingExperience.Min,
           max: SurfingExperience.Max,
         }),
         date: dayjs(faker.date.future()).format(DATE_FORMAT),
-        surfboard_id: mockedSurfboard.id,
+        surfboard_id: surfboardMock.id,
         national_id_photo_file_key: faker.string.alphanumeric(),
       });
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.get).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.delete).toHaveBeenCalledTimes(1);
-      expect(localMockedBooking.update).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.delete).toHaveBeenCalledTimes(1);
+      expect(localBookingMock.update).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
 
     it('should return success when national ID photo file is new and deletion of existing national ID photo fails', async () => {
-      const localMockedBooking = {
-        ...mockedBooking,
+      const localBookingMock = {
+        ...bookingMock,
         update: jest.fn().mockResolvedValue(undefined),
       };
 
-      mockedBookingModel.findByPk.mockResolvedValue(localMockedBooking);
-      mockedSettingService.readCountryById.mockResolvedValue(mockedCountry);
-      mockedSettingService.readSurfboardById.mockResolvedValue(mockedSurfboard);
-      mockedFileService.get.mockResolvedValue(mockedNationalIdPhotoFile);
-      mockedFileService.delete.mockRejectedValue(new Error());
+      bookingModelMock.findByPk.mockResolvedValue(localBookingMock);
+      settingServiceMock.readCountryById.mockResolvedValue(countryMock);
+      settingServiceMock.readSurfboardById.mockResolvedValue(surfboardMock);
+      fileServiceMock.get.mockResolvedValue(nationalIdPhotoFileMock);
+      fileServiceMock.delete.mockRejectedValue(new Error());
 
-      const { success } = await service.update(mockedBooking.id, {
+      const { success } = await service.update(bookingMock.id, {
         name: faker.person.fullName(),
         email: faker.internet.email(),
         phone: faker.phone.number(),
-        country_id: mockedCountry.id,
+        country_id: countryMock.id,
         surfing_experience: faker.number.int({
           min: SurfingExperience.Min,
           max: SurfingExperience.Max,
         }),
         date: dayjs(faker.date.future()).format(DATE_FORMAT),
-        surfboard_id: mockedSurfboard.id,
+        surfboard_id: surfboardMock.id,
         national_id_photo_file_key: faker.string.alphanumeric(),
       });
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.get).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.delete).toHaveBeenCalledTimes(1);
-      expect(localMockedBooking.update).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.delete).toHaveBeenCalledTimes(1);
+      expect(localBookingMock.update).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
 
     it('should return success', async () => {
-      const localMockedBooking = {
-        ...mockedBooking,
+      const localBookingMock = {
+        ...bookingMock,
         update: jest.fn().mockResolvedValue(undefined),
       };
 
-      mockedBookingModel.findByPk.mockResolvedValue(localMockedBooking);
-      mockedSettingService.readCountryById.mockResolvedValue(mockedCountry);
-      mockedSettingService.readSurfboardById.mockResolvedValue(mockedSurfboard);
-      mockedFileService.get.mockResolvedValue(mockedNationalIdPhotoFile);
+      bookingModelMock.findByPk.mockResolvedValue(localBookingMock);
+      settingServiceMock.readCountryById.mockResolvedValue(countryMock);
+      settingServiceMock.readSurfboardById.mockResolvedValue(surfboardMock);
+      fileServiceMock.get.mockResolvedValue(nationalIdPhotoFileMock);
 
-      const { success } = await service.update(mockedBooking.id, {
+      const { success } = await service.update(bookingMock.id, {
         name: faker.person.fullName(),
         email: faker.internet.email(),
         phone: faker.phone.number(),
-        country_id: mockedCountry.id,
+        country_id: countryMock.id,
         surfing_experience: faker.number.int({
           min: SurfingExperience.Min,
           max: SurfingExperience.Max,
         }),
         date: dayjs(faker.date.future()).format(DATE_FORMAT),
-        surfboard_id: mockedSurfboard.id,
-        national_id_photo_file_key: mockedBooking.national_id_photo_file_key,
+        surfboard_id: surfboardMock.id,
+        national_id_photo_file_key: bookingMock.national_id_photo_file_key,
       });
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readCountryById).toHaveBeenCalledTimes(1);
-      expect(mockedSettingService.readSurfboardById).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.get).toHaveBeenCalledTimes(1);
-      expect(localMockedBooking.update).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readCountryById).toHaveBeenCalledTimes(1);
+      expect(settingServiceMock.readSurfboardById).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(localBookingMock.update).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });
@@ -608,7 +608,7 @@ describe('BookingService', () => {
 
   describe('delete', () => {
     it('should return 422 when booking does not exist', async () => {
-      mockedBookingModel.findByPk.mockResolvedValue(null);
+      bookingModelMock.findByPk.mockResolvedValue(null);
 
       let err: UnprocessableEntityException;
 
@@ -618,27 +618,27 @@ describe('BookingService', () => {
         err = error;
       }
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
 
       expect(err).toBeInstanceOf(UnprocessableEntityException);
       expect(err.getStatus()).toEqual(HttpStatus.UNPROCESSABLE_ENTITY);
     });
 
     it('should return success', async () => {
-      const localMockedBooking = {
-        ...mockedBooking,
+      const localBookingMock = {
+        ...bookingMock,
         destroy: jest.fn(),
       };
 
-      mockedBookingModel.findByPk.mockResolvedValue(localMockedBooking);
-      mockedFileService.delete.mockResolvedValue(undefined);
-      localMockedBooking.destroy.mockResolvedValue(undefined);
+      bookingModelMock.findByPk.mockResolvedValue(localBookingMock);
+      fileServiceMock.delete.mockResolvedValue(undefined);
+      localBookingMock.destroy.mockResolvedValue(undefined);
 
       const { success } = await service.delete(faker.string.uuid());
 
-      expect(mockedBookingModel.findByPk).toHaveBeenCalledTimes(1);
-      expect(mockedFileService.delete).toHaveBeenCalledTimes(1);
-      expect(localMockedBooking.destroy).toHaveBeenCalledTimes(1);
+      expect(bookingModelMock.findByPk).toHaveBeenCalledTimes(1);
+      expect(fileServiceMock.delete).toHaveBeenCalledTimes(1);
+      expect(localBookingMock.destroy).toHaveBeenCalledTimes(1);
 
       expect(success).toBeTruthy();
     });

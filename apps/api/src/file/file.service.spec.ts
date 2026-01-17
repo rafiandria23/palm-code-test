@@ -17,7 +17,7 @@ import { FileService } from './file.service';
 describe('FileService', () => {
   let service: FileService;
 
-  const mockedS3Client = mockClient(S3Client);
+  const s3ClientMock = mockClient(S3Client);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,15 +31,15 @@ describe('FileService', () => {
     jest.resetModules();
     jest.resetAllMocks();
 
-    mockedS3Client.reset();
+    s3ClientMock.reset();
   });
 
   describe('upload', () => {
     it('should return upload', async () => {
-      mockedS3Client.on(CreateMultipartUploadCommand).resolves({
+      s3ClientMock.on(CreateMultipartUploadCommand).resolves({
         UploadId: faker.string.uuid(),
       });
-      mockedS3Client.on(UploadPartCommand).resolves({
+      s3ClientMock.on(UploadPartCommand).resolves({
         ETag: faker.string.alphanumeric(),
       });
 
@@ -52,7 +52,7 @@ describe('FileService', () => {
         } as MultipartFile)
         .done();
 
-      expect(mockedS3Client.send.callCount).toEqual(1);
+      expect(s3ClientMock.send.callCount).toEqual(1);
 
       expect(result).toHaveProperty('Bucket');
       expect(result).toHaveProperty('Key');
@@ -62,19 +62,19 @@ describe('FileService', () => {
 
   describe('get', () => {
     it('should return null when file does not exist', async () => {
-      mockedS3Client.on(GetObjectCommand).rejects({ name: 'NoSuchKey' });
+      s3ClientMock.on(GetObjectCommand).rejects({ name: 'NoSuchKey' });
 
       const result = await service.get(
         `${faker.string.uuid()}.${faker.system.fileExt()}`,
       );
 
-      expect(mockedS3Client.send.callCount).toEqual(1);
+      expect(s3ClientMock.send.callCount).toEqual(1);
 
       expect(result).toBeNull();
     });
 
     it('should throw error', async () => {
-      mockedS3Client
+      s3ClientMock
         .on(GetObjectCommand)
         .rejects(new Error(faker.string.alpha()));
 
@@ -86,7 +86,7 @@ describe('FileService', () => {
         err = error;
       }
 
-      expect(mockedS3Client.send.callCount).toEqual(1);
+      expect(s3ClientMock.send.callCount).toEqual(1);
 
       expect(err).toBeInstanceOf(Error);
     });
@@ -96,13 +96,13 @@ describe('FileService', () => {
         ContentType: faker.system.mimeType(),
       };
 
-      mockedS3Client.on(GetObjectCommand).resolves(expectedResult);
+      s3ClientMock.on(GetObjectCommand).resolves(expectedResult);
 
       const result = await service.get(
         `${faker.string.uuid()}.${faker.system.fileExt()}`,
       );
 
-      expect(mockedS3Client.send.callCount).toEqual(1);
+      expect(s3ClientMock.send.callCount).toEqual(1);
 
       expect(result).toEqual(expectedResult);
     });
@@ -120,7 +120,7 @@ describe('FileService', () => {
 
   describe('delete', () => {
     it('should return void as success', async () => {
-      mockedS3Client.on(DeleteObjectCommand).resolves({
+      s3ClientMock.on(DeleteObjectCommand).resolves({
         $metadata: {
           httpStatusCode: HttpStatus.OK,
         },
@@ -128,9 +128,9 @@ describe('FileService', () => {
 
       await service.delete(`${faker.string.uuid()}.${faker.system.fileExt()}`);
 
-      expect(mockedS3Client.send.callCount).toEqual(1);
+      expect(s3ClientMock.send.callCount).toEqual(1);
       expect(
-        (await mockedS3Client.send.returnValues[0]).$metadata.httpStatusCode,
+        (await s3ClientMock.send.returnValues[0]).$metadata.httpStatusCode,
       ).toEqual(HttpStatus.OK);
     });
   });

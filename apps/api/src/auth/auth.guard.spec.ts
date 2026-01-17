@@ -14,19 +14,19 @@ import { AuthGuard } from './auth.guard';
 describe('Auth guard', () => {
   let guard: AuthGuard;
 
-  const mockedReflector = {
+  const reflectorMock = {
     getAllAndOverride: jest.fn(),
   };
 
-  const mockedConfigService = {
+  const configServiceMock = {
     get: jest.fn(),
   };
 
-  const mockedJwtService = {
+  const jwtServiceMock = {
     verifyAsync: jest.fn(),
   };
 
-  const mockedExecutionContext = {
+  const executionContextMock = {
     getHandler: jest.fn(),
     getClass: jest.fn(),
     switchToHttp: jest.fn(),
@@ -38,15 +38,15 @@ describe('Auth guard', () => {
         AuthGuard,
         {
           provide: Reflector,
-          useValue: mockedReflector,
+          useValue: reflectorMock,
         },
         {
           provide: ConfigService,
-          useValue: mockedConfigService,
+          useValue: configServiceMock,
         },
         {
           provide: JwtService,
-          useValue: mockedJwtService,
+          useValue: jwtServiceMock,
         },
       ],
     }).compile();
@@ -60,21 +60,21 @@ describe('Auth guard', () => {
   });
 
   it('should return true when endpoint is public', async () => {
-    mockedReflector.getAllAndOverride.mockReturnValue(true);
+    reflectorMock.getAllAndOverride.mockReturnValue(true);
 
     const result = await guard.canActivate(
-      mockedExecutionContext as unknown as ExecutionContext,
+      executionContextMock as unknown as ExecutionContext,
     );
 
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
 
     expect(result).toBeTruthy();
   });
 
   it('should return 401 when authorization header is not found', async () => {
-    mockedReflector.getAllAndOverride.mockReturnValue(false);
+    reflectorMock.getAllAndOverride.mockReturnValue(false);
 
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         headers: {
           authorization: null,
@@ -86,23 +86,23 @@ describe('Auth guard', () => {
 
     try {
       await guard.canActivate(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
 
     expect(err).toBeInstanceOf(UnauthorizedException);
     expect(err.getStatus()).toEqual(HttpStatus.UNAUTHORIZED);
   });
 
   it('should return 401 when access token type is invalid', async () => {
-    mockedReflector.getAllAndOverride.mockReturnValue(false);
+    reflectorMock.getAllAndOverride.mockReturnValue(false);
 
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         headers: {
           authorization: `${faker.string.alpha()} ${faker.string.alphanumeric()}`,
@@ -114,23 +114,23 @@ describe('Auth guard', () => {
 
     try {
       await guard.canActivate(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
 
     expect(err).toBeInstanceOf(UnauthorizedException);
     expect(err.getStatus()).toEqual(HttpStatus.UNAUTHORIZED);
   });
 
   it('should return 401 when access token is not found', async () => {
-    mockedReflector.getAllAndOverride.mockReturnValue(false);
+    reflectorMock.getAllAndOverride.mockReturnValue(false);
 
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         headers: {
           authorization: 'Bearer',
@@ -142,23 +142,23 @@ describe('Auth guard', () => {
 
     try {
       await guard.canActivate(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
 
     expect(err).toBeInstanceOf(UnauthorizedException);
     expect(err.getStatus()).toEqual(HttpStatus.UNAUTHORIZED);
   });
 
   it('should return 401 when access token is invalid', async () => {
-    mockedReflector.getAllAndOverride.mockReturnValue(false);
+    reflectorMock.getAllAndOverride.mockReturnValue(false);
 
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         headers: {
           authorization: `Bearer ${faker.string.alphanumeric()}`,
@@ -166,9 +166,9 @@ describe('Auth guard', () => {
       }),
     });
 
-    mockedConfigService.get.mockReturnValue(faker.string.alphanumeric());
+    configServiceMock.get.mockReturnValue(faker.string.alphanumeric());
 
-    mockedJwtService.verifyAsync.mockRejectedValue(
+    jwtServiceMock.verifyAsync.mockRejectedValue(
       new Error(faker.string.alpha()),
     );
 
@@ -176,25 +176,25 @@ describe('Auth guard', () => {
 
     try {
       await guard.canActivate(
-        mockedExecutionContext as unknown as ExecutionContext,
+        executionContextMock as unknown as ExecutionContext,
       );
     } catch (error) {
       err = error;
     }
 
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(1);
-    expect(mockedConfigService.get).toHaveBeenCalledTimes(1);
-    expect(mockedJwtService.verifyAsync).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
+    expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+    expect(jwtServiceMock.verifyAsync).toHaveBeenCalledTimes(1);
 
     expect(err).toBeInstanceOf(UnauthorizedException);
     expect(err.getStatus()).toEqual(HttpStatus.UNAUTHORIZED);
   });
 
   it('should return true when access token is valid', async () => {
-    mockedReflector.getAllAndOverride.mockReturnValue(false);
+    reflectorMock.getAllAndOverride.mockReturnValue(false);
 
-    mockedExecutionContext.switchToHttp.mockReturnValue({
+    executionContextMock.switchToHttp.mockReturnValue({
       getRequest: jest.fn().mockReturnValue({
         headers: {
           authorization: `Bearer ${faker.string.alphanumeric()}`,
@@ -202,18 +202,18 @@ describe('Auth guard', () => {
       }),
     });
 
-    mockedConfigService.get.mockReturnValue(faker.string.alphanumeric());
+    configServiceMock.get.mockReturnValue(faker.string.alphanumeric());
 
-    mockedJwtService.verifyAsync.mockResolvedValue({});
+    jwtServiceMock.verifyAsync.mockResolvedValue({});
 
     const result = await guard.canActivate(
-      mockedExecutionContext as unknown as ExecutionContext,
+      executionContextMock as unknown as ExecutionContext,
     );
 
-    expect(mockedReflector.getAllAndOverride).toHaveBeenCalledTimes(1);
-    expect(mockedExecutionContext.switchToHttp).toHaveBeenCalledTimes(1);
-    expect(mockedConfigService.get).toHaveBeenCalledTimes(1);
-    expect(mockedJwtService.verifyAsync).toHaveBeenCalledTimes(1);
+    expect(reflectorMock.getAllAndOverride).toHaveBeenCalledTimes(1);
+    expect(executionContextMock.switchToHttp).toHaveBeenCalledTimes(1);
+    expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+    expect(jwtServiceMock.verifyAsync).toHaveBeenCalledTimes(1);
 
     expect(result).toBeTruthy();
   });

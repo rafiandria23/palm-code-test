@@ -12,13 +12,13 @@ describe('Common filters', () => {
 
     let filter: ExceptionFilter;
 
-    const mockedHttpAdapterHost = {
+    const httpAdapterHostMock = {
       httpAdapter: {
         reply: jest.fn(),
       },
     };
 
-    const mockedArgumentsHost = {
+    const argumentsHostMock = {
       switchToHttp: jest.fn(),
     };
 
@@ -28,7 +28,7 @@ describe('Common filters', () => {
           ExceptionFilter,
           {
             provide: HttpAdapterHost,
-            useValue: mockedHttpAdapterHost,
+            useValue: httpAdapterHostMock,
           },
           CommonService,
         ],
@@ -45,13 +45,13 @@ describe('Common filters', () => {
     });
 
     it('should return 500 and log error when error is not HttpException instance', () => {
-      mockedArgumentsHost.switchToHttp.mockReturnValue({
+      argumentsHostMock.switchToHttp.mockReturnValue({
         getResponse: jest.fn(),
       });
 
       filter.catch(
         new Error(faker.string.alpha()),
-        mockedArgumentsHost as unknown as ArgumentsHost,
+        argumentsHostMock as unknown as ArgumentsHost,
       );
     });
 
@@ -63,7 +63,7 @@ describe('Common filters', () => {
         },
       });
 
-      mockedArgumentsHost.switchToHttp.mockReturnValue({
+      argumentsHostMock.switchToHttp.mockReturnValue({
         getResponse: jest.fn(),
       });
 
@@ -72,7 +72,7 @@ describe('Common filters', () => {
           expectedResponseData.data,
           HttpStatus.UNPROCESSABLE_ENTITY,
         ),
-        mockedArgumentsHost as unknown as ArgumentsHost,
+        argumentsHostMock as unknown as ArgumentsHost,
       );
     });
 
@@ -86,7 +86,7 @@ describe('Common filters', () => {
         ],
       });
 
-      mockedArgumentsHost.switchToHttp.mockReturnValue({
+      argumentsHostMock.switchToHttp.mockReturnValue({
         getResponse: jest.fn(),
       });
 
@@ -95,7 +95,7 @@ describe('Common filters', () => {
           expectedResponseData.data,
           HttpStatus.UNPROCESSABLE_ENTITY,
         ),
-        mockedArgumentsHost as unknown as ArgumentsHost,
+        argumentsHostMock as unknown as ArgumentsHost,
       );
     });
   });
