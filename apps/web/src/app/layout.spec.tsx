@@ -1,36 +1,33 @@
+import type { ImgHTMLAttributes } from 'react';
 import { render, screen } from '@testing-library/react';
+import { createTheme } from '@mui/material/styles';
 
-import RootLayout from './layout';
+import RootLayout, { metadata } from './layout';
 
-// Mock fonts properly to satisfy theme.ts
-jest.mock('next/font/google', () => ({
-  Inter: jest.fn().mockReturnValue({
-    className: 'inter-font',
-    style: { fontFamily: 'Inter' },
-  }),
-  Outfit: jest.fn().mockReturnValue({
-    className: 'outfit-font',
-    style: { fontFamily: 'Outfit' },
-  }),
-  Bodoni_Moda: jest.fn().mockReturnValue({
-    className: 'bodoni-moda-font',
-    style: { fontFamily: 'Bodoni Moda' },
-  }),
-}));
-
-jest.mock('../components/ReduxProvider', () => ({
+jest.mock('next/image', () => ({
   __esModule: true,
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="redux-provider">{children}</div>
+  default: (props: ImgHTMLAttributes<HTMLImageElement>) => (
+    <img {...props} alt={props.alt} />
   ),
 }));
 
-jest.mock('../components/NotistackProvider', () => ({
-  __esModule: true,
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="notistack-provider">{children}</div>
-  ),
-}));
+jest.mock('../styles/theme', () => createTheme());
+
+jest.mock('../assets/logo.svg', () => 'logo-image');
+jest.mock('../assets/sky.png', () => 'sky-image');
+jest.mock('../assets/surfing.png', () => 'surfing-image');
+
+jest.mock('../components/ReduxProvider', () => () => (
+  <div data-testid="redux-provider" />
+));
+
+jest.mock('../components/DatePickersProvider', () => () => (
+  <div data-testid="date-pickers-provider" />
+));
+
+jest.mock('../components/NotistackProvider', () => () => (
+  <div data-testid="notistack-provider" />
+));
 
 describe('RootLayout', () => {
   afterEach(() => {
@@ -38,17 +35,28 @@ describe('RootLayout', () => {
     jest.resetAllMocks();
   });
 
-  it('renders correctly with children and essential elements', () => {
-    // We avoid rendering directly into the document or documentElement to prevent hydration warnings
-    // RTL's default rendering into a <div> is fine for verifying providers and children presence.
+  it('should have metadata', () => {
+    expect(metadata).toEqual({
+      title: 'Palm Code Test Web',
+      description: 'Test for Palm Code.',
+    });
+  });
+
+  it('should render', () => {
     render(
       <RootLayout>
-        <div data-testid="test-child">Content</div>
+        <div data-testid="root-layout-child" />
       </RootLayout>,
     );
 
-    expect(screen.getByTestId('redux-provider')).toBeInTheDocument();
-    expect(screen.getByTestId('notistack-provider')).toBeInTheDocument();
-    expect(screen.getByTestId('test-child')).toBeInTheDocument();
+    const reduxProvider = screen.getByTestId('redux-provider');
+    const datePickersProvider = screen.getByTestId('date-pickers-provider');
+    const notistackProvider = screen.getByTestId('notistack-provider');
+    const rootLayoutChild = screen.getByTestId('root-layout-child');
+
+    expect(reduxProvider).toBeInTheDocument();
+    expect(datePickersProvider).toBeInTheDocument();
+    expect(notistackProvider).toBeInTheDocument();
+    expect(rootLayoutChild).toBeInTheDocument();
   });
 });
