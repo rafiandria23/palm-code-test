@@ -1,8 +1,7 @@
 'use client';
 
 import _ from 'lodash';
-import type { FC } from 'react';
-import { useCallback, useEffect } from 'react';
+import { type FC, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { Container, Stack, Paper, Box, CircularProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';

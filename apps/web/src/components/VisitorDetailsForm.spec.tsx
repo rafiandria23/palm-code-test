@@ -124,10 +124,10 @@ describe('VisitorDetailsForm', () => {
 
     settingApiMock.useReadAllCountriesQuery.mockReturnValue({
       data: { data: countriesMock },
+      error: null,
       isLoading: false,
       isFetching: false,
       isError: false,
-      error: null,
       refetch: jest.fn(),
     });
   });

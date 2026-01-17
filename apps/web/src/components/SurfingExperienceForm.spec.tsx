@@ -127,10 +127,10 @@ describe('SurfingExperienceForm', () => {
 
     settingApiMock.useReadAllSurfboardsQuery.mockReturnValue({
       data: { data: surfboardsMock },
+      error: null,
       isLoading: false,
       isFetching: false,
       isError: false,
-      error: null,
       refetch: jest.fn(),
     });
   });

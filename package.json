@@ -10,6 +10,7 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@faker-js/faker": "^9.9.0",
     "@fastify/multipart": "^9.3.0",
     "@fastify/static": "^9.0.0",
     "@hookform/resolvers": "^5.2.2",
@@ -50,7 +51,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
-    "@faker-js/faker": "^9.9.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.0",
     "@next/eslint-plugin-next": "^16.0.1",
