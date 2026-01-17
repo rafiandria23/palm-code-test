@@ -14,7 +14,12 @@ const config = {
   coverageDirectory: '../../coverage/apps/web',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  coveragePathIgnorePatterns: ['/constants/', '/interfaces/', '/services/'],
+  coveragePathIgnorePatterns: [
+    '/components/providers/',
+    '/constants/',
+    '/interfaces/',
+    '/services/',
+  ],
 };
 
 module.exports = createJestConfig(config);

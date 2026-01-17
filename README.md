@@ -15,21 +15,21 @@
 
 Test for Palm Code.
 
-## Tech Stacks
+## Tech Stack
+
+### [API](apps/api/)
 
 - [Node.js](https://nodejs.org)
 - [TypeScript](https://typescriptlang.org)
 - [Nx](https://nx.dev)
 - [Nest.js](https://nestjs.com)
 - [Sequelize](https://sequelize.org)
+
+### [Web](apps/web/)
+
 - [Next.js](https://nextjs.org)
 - [Redux Toolkit](https://redux-toolkit.js.org)
 - [MUI](https://mui.com)
-
-## Apps
-
-- [API](apps/api/)
-- [Web](apps/web/)
 
 ## Environment
 
