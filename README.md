@@ -19,9 +19,6 @@ Test for Palm Code.
 
 ### [API](apps/api/)
 
-- [Node.js](https://nodejs.org)
-- [TypeScript](https://typescriptlang.org)
-- [Nx](https://nx.dev)
 - [Nest.js](https://nestjs.com)
 - [Sequelize](https://sequelize.org)
 
