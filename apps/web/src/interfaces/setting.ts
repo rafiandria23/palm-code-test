@@ -3,10 +3,12 @@ import type { PaginationPayload, SortPayload } from './api';
 
 export interface Country {
   id: string;
+
   name: string;
   code: string;
   dial_code: string;
   emoji: string;
+
   created_at: Timestamp;
   updated_at: Timestamp;
   deleted_at: Timestamp | null;
@@ -14,7 +16,9 @@ export interface Country {
 
 export interface Surfboard {
   id: string;
+
   name: string;
+
   created_at: Timestamp;
   updated_at: Timestamp;
   deleted_at: Timestamp | null;

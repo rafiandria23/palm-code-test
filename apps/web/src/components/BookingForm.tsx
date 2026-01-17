@@ -1,7 +1,15 @@
 'use client';
 
-import type { FC, ReactElement, FormEventHandler } from 'react';
-import { useState, useMemo, useCallback, memo } from 'react';
+import _ from 'lodash';
+import {
+  type FC,
+  type ReactElement,
+  type FormEventHandler,
+  useState,
+  useMemo,
+  useCallback,
+  memo,
+} from 'react';
 import { useTheme, Stack, Box, Typography, Button } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 
@@ -61,6 +69,14 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
     [handleReset],
   );
 
+  const validStep = useMemo<boolean>(
+    () =>
+      _.get(steps, `[${activeStep}].fields`, []).every(
+        (field) => !formCtx.formState.errors[field],
+      ),
+    [steps, activeStep, formCtx],
+  );
+
   const lastStep = useMemo<boolean>(() => {
     return activeStep === steps.length - 2;
   }, [activeStep, steps]);
@@ -80,7 +96,11 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
           await onSubmit(formCtx.getValues());
         }
 
-        setActiveStep(activeStep + 1);
+        const nextStep = activeStep + 1;
+
+        if (nextStep < steps.length) {
+          setActiveStep(nextStep);
+        }
       }
     },
     [formCtx, steps, activeStep, lastStep, onSubmit, setActiveStep],
@@ -122,11 +142,13 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
       {!finished && (
         <Box>
           <Button
+            data-testid="create-booking-button"
             type="submit"
             variant="contained"
             size="large"
             disableElevation
-            disabled={bookingState.loading}
+            disabled={!validStep}
+            loading={bookingState.loading}
             sx={{
               paddingX: theme.spacing(8),
               borderRadius: 'unset',

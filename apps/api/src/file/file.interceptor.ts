@@ -8,7 +8,7 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { extname } from 'path';
+import { extname } from 'node:path';
 
 import { ApiRequest, ApiResponse } from '../common/common.interface';
 

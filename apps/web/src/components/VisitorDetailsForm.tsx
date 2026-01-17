@@ -4,7 +4,13 @@ import _ from 'lodash';
 import type { FC } from 'react';
 import { useCallback } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { Grid, Autocomplete, TextField, IconButton } from '@mui/material';
+import {
+  Grid,
+  Autocomplete,
+  TextField,
+  type IconButtonProps,
+  IconButton,
+} from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 
 import type { CreateBookingFormPayload } from '../interfaces/booking';
@@ -19,19 +25,18 @@ const VisitorDetailsForm: FC = () => {
   const formCtx = useFormContext<CreateBookingFormPayload>();
 
   const handleClear = useCallback(
-    (key: keyof Pick<CreateBookingFormPayload, 'name' | 'email' | 'phone'>) => {
-      return () => {
+    (key: keyof Pick<CreateBookingFormPayload, 'name' | 'email' | 'phone'>) =>
+      () => {
         formCtx.setValue(key, '', {
           shouldValidate: true,
         });
-      };
-    },
+      },
     [formCtx],
   );
 
   return (
     <Grid container spacing={4}>
-      <Grid item xs={6}>
+      <Grid size={6}>
         <Controller
           key="name"
           control={formCtx.control}
@@ -39,6 +44,7 @@ const VisitorDetailsForm: FC = () => {
           disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <TextField
+              data-testid={`${field.name}-input`}
               fullWidth
               disabled={field.disabled}
               type="txt"
@@ -50,25 +56,28 @@ const VisitorDetailsForm: FC = () => {
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={_.get(fieldState, 'error.message')}
-              InputProps={{
-                endAdornment: (
-                  <IconButton
-                    size="small"
-                    onClick={handleClear('name')}
-                    sx={{
-                      visibility: !field.value ? 'hidden' : 'visible',
-                    }}
-                  >
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <IconButton
+                      data-testid={`clear-${field.name}-button`}
+                      size="small"
+                      onClick={handleClear('name')}
+                      sx={{
+                        visibility: field.value ? 'visible' : 'hidden',
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  ),
+                },
               }}
             />
           )}
         />
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid size={6}>
         <Controller
           key="country_id"
           control={formCtx.control}
@@ -88,6 +97,7 @@ const VisitorDetailsForm: FC = () => {
               renderInput={(params) => (
                 <TextField
                   {...params}
+                  data-testid={`${field.name}-input`}
                   type="text"
                   name={field.name}
                   label="Country"
@@ -95,12 +105,17 @@ const VisitorDetailsForm: FC = () => {
                   helperText={_.get(fieldState, 'error.message')}
                 />
               )}
+              slotProps={{
+                clearIndicator: {
+                  ['data-testid']: `clear-${field.name}-button`,
+                } as IconButtonProps,
+              }}
             />
           )}
         />
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid size={6}>
         <Controller
           key="email"
           control={formCtx.control}
@@ -108,6 +123,7 @@ const VisitorDetailsForm: FC = () => {
           disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <TextField
+              data-testid={`${field.name}-input`}
               fullWidth
               disabled={field.disabled}
               type="email"
@@ -119,25 +135,28 @@ const VisitorDetailsForm: FC = () => {
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={_.get(fieldState, 'error.message')}
-              InputProps={{
-                endAdornment: (
-                  <IconButton
-                    size="small"
-                    onClick={handleClear('email')}
-                    sx={{
-                      visibility: !field.value ? 'hidden' : 'visible',
-                    }}
-                  >
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <IconButton
+                      data-testid={`clear-${field.name}-button`}
+                      size="small"
+                      onClick={handleClear('email')}
+                      sx={{
+                        visibility: field.value ? 'visible' : 'hidden',
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  ),
+                },
               }}
             />
           )}
         />
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid size={6}>
         <Controller
           key="phone"
           control={formCtx.control}
@@ -145,29 +164,33 @@ const VisitorDetailsForm: FC = () => {
           disabled={bookingState.loading}
           render={({ field, fieldState }) => (
             <TextField
+              data-testid={`${field.name}-input`}
               fullWidth
               disabled={field.disabled}
               type="tel"
               name={field.name}
-              label="Whatsapp number"
+              label="WhatsApp number"
               placeholder="Your active number"
               value={field.value}
               onChange={field.onChange}
               onBlur={field.onBlur}
               error={!!fieldState.error || fieldState.invalid}
               helperText={_.get(fieldState, 'error.message')}
-              InputProps={{
-                endAdornment: (
-                  <IconButton
-                    size="small"
-                    onClick={handleClear('phone')}
-                    sx={{
-                      visibility: !field.value ? 'hidden' : 'visible',
-                    }}
-                  >
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                ),
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <IconButton
+                      data-testid={`clear-${field.name}-button`}
+                      size="small"
+                      onClick={handleClear('phone')}
+                      sx={{
+                        visibility: field.value ? 'visible' : 'hidden',
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  ),
+                },
               }}
             />
           )}

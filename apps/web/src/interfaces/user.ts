@@ -3,9 +3,11 @@ import { PaginationPayload, SortPayload } from './api';
 
 export interface User {
   id: string;
+
   first_name: string;
   last_name: string | null;
   email: string;
+
   created_at: Timestamp;
   updated_at: Timestamp;
   deleted_at: Timestamp | null;
