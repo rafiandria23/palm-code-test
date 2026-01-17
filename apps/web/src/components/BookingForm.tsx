@@ -1,5 +1,6 @@
 'use client';
 
+import _ from 'lodash';
 import {
   type FC,
   type ReactElement,
@@ -70,9 +71,9 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
 
   const validStep = useMemo<boolean>(
     () =>
-      steps[activeStep].fields?.every(
+      _.get(steps, `[${activeStep}].fields`, []).every(
         (field) => !formCtx.formState.errors[field],
-      ) ?? true,
+      ),
     [steps, activeStep, formCtx],
   );
 
@@ -137,6 +138,7 @@ const BookingForm: FC<BookingFormProps> = ({ onSubmit }) => {
       {!finished && (
         <Box>
           <Button
+            data-testid="create-booking-button"
             type="submit"
             variant="contained"
             size="large"
