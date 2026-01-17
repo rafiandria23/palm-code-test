@@ -4,7 +4,7 @@ import { type FC, type ReactNode, memo } from 'react';
 import { Provider } from 'react-redux';
 
 // Redux
-import store from '../stores';
+import store from '../../stores';
 
 export interface ReduxProviderProps {
   children: ReactNode;
