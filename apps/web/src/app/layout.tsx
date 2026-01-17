@@ -18,9 +18,9 @@ import LogoImage from '../assets/logo.svg';
 import SkyImage from '../assets/sky.png';
 import SurfingImage from '../assets/surfing.png';
 
-import ReduxProvider from '../components/ReduxProvider';
-import DatePickersProvider from '../components/DatePickersProvider';
-import NotistackProvider from '../components/NotistackProvider';
+import ReduxProvider from '../components/providers/ReduxProvider';
+import DatePickersProvider from '../components/providers/DatePickersProvider';
+import NotistackProvider from '../components/providers/NotistackProvider';
 
 export const metadata: Metadata = {
   title: 'Palm Code Test Web',

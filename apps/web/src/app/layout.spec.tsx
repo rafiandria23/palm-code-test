@@ -2,9 +2,9 @@ import type { ImgHTMLAttributes, FC } from 'react';
 import { render, screen } from '@testing-library/react';
 import { createTheme } from '@mui/material/styles';
 
-import type { ReduxProviderProps } from '../components/ReduxProvider';
-import type { DatePickersProviderProps } from '../components/DatePickersProvider';
-import type { NotistackProviderProps } from '../components/NotistackProvider';
+import type { ReduxProviderProps } from '../components/providers/ReduxProvider';
+import type { DatePickersProviderProps } from '../components/providers/DatePickersProvider';
+import type { NotistackProviderProps } from '../components/providers/NotistackProvider';
 import RootLayout, { metadata } from './layout';
 
 jest.mock('next/image', () => ({
@@ -20,7 +20,7 @@ jest.mock('../assets/logo.svg', () => 'logo-image');
 jest.mock('../assets/sky.png', () => 'sky-image');
 jest.mock('../assets/surfing.png', () => 'surfing-image');
 
-jest.mock('../components/ReduxProvider', () => {
+jest.mock('../components/providers/ReduxProvider', () => {
   const ReduxProviderMock: FC<ReduxProviderProps> = ({ children }) => (
     <div data-testid="redux-provider">{children}</div>
   );
@@ -28,7 +28,7 @@ jest.mock('../components/ReduxProvider', () => {
   return ReduxProviderMock;
 });
 
-jest.mock('../components/DatePickersProvider', () => {
+jest.mock('../components/providers/DatePickersProvider', () => {
   const DatePickersProviderMock: FC<DatePickersProviderProps> = ({
     children,
   }) => <div data-testid="date-pickers-provider">{children}</div>;
@@ -36,7 +36,7 @@ jest.mock('../components/DatePickersProvider', () => {
   return DatePickersProviderMock;
 });
 
-jest.mock('../components/NotistackProvider', () => {
+jest.mock('../components/providers/NotistackProvider', () => {
   const NotistackProviderMock: FC<NotistackProviderProps> = ({ children }) => (
     <div data-testid="notistack-provider">{children}</div>
   );

@@ -16,7 +16,7 @@ import { WEB_DATE_FORMAT } from '../constants/date';
 import { CreateBookingValidationSchema } from '../validations/booking';
 import { useAppSelector } from '../hooks/store';
 import settingApi from '../services/setting';
-import DatePickersProvider from './DatePickersProvider';
+import DatePickersProvider from './providers/DatePickersProvider';
 import SurfingExperienceForm from './SurfingExperienceForm';
 
 jest.mock('../hooks/store', () => ({
