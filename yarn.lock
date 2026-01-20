@@ -5677,7 +5677,7 @@ __metadata:
     "@types/bcrypt": "npm:^6.0.0"
     "@types/jest": "npm:^30.0.0"
     "@types/lodash": "npm:^4.17.21"
-    "@types/node": "npm:20.19.9"
+    "@types/node": "npm:20.19.30"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
     aws-sdk-client-mock: "npm:^4.1.0"
@@ -7709,12 +7709,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.19.9":
-  version: 20.19.9
-  resolution: "@types/node@npm:20.19.9"
+"@types/node@npm:20.19.30":
+  version: 20.19.30
+  resolution: "@types/node@npm:20.19.30"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/c6738131f1698258a5ac1e0185e4fc56977f7f566cd0ee11167f93f2339478470257bd82c5e1908a936a204e0ad7996d741356a1a07c04997a236161ea23a874
+  checksum: 10c0/23dbea652727d947ea35fc1c4e8acb7e1c535e85f6c139c3a4697864a5af164655ce305ab0877ea4cca537deee0405bf56aeac714f236ae1a3dd0fa6b87cc860
   languageName: node
   linkType: hard
 
