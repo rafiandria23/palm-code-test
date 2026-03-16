@@ -140,8 +140,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/client-s3@npm:^3.962.0":
-  version: 3.1009.0
-  resolution: "@aws-sdk/client-s3@npm:3.1009.0"
+  version: 3.1010.0
+  resolution: "@aws-sdk/client-s3@npm:3.1010.0"
   dependencies:
     "@aws-crypto/sha1-browser": "npm:5.2.0"
     "@aws-crypto/sha256-browser": "npm:5.2.0"
@@ -150,7 +150,7 @@ __metadata:
     "@aws-sdk/credential-provider-node": "npm:^3.972.21"
     "@aws-sdk/middleware-bucket-endpoint": "npm:^3.972.8"
     "@aws-sdk/middleware-expect-continue": "npm:^3.972.8"
-    "@aws-sdk/middleware-flexible-checksums": "npm:^3.973.6"
+    "@aws-sdk/middleware-flexible-checksums": "npm:^3.974.0"
     "@aws-sdk/middleware-host-header": "npm:^3.972.8"
     "@aws-sdk/middleware-location-constraint": "npm:^3.972.8"
     "@aws-sdk/middleware-logger": "npm:^3.972.8"
@@ -198,7 +198,7 @@ __metadata:
     "@smithy/util-utf8": "npm:^4.2.2"
     "@smithy/util-waiter": "npm:^4.2.13"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/45bae01e0079d9680442f3868a4f8b8a2b80cf734d26c31d86ea10294a268188edc4ef6fe3568a53004bc77c723981d19e79b3ca96d3aa813643a41f5c2765a8
+  checksum: 10c0/335e1fe313c2cb68694ddcb040c7f1e7721b163f648b38bebe8ec92345897654d9d9f7138a5765fbc1aebf570c579764259c2b2d80d90c745ab785bb1323fe95
   languageName: node
   linkType: hard
 
@@ -368,8 +368,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/lib-storage@npm:^3.962.0":
-  version: 3.1009.0
-  resolution: "@aws-sdk/lib-storage@npm:3.1009.0"
+  version: 3.1010.0
+  resolution: "@aws-sdk/lib-storage@npm:3.1010.0"
   dependencies:
     "@smithy/abort-controller": "npm:^4.2.12"
     "@smithy/middleware-endpoint": "npm:^4.4.25"
@@ -379,8 +379,8 @@ __metadata:
     stream-browserify: "npm:3.0.0"
     tslib: "npm:^2.6.2"
   peerDependencies:
-    "@aws-sdk/client-s3": ^3.1009.0
-  checksum: 10c0/24a8a133a334ca0403a7899e5897a4ac946abee2dfc18a45e5929c9065df051a5ed74a6c97c13ce455c202b5ba41818ae56d931eda3d08f628723811e6d1deb9
+    "@aws-sdk/client-s3": ^3.1010.0
+  checksum: 10c0/5274f9a71edd3cd832d006d3b192c1a973267ce429858a99bc99e2e283505f99c81a717b389368febf17a9c7c73014dc26323a514fe130e7ae39ce08565c2704
   languageName: node
   linkType: hard
 
@@ -411,9 +411,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/middleware-flexible-checksums@npm:^3.973.6":
-  version: 3.973.6
-  resolution: "@aws-sdk/middleware-flexible-checksums@npm:3.973.6"
+"@aws-sdk/middleware-flexible-checksums@npm:^3.974.0":
+  version: 3.974.0
+  resolution: "@aws-sdk/middleware-flexible-checksums@npm:3.974.0"
   dependencies:
     "@aws-crypto/crc32": "npm:5.2.0"
     "@aws-crypto/crc32c": "npm:5.2.0"
@@ -429,7 +429,7 @@ __metadata:
     "@smithy/util-stream": "npm:^4.5.19"
     "@smithy/util-utf8": "npm:^4.2.2"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/8f6fc640e590a5d47abefea459249771cd0b8c823902cd620290e452a3bb0ad7314eed8b2a388db39fe31ae76d2bfeecceabcc60560e1311cd4fe5eb0ab0a6e6
+  checksum: 10c0/80333a6d5e2488067d1287d08e515e4032a19a30f4aa5220865178fc74c7f05242bf4e10eeb61e09b4517b78f02ba800c948417d23f0b7e7e27b440d086688fe
   languageName: node
   linkType: hard
 
