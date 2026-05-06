@@ -47,7 +47,7 @@
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6",
     "tipe-apa": "^0.4.7",
-    "uuid": "^11.1.0"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
