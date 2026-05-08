@@ -4409,12 +4409,12 @@ __metadata:
   linkType: hard
 
 "@mui/x-date-pickers@npm:^9.0.0":
-  version: 9.0.4
-  resolution: "@mui/x-date-pickers@npm:9.0.4"
+  version: 9.1.0
+  resolution: "@mui/x-date-pickers@npm:9.1.0"
   dependencies:
     "@babel/runtime": "npm:^7.29.2"
     "@mui/utils": "npm:9.0.0"
-    "@mui/x-internals": "npm:^9.0.4"
+    "@mui/x-internals": "npm:^9.1.0"
     "@types/react-transition-group": "npm:^4.4.12"
     clsx: "npm:^2.1.1"
     prop-types: "npm:^15.8.1"
@@ -4452,13 +4452,13 @@ __metadata:
       optional: true
     moment-jalaali:
       optional: true
-  checksum: 10c0/0b21740373d367de3c25ed2c00f7579efde85ebff6822c0135a8d9b7a3596e005191082ae728e86e0c24a4a5c012b28455b465a01e69565ce0904eefd8a68590
+  checksum: 10c0/3a4d1df245bf756afed6834518081789a3bf6d285f80f70b35a0902392d34cc7d0181481e0f83466d6da63eeaef0652ba59cc22fce5b010cf03be5b465452fe0
   languageName: node
   linkType: hard
 
-"@mui/x-internals@npm:^9.0.4":
-  version: 9.0.4
-  resolution: "@mui/x-internals@npm:9.0.4"
+"@mui/x-internals@npm:^9.1.0":
+  version: 9.1.0
+  resolution: "@mui/x-internals@npm:9.1.0"
   dependencies:
     "@babel/runtime": "npm:^7.29.2"
     "@mui/utils": "npm:9.0.0"
@@ -4466,7 +4466,7 @@ __metadata:
     use-sync-external-store: "npm:^1.6.0"
   peerDependencies:
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/24347005e74e73a131a032c8e34c8e1edcaecc05d00d3f8f8450d5b3a6ca35bc3c0c849ac08d3283a8b72d8abc4d002196320cc8ad20b6e96abf81e73525a893
+  checksum: 10c0/3494fb8794b11e3d10e17310dcfb4affa95e73be00908b6e27f6016f13569bd643bc41b02ac032e7bd2dbbe44c8ba211a348fff4110548d7af6450650814eb3e
   languageName: node
   linkType: hard
 
