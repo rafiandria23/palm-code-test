@@ -15,92 +15,92 @@ export class CountryDto {
   @ApiProperty({
     format: 'uuid',
   })
-  public readonly id: string;
+  public readonly id!: string;
 
   @ApiProperty()
-  public readonly name: string;
+  public readonly name!: string;
 
   @ApiProperty()
-  public readonly code: string;
+  public readonly code!: string;
 
   @ApiProperty()
-  public readonly dial_code: string;
+  public readonly dial_code!: string;
 
   @ApiProperty()
-  public readonly emoji: string;
+  public readonly emoji!: string;
 
   @ApiProperty({
     format: 'date-time',
   })
-  public readonly created_at: Date;
+  public readonly created_at!: Date;
 
   @ApiProperty({
     format: 'date-time',
   })
-  public readonly updated_at: Date;
+  public readonly updated_at!: Date;
 
   @ApiProperty({
     nullable: true,
     format: 'date-time',
     default: null,
   })
-  public readonly deleted_at: Date | null;
+  public readonly deleted_at: Date | null = null;
 }
 
 export class SurfboardDto {
   @ApiProperty({
     format: 'uuid',
   })
-  public readonly id: string;
+  public readonly id!: string;
 
   @ApiProperty()
-  public readonly name: string;
+  public readonly name!: string;
 
   @ApiProperty({
     format: 'date-time',
   })
-  public readonly created_at: Date;
+  public readonly created_at!: Date;
 
   @ApiProperty({
     format: 'date-time',
   })
-  public readonly updated_at: Date;
+  public readonly updated_at!: Date;
 
   @ApiProperty({
     nullable: true,
     format: 'date-time',
     default: null,
   })
-  public readonly deleted_at: Date | null;
+  public readonly deleted_at: Date | null = null;
 }
 
 export class CreateCountryBodyDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly name: string;
+  public readonly name!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly code: string;
+  public readonly code!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly dial_code: string;
+  public readonly dial_code!: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly emoji: string;
+  public readonly emoji!: string;
 }
 
 export class CreateSurfboardBodyDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly name: string;
+  public readonly name!: string;
 }
 
 export class ReadAllCountriesQueryDto extends IntersectionType(
@@ -114,7 +114,7 @@ export class ReadAllCountriesQueryDto extends IntersectionType(
   @IsEnum(CountrySortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by?: CountrySortProperty = CountrySortProperty.Name;
+  public readonly sort_by: CountrySortProperty = CountrySortProperty.Name;
 
   @ApiProperty({
     required: false,
@@ -145,7 +145,7 @@ export class ReadCountryByIdParamDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly id: string;
+  public readonly id!: string;
 }
 
 export class ReadAllSurfboardsQueryDto extends IntersectionType(
@@ -159,7 +159,7 @@ export class ReadAllSurfboardsQueryDto extends IntersectionType(
   @IsEnum(SurfboardSortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by?: SurfboardSortProperty = SurfboardSortProperty.Name;
+  public readonly sort_by: SurfboardSortProperty = SurfboardSortProperty.Name;
 
   @ApiProperty({
     required: false,
@@ -176,7 +176,7 @@ export class ReadSurfboardByIdParamDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly id: string;
+  public readonly id!: string;
 }
 
 export class UpdateCountryParamDto {
@@ -186,7 +186,7 @@ export class UpdateCountryParamDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly id: string;
+  public readonly id!: string;
 }
 
 export class UpdateCountryBodyDto extends IntersectionType(
@@ -200,7 +200,7 @@ export class UpdateSurfboardParamDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly id: string;
+  public readonly id!: string;
 }
 
 export class UpdateSurfboardBodyDto extends IntersectionType(
@@ -214,7 +214,7 @@ export class DeleteCountryParamDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly id: string;
+  public readonly id!: string;
 }
 
 export class DeleteSurfboardParamDto {
@@ -224,5 +224,5 @@ export class DeleteSurfboardParamDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly id: string;
+  public readonly id!: string;
 }

@@ -12,14 +12,14 @@ import { PasswordLength } from './auth.constant';
 
 export class AuthTokenDataDto {
   @ApiProperty()
-  access_token: string;
+  access_token!: string;
 }
 
 export class SignUpBodyDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly first_name: string;
+  public readonly first_name!: string;
 
   @ApiProperty({
     required: false,
@@ -35,7 +35,7 @@ export class SignUpBodyDto {
   @IsEmail()
   @IsString()
   @IsNotEmpty()
-  public readonly email: string;
+  public readonly email!: string;
 
   @ApiProperty({
     minLength: PasswordLength.Min,
@@ -44,7 +44,7 @@ export class SignUpBodyDto {
   @MinLength(PasswordLength.Min)
   @IsString()
   @IsNotEmpty()
-  public readonly password: string;
+  public readonly password!: string;
 }
 
 export class SignInBodyDto extends PickType(SignUpBodyDto, [
@@ -60,7 +60,7 @@ export class UpdateEmailBodyDto {
   @IsEmail()
   @IsString()
   @IsNotEmpty()
-  public readonly email: string;
+  public readonly email!: string;
 }
 
 export class UpdatePasswordBodyDto {
@@ -71,7 +71,7 @@ export class UpdatePasswordBodyDto {
   @MinLength(PasswordLength.Min)
   @IsString()
   @IsNotEmpty()
-  public readonly old_password: string;
+  public readonly old_password!: string;
 
   @ApiProperty({
     minLength: PasswordLength.Min,
@@ -80,5 +80,5 @@ export class UpdatePasswordBodyDto {
   @MinLength(PasswordLength.Min)
   @IsString()
   @IsNotEmpty()
-  public readonly new_password: string;
+  public readonly new_password!: string;
 }

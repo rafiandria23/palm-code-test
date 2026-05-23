@@ -8,7 +8,7 @@ import {
   Max,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 import {
   RADIX,
@@ -19,7 +19,7 @@ import {
 
 export class ReadAllMetadataDto {
   @ApiProperty()
-  public readonly total: number;
+  public readonly total!: number;
 }
 
 export class PaginationQueryDto {
@@ -32,7 +32,7 @@ export class PaginationQueryDto {
   @Min(PaginationPage.Min)
   @IsNumber()
   @IsOptional()
-  public readonly page?: number = PaginationPage.Min;
+  public readonly page: number = PaginationPage.Min;
 
   @ApiProperty({
     required: false,
@@ -45,7 +45,7 @@ export class PaginationQueryDto {
   @Min(PaginationSize.Min)
   @IsNumber()
   @IsOptional()
-  public readonly page_size?: number = PaginationSize.Default;
+  public readonly page_size: number = PaginationSize.Default;
 }
 
 export class SortQueryDto {
@@ -56,24 +56,24 @@ export class SortQueryDto {
   @IsEnum(SortDirection)
   @IsString()
   @IsOptional()
-  public readonly sort?: SortDirection = SortDirection.Asc;
+  public readonly sort: SortDirection = SortDirection.Asc;
 }
 
 export class SuccessTimestampDto<MD = undefined, D = undefined> {
   @ApiProperty()
-  public readonly success: boolean;
+  public readonly success: boolean = true;
 
   @ApiProperty({
     type: 'string',
     format: 'date-time',
   })
-  public readonly timestamp: Dayjs;
+  public readonly timestamp: Dayjs = dayjs();
 
   @ApiProperty()
-  public readonly metadata: MD = undefined;
+  public readonly metadata?: MD = undefined;
 
   @ApiProperty()
-  public readonly data: D = undefined;
+  public readonly data?: D = undefined;
 }
 
 export class RawSuccessTimestampDto extends PickType(SuccessTimestampDto, [

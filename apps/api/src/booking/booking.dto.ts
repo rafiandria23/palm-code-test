@@ -27,66 +27,66 @@ export class BookingDto {
   @ApiProperty({
     format: 'uuid',
   })
-  public readonly id: string;
+  public readonly id!: string;
 
   @ApiProperty()
-  public readonly name: string;
+  public readonly name!: string;
 
   @ApiProperty({
     format: 'email',
   })
-  public readonly email: string;
+  public readonly email!: string;
 
   @ApiProperty()
-  public readonly phone: string;
+  public readonly phone!: string;
 
   @ApiProperty({
     format: 'uuid',
   })
-  public readonly country_id: string;
+  public readonly country_id!: string;
 
   @ApiProperty({
     minimum: SurfingExperience.Min,
     maximum: SurfingExperience.Max,
     default: SurfingExperience.Min,
   })
-  public readonly surfing_experience: number;
+  public readonly surfing_experience!: number;
 
   @ApiProperty({
     format: 'date',
   })
-  public readonly date: string;
+  public readonly date!: string;
 
   @ApiProperty({
     format: 'uuid',
   })
-  public readonly surfboard_id: string;
+  public readonly surfboard_id!: string;
 
   @ApiProperty()
-  public readonly national_id_photo_url: string;
+  public readonly national_id_photo_url!: string;
 
   @ApiProperty()
-  public readonly country: CountryDto;
+  public readonly country!: CountryDto;
 
   @ApiProperty()
-  public readonly surfboard: SurfboardDto;
+  public readonly surfboard!: SurfboardDto;
 
   @ApiProperty({
     format: 'date-time',
   })
-  public readonly created_at: Date;
+  public readonly created_at!: Date;
 
   @ApiProperty({
     format: 'date-time',
   })
-  public readonly updated_at: Date;
+  public readonly updated_at!: Date;
 
   @ApiProperty({
     nullable: true,
     format: 'date-time',
     default: null,
   })
-  public readonly deleted_at: Date | null;
+  public readonly deleted_at: Date | null = null;
 }
 
 export class UploadNationalIdPhotoBodyDto {
@@ -94,14 +94,14 @@ export class UploadNationalIdPhotoBodyDto {
     type: 'string',
     format: 'binary',
   })
-  national_id_photo: MultipartFile;
+  national_id_photo!: MultipartFile;
 }
 
 export class CreateBookingBodyDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  public readonly name: string;
+  public readonly name!: string;
 
   @ApiProperty({
     format: 'email',
@@ -109,13 +109,13 @@ export class CreateBookingBodyDto {
   @IsEmail()
   @IsString()
   @IsNotEmpty()
-  public readonly email: string;
+  public readonly email!: string;
 
   @ApiProperty()
   @IsPhoneNumber()
   @IsString()
   @IsNotEmpty()
-  public readonly phone: string;
+  public readonly phone!: string;
 
   @ApiProperty({
     format: 'uuid',
@@ -123,7 +123,7 @@ export class CreateBookingBodyDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly country_id: string;
+  public readonly country_id!: string;
 
   @ApiProperty({
     minimum: SurfingExperience.Min,
@@ -134,7 +134,7 @@ export class CreateBookingBodyDto {
   @Min(SurfingExperience.Min)
   @IsNumber()
   @IsNotEmpty()
-  public readonly surfing_experience: number;
+  public readonly surfing_experience!: number;
 
   @ApiProperty({
     format: 'date',
@@ -144,7 +144,7 @@ export class CreateBookingBodyDto {
   @IsDateString()
   @IsString()
   @IsNotEmpty()
-  public readonly date: string;
+  public readonly date!: string;
 
   @ApiProperty({
     format: 'uuid',
@@ -152,13 +152,13 @@ export class CreateBookingBodyDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly surfboard_id: string;
+  public readonly surfboard_id!: string;
 
   @ApiProperty()
   @Transform(({ value }) => value.toLowerCase())
   @IsString()
   @IsNotEmpty()
-  public readonly national_id_photo_file_key: string;
+  public readonly national_id_photo_file_key!: string;
 }
 
 export class ReadAllBookingsQueryDto extends IntersectionType(
@@ -172,7 +172,7 @@ export class ReadAllBookingsQueryDto extends IntersectionType(
   @IsEnum(BookingSortProperty)
   @IsString()
   @IsOptional()
-  public readonly sort_by?: BookingSortProperty = BookingSortProperty.CreatedAt;
+  public readonly sort_by: BookingSortProperty = BookingSortProperty.CreatedAt;
 
   @ApiProperty({
     required: false,
@@ -200,7 +200,6 @@ export class ReadAllBookingsQueryDto extends IntersectionType(
     required: false,
     minimum: SurfingExperience.Min,
     maximum: SurfingExperience.Max,
-    default: SurfingExperience.Min,
   })
   @Transform(({ value }) => Number.parseInt(value, RADIX))
   @Max(SurfingExperience.Max)
@@ -225,7 +224,7 @@ export class ReadBookingByIdParamDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly id: string;
+  public readonly id!: string;
 }
 
 export class UpdateBookingParamDto {
@@ -235,7 +234,7 @@ export class UpdateBookingParamDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly id: string;
+  public readonly id!: string;
 }
 
 export class UpdateBookingBodyDto extends IntersectionType(
@@ -249,5 +248,5 @@ export class DeleteBookingParamDto {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
-  public readonly id: string;
+  public readonly id!: string;
 }

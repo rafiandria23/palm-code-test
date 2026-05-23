@@ -25,29 +25,29 @@ export class User extends Model<User> {
     primaryKey: true,
     defaultValue: DataType.UUIDV4,
   })
-  public id: string;
+  declare public id: string;
 
   @Column
-  public first_name: string;
+  public first_name!: string;
 
   @AllowNull
   @Column
-  public last_name: string | null;
+  public last_name: string | null = null;
 
   @Unique
   @Column
-  public email: string;
+  public email!: string;
 
   @CreatedAt
   @Column
-  public created_at: Date;
+  public created_at!: Date;
 
   @UpdatedAt
   @Column
-  public updated_at: Date;
+  public updated_at!: Date;
 
   @AllowNull
   @DeletedAt
   @Column
-  public deleted_at: Date | null;
+  public deleted_at: Date | null = null;
 }

@@ -29,30 +29,30 @@ export class UserPassword extends Model<UserPassword> {
     primaryKey: true,
     defaultValue: DataType.UUIDV4,
   })
-  public id: string;
+  declare public id: string;
 
   @Column({
     type: DataType.UUID,
   })
-  public user_id: string;
+  public user_id!: string;
 
   @Column({
     type: DataType.TEXT,
   })
-  public hash: string;
+  public hash!: string;
 
   @CreatedAt
   @Column
-  public created_at: Date;
+  public created_at!: Date;
 
   @UpdatedAt
   @Column
-  public updated_at: Date;
+  public updated_at!: Date;
 
   @AllowNull
   @DeletedAt
   @Column
-  public deleted_at: Date | null;
+  public deleted_at: Date | null = null;
 
   @BeforeCreate
   @BeforeUpdate

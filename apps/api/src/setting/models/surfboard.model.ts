@@ -25,22 +25,22 @@ export class Surfboard extends Model<Surfboard> {
     primaryKey: true,
     defaultValue: DataType.UUIDV4,
   })
-  public id: string;
+  declare public id: string;
 
   @Unique
   @Column
-  public name: string;
+  public name!: string;
 
   @CreatedAt
   @Column
-  public created_at: Date;
+  public created_at!: Date;
 
   @UpdatedAt
   @Column
-  public updated_at: Date;
+  public updated_at!: Date;
 
   @AllowNull
   @DeletedAt
   @Column
-  public deleted_at: Date | null;
+  public deleted_at: Date | null = null;
 }

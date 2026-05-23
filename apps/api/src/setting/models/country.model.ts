@@ -25,33 +25,33 @@ export class Country extends Model<Country> {
     primaryKey: true,
     defaultValue: DataType.UUIDV4,
   })
-  public id: string;
+  declare public id: string;
 
   @Unique
   @Column
-  public name: string;
+  public name!: string;
 
   @Unique
   @Column
-  public code: string;
+  public code!: string;
 
   @Column
-  public dial_code: string;
+  public dial_code!: string;
 
   @Unique
   @Column
-  public emoji: string;
+  public emoji!: string;
 
   @CreatedAt
   @Column
-  public created_at: Date;
+  public created_at!: Date;
 
   @UpdatedAt
   @Column
-  public updated_at: Date;
+  public updated_at!: Date;
 
   @AllowNull
   @DeletedAt
   @Column
-  public deleted_at: Date | null;
+  public deleted_at: Date | null = null;
 }

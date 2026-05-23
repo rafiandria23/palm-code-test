@@ -28,24 +28,24 @@ export class Booking extends Model<Booking> {
     primaryKey: true,
     defaultValue: DataType.UUIDV4,
   })
-  public id: string;
+  declare public id: string;
 
   @Column
-  public name: string;
+  public name!: string;
 
   @Column
-  public email: string;
+  public email!: string;
 
   @Column
-  public phone: string;
+  public phone!: string;
 
   @Column({
     type: DataType.UUID,
   })
-  public country_id: string;
+  public country_id!: string;
 
   @Column
-  public surfing_experience: number;
+  public surfing_experience!: number;
 
   @Column({
     type: DataType.DATEONLY,
@@ -53,29 +53,29 @@ export class Booking extends Model<Booking> {
       return dayjs(this.getDataValue('date')).format(DATE_FORMAT);
     },
   })
-  date: string;
+  date!: string;
 
   @Column({
     type: DataType.UUID,
   })
-  public surfboard_id: string;
+  public surfboard_id!: string;
 
   @Unique
   @Column({
     type: DataType.TEXT,
   })
-  public national_id_photo_file_key: string;
+  public national_id_photo_file_key!: string;
 
   @CreatedAt
   @Column
-  public created_at: Date;
+  public created_at!: Date;
 
   @UpdatedAt
   @Column
-  public updated_at: Date;
+  public updated_at!: Date;
 
   @AllowNull
   @DeletedAt
   @Column
-  public deleted_at: Date | null;
+  public deleted_at: Date | null = null;
 }
