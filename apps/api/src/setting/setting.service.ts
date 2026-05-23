@@ -48,7 +48,7 @@ export class SettingService {
         code: payload.code,
         dial_code: payload.dial_code,
         emoji: payload.emoji,
-      },
+      } as Country,
       options,
     );
 
@@ -64,7 +64,7 @@ export class SettingService {
     const createdSurfboard = await this.surfboardModel.create(
       {
         name: payload.name,
-      },
+      } as Surfboard,
       options,
     );
 

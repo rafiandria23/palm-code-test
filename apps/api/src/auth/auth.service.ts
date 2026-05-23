@@ -53,7 +53,7 @@ export class AuthService {
         {
           user_id: createdUser.id,
           hash: payload.password,
-        },
+        } as UserPassword,
         options,
       ),
     ]);

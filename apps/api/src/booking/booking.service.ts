@@ -83,7 +83,7 @@ export class BookingService {
         date: payload.date,
         surfboard_id: existingSurfboard.id,
         national_id_photo_file_key: payload.national_id_photo_file_key,
-      },
+      } as Booking,
       options,
     );
 
@@ -133,7 +133,7 @@ export class BookingService {
     const { count: total, rows: existingBookings } =
       await this.bookingModel.findAndCountAll(finalOptions);
 
-    const result = [];
+    const result: BookingDto[] = [];
 
     for (const existingBooking of existingBookings.map((existingBooking) =>
       existingBooking.toJSON(),
@@ -149,14 +149,16 @@ export class BookingService {
         ),
       ]);
 
-      result.push({
-        ..._.omit(existingBooking, ['national_id_photo_file_key']),
-        national_id_photo_url: this.fileService.getUrl(
-          existingBooking.national_id_photo_file_key,
-        ),
-        country: existingCountry.toJSON(),
-        surfboard: existingSurfboard.toJSON(),
-      });
+      if (existingCountry && existingSurfboard) {
+        result.push({
+          ..._.omit(existingBooking, ['national_id_photo_file_key']),
+          national_id_photo_url: this.fileService.getUrl(
+            existingBooking.national_id_photo_file_key,
+          ),
+          country: existingCountry.toJSON(),
+          surfboard: existingSurfboard.toJSON(),
+        });
+      }
     }
 
     return this.commonService.successTimestamp<
@@ -191,16 +193,20 @@ export class BookingService {
       ),
     ]);
 
-    const result = {
-      ..._.omit(existingBooking.toJSON(), ['national_id_photo_file_key']),
-      national_id_photo_url: this.fileService.getUrl(
-        existingBooking.national_id_photo_file_key,
-      ),
-      country: existingCountry.toJSON(),
-      surfboard: existingSurfboard.toJSON(),
-    };
+    if (existingCountry && existingSurfboard) {
+      const result = {
+        ..._.omit(existingBooking.toJSON(), ['national_id_photo_file_key']),
+        national_id_photo_url: this.fileService.getUrl(
+          existingBooking.national_id_photo_file_key,
+        ),
+        country: existingCountry.toJSON(),
+        surfboard: existingSurfboard.toJSON(),
+      };
 
-    return result;
+      return result;
+    }
+
+    return null;
   }
 
   public async update(
@@ -253,7 +259,7 @@ export class BookingService {
           existingBooking.national_id_photo_file_key,
         );
       } catch (err) {
-        this.logger.error(err.message, err.stack, err.name);
+        this.logger.error(err);
       }
     }
 
