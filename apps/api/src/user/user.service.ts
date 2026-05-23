@@ -39,7 +39,7 @@ export class UserService {
         first_name: payload.first_name,
         last_name: payload.last_name,
         email: payload.email,
-      },
+      } as User,
       options,
     );
   }
@@ -51,12 +51,12 @@ export class UserService {
       'group' | 'where' | 'offset' | 'limit' | 'order'
     >,
   ) {
-    const finalOptions: Omit<FindAndCountOptions<User>, 'group'> = {
+    const finalOptions: FindAndCountOptions<User> = {
+      ...options,
       where: {},
       offset: queries.page_size * (queries.page - 1),
       limit: queries.page_size,
       order: [[queries.sort_by, queries.sort]],
-      ...options,
     };
 
     const filters = _.omit(queries, [
@@ -67,8 +67,11 @@ export class UserService {
 
     if (!_.isEmpty(filters)) {
       _.forOwn(filters, (filterValue, filterKey) => {
-        finalOptions.where[filterKey] = {
-          [Op.iLike]: `%${filterValue}%`,
+        finalOptions.where = {
+          ...finalOptions.where,
+          [filterKey]: {
+            [Op.iLike]: `%${filterValue}%`,
+          },
         };
       });
     }

@@ -80,12 +80,12 @@ export class SettingService {
       'group' | 'where' | 'offset' | 'limit' | 'order'
     >,
   ) {
-    const finalOptions: Omit<FindAndCountOptions<Country>, 'group'> = {
+    const finalOptions: FindAndCountOptions<Country> = {
+      ...options,
       where: {},
       offset: queries.page_size * (queries.page - 1),
       limit: queries.page_size,
       order: [[queries.sort_by, queries.sort]],
-      ...options,
     };
 
     const filters = _.omit(queries, [
@@ -96,8 +96,11 @@ export class SettingService {
 
     if (!_.isEmpty(filters)) {
       _.forOwn(filters, (filterValue, filterKey) => {
-        finalOptions.where[filterKey] = {
-          [Op.iLike]: `%${filterValue}%`,
+        finalOptions.where = {
+          ...finalOptions.where,
+          [filterKey]: {
+            [Op.iLike]: `%${filterValue}%`,
+          },
         };
       });
     }
@@ -130,12 +133,12 @@ export class SettingService {
       'group' | 'where' | 'offset' | 'limit' | 'order'
     >,
   ) {
-    const finalOptions: Omit<FindAndCountOptions<Surfboard>, 'group'> = {
+    const finalOptions: FindAndCountOptions<Surfboard> = {
+      ...options,
       where: {},
       offset: queries.page_size * (queries.page - 1),
       limit: queries.page_size,
       order: [[queries.sort_by, queries.sort]],
-      ...options,
     };
 
     const filters = _.omit(queries, [
@@ -146,8 +149,11 @@ export class SettingService {
 
     if (!_.isEmpty(filters)) {
       _.forOwn(filters, (filterValue, filterKey) => {
-        finalOptions.where[filterKey] = {
-          [Op.iLike]: `%${filterValue}%`,
+        finalOptions.where = {
+          ...finalOptions.where,
+          [filterKey]: {
+            [Op.iLike]: `%${filterValue}%`,
+          },
         };
       });
     }

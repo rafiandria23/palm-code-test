@@ -108,12 +108,12 @@ export class BookingService {
       'group' | 'where' | 'offset' | 'limit' | 'order'
     >,
   ) {
-    const finalOptions: Omit<FindAndCountOptions<Booking>, 'group'> = {
+    const finalOptions: FindAndCountOptions<Booking> = {
+      ...options,
       where: {},
       offset: queries.page_size * (queries.page - 1),
       limit: queries.page_size,
       order: [[queries.sort_by, queries.sort]],
-      ...options,
     };
 
     const filters = _.omit(queries, [
@@ -124,8 +124,11 @@ export class BookingService {
 
     if (!_.isEmpty(filters)) {
       _.forOwn(filters, (filterValue, filterKey) => {
-        finalOptions.where[filterKey] = {
-          [Op.iLike]: `%${filterValue}%`,
+        finalOptions.where = {
+          ...finalOptions.where,
+          [filterKey]: {
+            [Op.iLike]: `%${filterValue}%`,
+          },
         };
       });
     }
