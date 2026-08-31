@@ -4389,17 +4389,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/sequelize@npm:^11.0.1":
-  version: 11.0.1
-  resolution: "@nestjs/sequelize@npm:11.0.1"
+"@nestjs/sequelize@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "@nestjs/sequelize@npm:12.0.0"
   peerDependencies:
-    "@nestjs/common": ^10.0.0 || ^11.0.0
-    "@nestjs/core": ^10.0.0 || ^11.0.0
+    "@nestjs/common": ^11.0.0 || ^12.0.0
+    "@nestjs/core": ^11.0.0 || ^12.0.0
     reflect-metadata: ^0.1.13 || ^0.2.0
     rxjs: ^7.2.0
     sequelize: ^6.3.5
     sequelize-typescript: ^2.0.0
-  checksum: 10c0/df0a529649b8a7eccc6c5fb36e3ee4ad964d8b20d12995ede00ff36b2644b9a2ededbf7257911e1361e19da43cfebd49a0744f35e928f058817e380226385d76
+  checksum: 10c0/223f718c76a0db1a0c614830ef8b02cbaee74de1ea34d6b981362f6951aab9a633af125ec6fbec60f7ee80cfa3e69665dc68e2f81fa387a5e72cc12de5aa41bf
   languageName: node
   linkType: hard
 
@@ -5737,7 +5737,7 @@ __metadata:
     "@nestjs/platform-express": "npm:^12.0.0"
     "@nestjs/platform-fastify": "npm:^12.0.0"
     "@nestjs/schematics": "npm:^12.0.0"
-    "@nestjs/sequelize": "npm:^11.0.1"
+    "@nestjs/sequelize": "npm:^12.0.0"
     "@nestjs/swagger": "npm:^12.0.0"
     "@nestjs/testing": "npm:^12.0.0"
     "@next/eslint-plugin-next": "npm:^16.0.1"
