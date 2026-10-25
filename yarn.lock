@@ -2633,8 +2633,8 @@ __metadata:
   linkType: hard
 
 "@fastify/static@npm:^10.0.0":
-  version: 10.1.5
-  resolution: "@fastify/static@npm:10.1.5"
+  version: 10.1.7
+  resolution: "@fastify/static@npm:10.1.7"
   dependencies:
     "@fastify/accept-negotiator": "npm:^2.0.0"
     "@fastify/error": "npm:^4.0.0"
@@ -2643,7 +2643,7 @@ __metadata:
     fastify-plugin: "npm:^6.0.0"
     fastq: "npm:^1.17.1"
     glob: "npm:^13.0.0"
-  checksum: 10c0/6f9c3f7cbbc8edbbc1fb9590adf054e9580d1a76996ad6ea4ddee18e620dea29ac139f5131d6f31a3f1b41b5b0d96baa97aed5d4cb9ef0de947feaf2d1c27524
+  checksum: 10c0/325fcca2fb5818ce44c3775b49d21afb47841ef46f02c20c6571475c78233c65d94b0e88821ec577d31b8a42ad4c616fd9cc61d9aec3b8a7b2adc8df7c39f6a6
   languageName: node
   linkType: hard
 
