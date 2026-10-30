@@ -2711,15 +2711,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hookform/resolvers@npm:^5.2.2":
-  version: 5.9.2
-  resolution: "@hookform/resolvers@npm:5.9.2"
+"@hookform/resolvers@npm:^6.0.0":
+  version: 6.0.2
+  resolution: "@hookform/resolvers@npm:6.0.2"
   dependencies:
     "@standard-schema/utils": "npm:^0.3.0"
   peerDependencies:
     "@sinclair/typebox": ">=0.25.24"
     "@standard-schema/spec": ^1.0.0
-    "@typeschema/main": ">=0.13.7"
     "@vinejs/vine": ^2.0.0 || ^3.0.0 || ^4.0.0
     ajv: ^8.12.0
     ajv-errors: ^3.0.0
@@ -2729,7 +2728,7 @@ __metadata:
     class-transformer: ">=0.4.0"
     class-validator: ">=0.12.0"
     computed-types: ^1.0.0
-    effect: ^3.10.3
+    effect: ^4.0.0
     fluentvalidation-ts: ^3.0.0
     fp-ts: ^2.7.0
     io-ts: ^2.0.0
@@ -2746,8 +2745,6 @@ __metadata:
     "@sinclair/typebox":
       optional: true
     "@standard-schema/spec":
-      optional: true
-    "@typeschema/main":
       optional: true
     "@vinejs/vine":
       optional: true
@@ -2791,7 +2788,7 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 10c0/a1dfbb21ca5c65cba81fb82b1176c4788b8fe6a591886c16908995c1c21fdb1426bce8f013c6d90c00d511b44c481f99bc9b897b8c6ca3f61e0db5f4fe7dfd4a
+  checksum: 10c0/64fa9666b2137cc9e3b5730c77642f4a385e79bcedfbcf6cef64611608da0380204fe26627ffa62c583395f4f9dbe12aced06ae67057845e35d6d3276631416f
   languageName: node
   linkType: hard
 
@@ -4378,8 +4375,8 @@ __metadata:
   linkType: hard
 
 "@nestjs/schematics@npm:^12.0.0":
-  version: 12.0.11
-  resolution: "@nestjs/schematics@npm:12.0.11"
+  version: 12.0.12
+  resolution: "@nestjs/schematics@npm:12.0.12"
   dependencies:
     "@angular-devkit/core": "npm:22.2.4"
     "@angular-devkit/schematics": "npm:22.2.4"
@@ -4392,7 +4389,7 @@ __metadata:
   peerDependenciesMeta:
     prettier:
       optional: true
-  checksum: 10c0/8b5014c9fc999780b1b5a8020e33fdfd1f3ad8dbbdc1934dfa636678fa78419f5e9a1b7ba4835bcd714172401f3f6600ddc71b1f2209acb637d85745d3041f71
+  checksum: 10c0/e21ee8b079b04d8fe8101898c6402e7cbac38c8f244d64ae6e6ded76d3f73bdc7f83b2d3c8d478b00c76b93d2807b3bc89aab3f2ab7c206716ef202952a9de32
   languageName: node
   linkType: hard
 
@@ -5718,7 +5715,7 @@ __metadata:
     "@faker-js/faker": "npm:^9.9.0"
     "@fastify/multipart": "npm:^10.0.0"
     "@fastify/static": "npm:^10.0.0"
-    "@hookform/resolvers": "npm:^5.2.2"
+    "@hookform/resolvers": "npm:^6.0.0"
     "@mui/icons-material": "npm:^9.0.0"
     "@mui/material": "npm:^9.0.0"
     "@mui/material-nextjs": "npm:^9.0.0"
@@ -5759,7 +5756,7 @@ __metadata:
     "@types/bcrypt": "npm:^6.0.0"
     "@types/jest": "npm:^30.0.0"
     "@types/lodash": "npm:^4.17.21"
-    "@types/node": "npm:26.6.5"
+    "@types/node": "npm:26.6.6"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
     aws-sdk-client-mock: "npm:^4.1.0"
@@ -5795,7 +5792,7 @@ __metadata:
     react-redux: "npm:^9.2.0"
     reflect-metadata: "npm:^0.2.0"
     rxjs: "npm:^7.8.0"
-    sass: "npm:1.106.1"
+    sass: "npm:1.107.0"
     sequelize: "npm:^6.37.7"
     sequelize-typescript: "npm:^2.1.6"
     tipe-apa: "npm:^0.4.7"
@@ -6597,12 +6594,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:26.6.5":
-  version: 26.6.5
-  resolution: "@types/node@npm:26.6.5"
+"@types/node@npm:26.6.6":
+  version: 26.6.6
+  resolution: "@types/node@npm:26.6.6"
   dependencies:
     undici-types: "npm:~8.9.0"
-  checksum: 10c0/4f791f69466ace7842c09e7bef96cb1ddbb65cf3db916ef7e84f0e2b2a17220b6b816dc7539d01520cadfb17ed7169b8214910900493e0a83be8bc7d124ec20a
+  checksum: 10c0/5cb63f644f6e85a257a9cd2403cbcbe196760e2a35fd3ec9fb8b5cff663e14cc832b198cc17b53f870a2e30900ed45a1fb3f53e6589aba26b8e8c484aa672053
   languageName: node
   linkType: hard
 
@@ -17218,9 +17215,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:1.106.1":
-  version: 1.106.1
-  resolution: "sass@npm:1.106.1"
+"sass@npm:1.107.0":
+  version: 1.107.0
+  resolution: "sass@npm:1.107.0"
   dependencies:
     "@parcel/watcher": "npm:^2.4.1"
     chokidar: "npm:^5.0.0"
@@ -17231,7 +17228,7 @@ __metadata:
       optional: true
   bin:
     sass: sass.js
-  checksum: 10c0/4f1043e2d5b3b7e9cf563050040ed3d91ef1bf8eb9dd180ecfd7ec403bfbd52ac2f557d7e7b398573021f9240a134a080d11af21b802724c05cad386b768df4c
+  checksum: 10c0/5e2a8da603a7cbe4edd904f38db12136e3aba3b673e8acffa98d5b4d1d95d47c83b9f40ecc92686466f0e17e34cfb9c948313e69781392081729d93073f9bbe0
   languageName: node
   linkType: hard
 
