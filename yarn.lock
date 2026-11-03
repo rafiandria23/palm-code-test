@@ -2654,15 +2654,15 @@ __metadata:
   linkType: hard
 
 "@fastify/multipart@npm:^10.0.0":
-  version: 10.1.6
-  resolution: "@fastify/multipart@npm:10.1.6"
+  version: 10.1.7
+  resolution: "@fastify/multipart@npm:10.1.7"
   dependencies:
     "@fastify/busboy": "npm:^3.0.0"
     "@fastify/deepmerge": "npm:^3.0.0"
     "@fastify/error": "npm:^4.0.0"
     fastify-plugin: "npm:^6.0.0"
     secure-json-parse: "npm:^4.0.0"
-  checksum: 10c0/42544cf5239a323f07eae3f72e48f1c6b137cdda4f6fe3f4ae7aebed5df8a9140513f40961bc22270da9cd10cdca7226dde9e942e90fa39b2cf61f44f72c7276
+  checksum: 10c0/e69c3575ede6483bc5a7975f75d9eb11f3a1ecb875b7b0b75ba0c92d49d1bea896aeb52253a89dff636c9232d55834abc4c7c202dad6ce8ec53088bb1c232bc4
   languageName: node
   linkType: hard
 
